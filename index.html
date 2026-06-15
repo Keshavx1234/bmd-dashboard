@@ -937,7 +937,7 @@ tbody td {
           <span class="lf-btn-text">Sign In</span>
         </div>
       </button>
-      <div class="lf-hint">Default credentials: <span>admin</span> / <span>bmd2024</span></div>
+      <div class="lf-hint">Authorised access only. Contact admin for credentials.</div>
     </div>
   </div>
 </div>
@@ -977,15 +977,15 @@ tbody td {
   <!-- NAV -->
   <nav class="nav">
     <div class="nt active" onclick="showPg('dashboard',this)">📊 Dashboard</div>
-    <div class="nt" onclick="showPg('sales',this)">💰 Sales Entry</div>
-    <div class="nt" onclick="showPg('production',this)">🏭 Production</div>
-    <div class="nt" onclick="showPg('expense',this)">💸 Expenses</div>
-    <div class="nt" onclick="showPg('inventory',this)">📦 Inventory</div>
-    <div class="nt" onclick="showPg('reports',this)">📈 Reports</div>
-    <div class="nt" onclick="showPg('customers',this)">👤 Customers</div>
-    <div class="nt" onclick="showPg('payments',this)">💳 Payments</div>
+    <div class="nt" onclick="showPg('sales',this)">💰 Sales & Dispatch</div>
+    <div class="nt" onclick="showPg('production',this)">🏭 Brick Production</div>
+    <div class="nt" onclick="showPg('expense',this)">💸 Expenses & Wages</div>
+    <div class="nt" onclick="showPg('inventory',this)">📦 Stock & Materials</div>
+    <div class="nt" onclick="showPg('reports',this)">📈 Reports & Analysis</div>
+    <div class="nt" onclick="showPg('customers',this)">👤 Customer Ledger</div>
+    <div class="nt" onclick="showPg('payments',this)">💳 Receipts</div>
     <div class="nt" onclick="showPg('opening',this)">⚖️ Opening Balances</div>
-    <div class="nt" onclick="showPg('setup',this)">⚙️ Setup &amp; Guide</div>
+    <div class="nt" onclick="showPg('setup',this)">⚙️ Settings & Guide</div>
   </nav>
 </aside>
 
@@ -5993,7 +5993,7 @@ async function syncFromGSheet() {
 }
 
 // ── LOGIN LOGIC ───────────────────────────────────────────
-const USERS = { 'admin':'bmd2024', 'manager':'plant123', 'operator':'ops456' };
+const USERS = { 'admin':'keshavx01' };
 
 function doLogin() {
   const u = (document.getElementById('lf-user').value||'').trim();
