@@ -2129,6 +2129,50 @@ function renderBrickModal() {
     </div>
   </div>
 
+  <!-- Weekly Avg Workers -->
+  <div style="background:linear-gradient(135deg,#1a1f35,#0f1628);border-radius:14px;padding:16px 18px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.08)">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:18px">👷</span>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#fff;letter-spacing:0.3px">WEEKLY WORKER AVERAGE</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:1px">Tue to Tue wages cycle</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:4px;background:rgba(255,255,255,0.05);border-radius:8px;padding:3px">
+        <button onclick="setWorkerPeriod(7,this)"  class="wp-btn" style="padding:4px 10px;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;background:rgba(99,102,241,0.7);color:#fff">This Week</button>
+        <button onclick="setWorkerPeriod(14,this)" class="wp-btn" style="padding:4px 10px;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:rgba(255,255,255,0.4)">2 Weeks</button>
+        <button onclick="setWorkerPeriod(30,this)" class="wp-btn" style="padding:4px 10px;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:rgba(255,255,255,0.4)">Month</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px">
+      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.07)">
+        <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;font-weight:600">AVG MALE</div>
+        <div id="avg-male" style="font-size:22px;font-weight:800;color:#818cf8">0</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">per day</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.07)">
+        <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;font-weight:600">AVG FEMALE</div>
+        <div id="avg-female" style="font-size:22px;font-weight:800;color:#c084fc">0</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">per day</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.07)">
+        <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;font-weight:600">AVG TOTAL</div>
+        <div id="avg-total" style="font-size:22px;font-weight:800;color:#4ade80">0</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">per day</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.07)">
+        <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;font-weight:600">WORKING DAYS</div>
+        <div id="avg-days" style="font-size:22px;font-weight:800;color:#f97316">0</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">in period</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+      <span id="avg-period-label" style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:600">Period</span>
+      <span style="font-size:11px;color:rgba(255,255,255,0.6)">Total: 👨 <strong id="avg-total-male" style="color:#818cf8">0</strong> &nbsp;|&nbsp; 👩 <strong id="avg-total-female" style="color:#c084fc">0</strong> &nbsp;|&nbsp; 🧱 <strong id="avg-total-bricks" style="color:#4ade80">0</strong> bricks</span>
+    </div>
+  </div>
+
   <!-- Production Log -->
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:18px 0 11px">
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -5950,7 +5994,7 @@ function refreshStockWidget() {
   };
 
   // Always all-time totals for the main number
-  const allProd = (db.production || []).reduce((s,p) => s + (parseFloat(p.bricks)||0), 0);
+  const allProd = (db.prod || []).reduce((s,p) => s + (parseFloat(p.bricks)||0), 0);
   const allSold = (db.sales || []).reduce((s,p) => s + (parseFloat(p.qty)||0), 0);
   const inStock = Math.max(0, allProd - allSold);
 
@@ -5967,7 +6011,7 @@ function refreshStockWidget() {
   }
 
   const inRange = d => !fromDate || d >= fromDate;
-  const periodProd = (db.production||[]).filter(p=>inRange(p.date)).reduce((s,p)=>s+(parseFloat(p.bricks)||0),0);
+  const periodProd = (db.prod||[]).filter(p=>inRange(p.date)).reduce((s,p)=>s+(parseFloat(p.bricks)||0),0);
   const periodSold = (db.sales||[]).filter(p=>inRange(p.date)).reduce((s,p)=>s+(parseFloat(p.qty)||0),0);
   const periodNet  = periodProd - periodSold;
 
@@ -6003,7 +6047,7 @@ function refreshStockWidget() {
   // Wages cycle
   const lastTue = getLastTuesday();
   const tod = today();
-  const wageProd = (db.production||[]).filter(p=>p.date>=lastTue&&p.date<=tod).reduce((s,p)=>s+(parseFloat(p.bricks)||0),0);
+  const wageProd = (db.prod||[]).filter(p=>p.date>=lastTue&&p.date<=tod).reduce((s,p)=>s+(parseFloat(p.bricks)||0),0);
   document.getElementById('stock-wages-range').textContent = fmtDateDMY(lastTue) + ' → ' + fmtDateDMY(tod);
   document.getElementById('stock-wages-prod').textContent = fmt(wageProd) + ' bricks';
 }
@@ -6013,6 +6057,102 @@ const _origRefreshAll = refreshAll;
 refreshAll = function() {
   _origRefreshAll.apply(this, arguments);
   try { refreshStockWidget(); } catch(e) {}
+
+// ── Weekly Worker Average ─────────────────────
+let _workerDays = 7;
+
+function setWorkerPeriod(days, btn) {
+  _workerDays = days;
+  document.querySelectorAll('.wp-btn').forEach(b => {
+    b.style.background = 'transparent';
+    b.style.color = 'rgba(255,255,255,0.4)';
+  });
+  btn.style.background = 'rgba(99,102,241,0.7)';
+  btn.style.color = '#fff';
+  refreshWorkerAvg();
+}
+
+function refreshWorkerAvg() {
+  try {
+    const db = loadDB();
+    const prod = db.prod || [];
+    const now = new Date();
+
+    // Get start date based on period
+    let fromDate;
+    if (_workerDays === 7) {
+      // Last Tuesday (wages cycle start)
+      const day = now.getDay();
+      const diff = (day >= 2) ? day - 2 : day + 5;
+      const tue = new Date(now);
+      tue.setDate(now.getDate() - diff);
+      fromDate = String(tue.getDate()).padStart(2,'0') + '-' + String(tue.getMonth()+1).padStart(2,'0') + '-' + tue.getFullYear();
+    } else {
+      const past = new Date(now);
+      past.setDate(now.getDate() - (_workerDays - 1));
+      fromDate = String(past.getDate()).padStart(2,'0') + '-' + String(past.getMonth()+1).padStart(2,'0') + '-' + past.getFullYear();
+    }
+
+    const tod = String(now.getDate()).padStart(2,'0') + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + now.getFullYear();
+
+    const filtered = prod.filter(p => p.date >= fromDate && p.date <= tod);
+
+    if (!filtered.length) {
+      ['avg-male','avg-female','avg-total','avg-days'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '0';
+      });
+      const lbl = document.getElementById('avg-period-label');
+      if (lbl) lbl.textContent = 'No data for this period';
+      return;
+    }
+
+    // Group by date to get unique working days
+    const byDate = {};
+    filtered.forEach(p => {
+      if (!byDate[p.date]) byDate[p.date] = { male: 0, female: 0, bricks: 0 };
+      byDate[p.date].male   += parseFloat(p.male)   || 0;
+      byDate[p.date].female += parseFloat(p.female) || 0;
+      byDate[p.date].bricks += parseFloat(p.bricks) || 0;
+    });
+
+    const days = Object.keys(byDate);
+    const numDays = days.length;
+    const totalMale   = days.reduce((s,d) => s + byDate[d].male,   0);
+    const totalFemale = days.reduce((s,d) => s + byDate[d].female, 0);
+    const totalBricks = days.reduce((s,d) => s + byDate[d].bricks, 0);
+
+    const avgMale   = Math.round(totalMale   / numDays);
+    const avgFemale = Math.round(totalFemale / numDays);
+    const avgTotal  = Math.round((totalMale + totalFemale) / numDays);
+
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    set('avg-male',   avgMale);
+    set('avg-female', avgFemale);
+    set('avg-total',  avgTotal);
+    set('avg-days',   numDays);
+    set('avg-total-male',   totalMale);
+    set('avg-total-female', totalFemale);
+    set('avg-total-bricks', totalBricks >= 1000 ? (totalBricks/1000).toFixed(1)+'K' : totalBricks);
+
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const fmt = ddmmyyyy => {
+      if (!ddmmyyyy) return '';
+      const [d,m,y] = ddmmyyyy.split('-');
+      return d + ' ' + (months[parseInt(m,10)-1]||m);
+    };
+    const lbl = document.getElementById('avg-period-label');
+    if (lbl) lbl.textContent = fmt(fromDate) + ' → ' + fmt(tod);
+  } catch(e) {}
+}
+
+// Hook into refreshAll
+const _origRefreshAllW = refreshAll;
+refreshAll = function() {
+  _origRefreshAllW.apply(this, arguments);
+  try { refreshWorkerAvg(); } catch(e) {}
+};
+try { refreshWorkerAvg(); } catch(e) {}
 
 // ── Auto-sync every 3 minutes ──────────────────
 let _lastAutoSync = 0;
