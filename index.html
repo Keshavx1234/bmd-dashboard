@@ -1310,6 +1310,83 @@ tbody td {
     </div>
   </div>
 
+  <!-- BRICKS STOCK WIDGET -->
+  <div id="bricks-stock-widget" style="padding:16px 20px 0">
+    <div style="background:linear-gradient(135deg,#1a1f35 0%,#0f1628 100%);border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,0.08);position:relative;overflow:hidden">
+      <div style="position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(99,102,241,0.15),transparent 70%);pointer-events:none"></div>
+
+      <!-- Title + badge -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:24px">🧱</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#ffffff;letter-spacing:0.3px">BRICKS IN STOCK</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:1px">Production − Sales = Available</div>
+          </div>
+        </div>
+        <div id="stock-badge" style="font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.25)">HEALTHY</div>
+      </div>
+
+      <!-- Period filter tabs -->
+      <div style="display:flex;gap:4px;margin-bottom:16px;background:rgba(255,255,255,0.05);border-radius:10px;padding:3px">
+        <button onclick="setStockPeriod(1,this)"   class="spill" style="flex:1;padding:5px 0;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:rgba(255,255,255,0.4);transition:all .15s">1D</button>
+        <button onclick="setStockPeriod(3,this)"   class="spill" style="flex:1;padding:5px 0;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:rgba(255,255,255,0.4);transition:all .15s">3D</button>
+        <button onclick="setStockPeriod(7,this)"   class="spill" style="flex:1;padding:5px 0;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:rgba(255,255,255,0.4);transition:all .15s">7D</button>
+        <button onclick="setStockPeriod(15,this)"  class="spill" style="flex:1;padding:5px 0;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:rgba(255,255,255,0.4);transition:all .15s">15D</button>
+        <button onclick="setStockPeriod(30,this)"  class="spill" style="flex:1;padding:5px 0;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:rgba(255,255,255,0.4);transition:all .15s">Month</button>
+        <button onclick="setStockPeriod(0,this)"   class="spill" style="flex:1;padding:5px 0;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;background:rgba(99,102,241,0.7);color:#fff;transition:all .15s">All</button>
+      </div>
+
+      <!-- Main number -->
+      <div style="text-align:center;margin-bottom:16px">
+        <div id="stock-main-num" style="font-size:52px;font-weight:800;color:#ffffff;letter-spacing:-2px;line-height:1;font-family:Inter,sans-serif">0</div>
+        <div id="stock-period-label" style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;font-weight:500">bricks available — today</div>
+      </div>
+
+      <!-- Progress bar -->
+      <div style="margin-bottom:16px">
+        <div style="background:rgba(255,255,255,0.08);border-radius:999px;height:10px;overflow:hidden">
+          <div id="stock-progress-bar" style="height:100%;border-radius:999px;background:linear-gradient(90deg,#6366f1,#8b5cf6);width:0%;transition:width 1s cubic-bezier(.4,0,.2,1)"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px">
+          <span style="font-size:10px;color:rgba(255,255,255,0.3)">0%</span>
+          <span id="stock-pct-label" style="font-size:10px;color:rgba(255,255,255,0.3)">0% in stock</span>
+        </div>
+      </div>
+
+      <!-- 3 stat boxes -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;font-weight:600">PRODUCED</div>
+          <div id="stock-produced" style="font-size:20px;font-weight:800;color:#818cf8">0</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">in period</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;font-weight:600">SOLD</div>
+          <div id="stock-sold" style="font-size:20px;font-weight:800;color:#f97316">0</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">dispatched</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;font-weight:600">NET STOCK</div>
+          <div id="stock-remaining" style="font-size:20px;font-weight:800;color:#4ade80">0</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">± period</div>
+        </div>
+      </div>
+
+      <!-- Wages cycle info -->
+      <div style="margin-top:12px;padding:10px 14px;background:rgba(255,255,255,0.04);border-radius:10px;border:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        <div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600">WAGES CYCLE (Tue→Tue)</div>
+          <div id="stock-wages-range" style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px">—</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600">CYCLE PRODUCTION</div>
+          <div id="stock-wages-prod" style="font-size:14px;font-weight:800;color:#818cf8">0 bricks</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Body -->
   <div class="d-body">
 
@@ -5827,6 +5904,203 @@ setHeader();
 initForms();
 refreshAll();
 syncInit();
+
+// ── Stock Widget ──────────────────────────────
+let _stockDays = 0; // default All
+
+function dateNDaysAgo(n) {
+  const d = new Date();
+  d.setDate(d.getDate() - (n - 1));
+  return d.toISOString().slice(0,10).split('-').reverse().join('-'); // DD-MM-YYYY
+}
+
+function getLastTuesday() {
+  const d = new Date();
+  const day = d.getDay(); // 0=Sun,2=Tue
+  const diff = (day >= 2) ? day - 2 : day + 5;
+  d.setDate(d.getDate() - diff);
+  return d.toISOString().slice(0,10).split('-').reverse().join('-');
+}
+
+function fmtDateDMY(ddmmyyyy) {
+  if (!ddmmyyyy) return '';
+  const [d,m,y] = ddmmyyyy.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d + ' ' + (months[parseInt(m,10)-1]||m);
+}
+
+function setStockPeriod(days, btn) {
+  _stockDays = days;
+  document.querySelectorAll('.spill').forEach(b => {
+    b.style.background = 'transparent';
+    b.style.color = 'rgba(255,255,255,0.4)';
+  });
+  btn.style.background = 'rgba(99,102,241,0.7)';
+  btn.style.color = '#fff';
+  refreshStockWidget();
+}
+
+function refreshStockWidget() {
+  const db = loadDB();
+  const fmt = n => {
+    n = Math.round(n);
+    if (n >= 100000) return (n/100000).toFixed(2) + ' L';
+    if (n >= 1000)   return (n/1000).toFixed(1) + 'K';
+    return String(n);
+  };
+
+  // Always all-time totals for the main number
+  const allProd = (db.production || []).reduce((s,p) => s + (parseFloat(p.bricks)||0), 0);
+  const allSold = (db.sales || []).reduce((s,p) => s + (parseFloat(p.qty)||0), 0);
+  const inStock = Math.max(0, allProd - allSold);
+
+  // Period filter for the 3 boxes
+  let fromDate = null;
+  let periodLabel = 'all time';
+  if (_stockDays > 0 && _stockDays < 30) {
+    fromDate = dateNDaysAgo(_stockDays);
+    periodLabel = 'last ' + _stockDays + ' day' + (_stockDays > 1 ? 's' : '');
+  } else if (_stockDays === 30) {
+    const now = new Date();
+    fromDate = '01-' + String(now.getMonth()+1).padStart(2,'0') + '-' + now.getFullYear();
+    periodLabel = 'this month';
+  }
+
+  const inRange = d => !fromDate || d >= fromDate;
+  const periodProd = (db.production||[]).filter(p=>inRange(p.date)).reduce((s,p)=>s+(parseFloat(p.bricks)||0),0);
+  const periodSold = (db.sales||[]).filter(p=>inRange(p.date)).reduce((s,p)=>s+(parseFloat(p.qty)||0),0);
+  const periodNet  = periodProd - periodSold;
+
+  // Main number = always current stock
+  document.getElementById('stock-main-num').textContent = fmt(inStock);
+  document.getElementById('stock-period-label').textContent = 'bricks currently in stock (all time)';
+  document.getElementById('stock-produced').textContent = fmt(periodProd);
+  document.getElementById('stock-sold').textContent = fmt(periodSold);
+  document.getElementById('stock-remaining').textContent = (periodNet>=0?'+':'') + fmt(periodNet);
+  document.getElementById('stock-remaining').style.color = periodNet >= 0 ? '#4ade80' : '#f87171';
+
+  // Progress bar = stock % of all produced
+  const pct = allProd > 0 ? Math.min(100, Math.round((inStock/allProd)*100)) : 0;
+  document.getElementById('stock-progress-bar').style.width = pct + '%';
+  document.getElementById('stock-pct-label').textContent = pct + '% remaining in stock';
+
+  const bar = document.getElementById('stock-progress-bar');
+  const badge = document.getElementById('stock-badge');
+  if (pct > 40) {
+    bar.style.background='linear-gradient(90deg,#6366f1,#8b5cf6)';
+    badge.style.cssText='font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.25)';
+    badge.textContent='HEALTHY';
+  } else if (pct > 15) {
+    bar.style.background='linear-gradient(90deg,#f59e0b,#f97316)';
+    badge.style.cssText='font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.25)';
+    badge.textContent='MODERATE';
+  } else {
+    bar.style.background='linear-gradient(90deg,#ef4444,#dc2626)';
+    badge.style.cssText='font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.25)';
+    badge.textContent='LOW STOCK';
+  }
+
+  // Wages cycle
+  const lastTue = getLastTuesday();
+  const tod = today();
+  const wageProd = (db.production||[]).filter(p=>p.date>=lastTue&&p.date<=tod).reduce((s,p)=>s+(parseFloat(p.bricks)||0),0);
+  document.getElementById('stock-wages-range').textContent = fmtDateDMY(lastTue) + ' → ' + fmtDateDMY(tod);
+  document.getElementById('stock-wages-prod').textContent = fmt(wageProd) + ' bricks';
+}
+
+// Hook into refreshAll
+const _origRefreshAll = refreshAll;
+refreshAll = function() {
+  _origRefreshAll.apply(this, arguments);
+  try { refreshStockWidget(); } catch(e) {}
+
+// ── Auto-sync every 3 minutes ──────────────────
+let _lastAutoSync = 0;
+
+async function autoSyncFromGSheet() {
+  try {
+    const now = Date.now();
+    if (now - _lastAutoSync < 180000) return; // 3 min cooldown
+    _lastAutoSync = now;
+
+    const json = await jsonpFetch(GSHEET_WEBAPP);
+    if (!json.rows || !Array.isArray(json.rows)) return;
+
+    const normalize = str => (str||'').toString().toLowerCase().trim();
+    const db = loadDB();
+
+    // Build fingerprint map: fp -> index in db.sales
+    const fpMap = {};
+    db.sales.forEach((s, i) => {
+      const fp = [s.date, (s.cust||'').toLowerCase(), s.qty, s.total].join('|');
+      fpMap[fp] = i;
+    });
+
+    let added = 0, updated = 0;
+
+    for (const row of json.rows) {
+      const get = (...keys) => {
+        for (const k of keys)
+          for (const rk of Object.keys(row))
+            if (normalize(rk).includes(k)) return (row[rk]||'').toString().trim();
+        return '';
+      };
+
+      const date  = gsNormalizeDate(get('date'));
+      const cust  = toTitleCase(get('customer name','customer','name'));
+      const qty   = parseFloat(get('quantity','qty').replace(/[^\d.]/g,'')) || 0;
+      const total = parseFloat(get('total amount','total').replace(/[^\d.]/g,'')) || 0;
+      if (!cust || !qty || !total) continue;
+
+      const fp = [date, cust.toLowerCase(), qty, total].join('|');
+      const recv   = parseFloat(get('amount received','received').replace(/[^\d.]/g,'')) || 0;
+      const status = gsNormalizeStatus(get('payment status','payment','status'));
+      const rem    = get('remarks','remark','note');
+      const bal    = Math.max(0, total - recv);
+
+      if (fp in fpMap) {
+        // UPDATE existing — only if recv or status changed, never delete
+        const existing = db.sales[fpMap[fp]];
+        if (existing.recv !== recv || existing.status !== status || existing.rem !== rem) {
+          db.sales[fpMap[fp]] = { ...existing, recv, status, bal, rem };
+          updated++;
+        }
+      } else {
+        // ADD new
+        db.sales.push({
+          id: Date.now() + Math.random(),
+          date, cust,
+          phone: get('mobile','phone'),
+          site: get('location','site'),
+          vehicle: get('vehicle'),
+          qty, total, status, recv, bal, rem,
+          time: timeNow(), source: 'gsheet'
+        });
+        fpMap[fp] = db.sales.length - 1;
+        added++;
+      }
+    }
+
+    if (added > 0 || updated > 0) {
+      saveDB(db);
+      refreshAll();
+      const msg = [];
+      if (added)   msg.push(added + ' new');
+      if (updated) msg.push(updated + ' updated');
+      toast('🔄 Auto-synced: ' + msg.join(', ') + ' from Google Sheet');
+    }
+  } catch(e) {
+    // Silent fail — don't disturb user
+  }
+}
+
+// Run auto-sync every 3 minutes
+setInterval(autoSyncFromGSheet, 180000);
+// Also run once after 10 seconds on load
+setTimeout(autoSyncFromGSheet, 10000);
+};
+
+try { refreshStockWidget(); } catch(e) {}
 
 // ══════════════════════════════════════════════════════════════
 // GOOGLE SHEET SYNC  — Sales Entry (Responses)
