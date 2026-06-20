@@ -466,6 +466,16 @@ tr:hover td{background:rgba(47,111,237,.04)}
 .cu-stats .lbl{color:var(--muted)}
 .cu-badge{position:absolute;top:14px;right:14px}
 .cu-foot{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;margin-top:9px;padding-top:9px;border-top:1px solid var(--border-soft)}
+.cu-fifo{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 4px}
+.cu-fifo-tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;letter-spacing:.3px}
+.cu-fifo-tag.clr{background:#dcfce7;color:#15803d}
+.cu-fifo-tag.par{background:#fef3c7;color:#92400e}
+.cu-fifo-tag.pen{background:#fee2e2;color:#b91c1c}
+.fifo-badge{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px;margin-left:6px;vertical-align:middle;letter-spacing:.3px}
+.fifo-ok{background:#dcfce7;color:#15803d}
+.fifo-par{background:#fef3c7;color:#92400e}
+.fifo-pen{background:#fee2e2;color:#b91c1c}
+.fifo-adj{font-size:11px;color:#374151;padding:3px 0 3px 6px;border-left:2px solid #d1fae5;margin-top:2px;line-height:1.7}
 .cu-view{font-size:11.5px;color:var(--accent);font-weight:700;font-family:'Inter',sans-serif;letter-spacing:.5px}
 
 /* TIMELINE (customer detail) */
@@ -478,6 +488,59 @@ tr:hover td{background:rgba(47,111,237,.04)}
 .tl-body{flex:1;font-size:12.5px}
 .tl-row{display:flex;justify-content:space-between;gap:8px}
 .tl-meta{color:var(--muted);font-size:11px;margin-top:2px}
+/* ── Customer Ledger Remodel ── */
+.lg-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+@media(max-width:560px){.lg-kpi{grid-template-columns:1fr 1fr}}
+.lg-kpi-item{background:var(--surface-2);border-radius:9px;padding:10px 13px;border:1px solid var(--border)}
+.lg-kpi-item.grn{border-color:var(--green);background:var(--green-lt)}
+.lg-kpi-item.red{border-color:var(--red);background:#fff5f5}
+.lg-kpi-item.blu{border-color:var(--accent);background:var(--accent-lt)}
+.lg-kpi-lbl{font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.lg-kpi-val{font-size:15px;font-weight:800;color:var(--text)}
+.lg-kpi-item.grn .lg-kpi-val{color:var(--green)}
+.lg-kpi-item.red .lg-kpi-val{color:var(--red)}
+.lg-kpi-item.blu .lg-kpi-val{color:var(--accent)}
+.lg-ledger{width:100%;border-collapse:collapse;font-size:12.5px}
+.lg-ledger th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:var(--muted);background:var(--surface-2);padding:8px 11px;border-bottom:1.5px solid var(--border);text-align:left}
+.lg-ledger td{padding:8px 11px;border-bottom:1px solid var(--border-soft);vertical-align:middle}
+.lg-ledger tr.lg-pay td{background:rgba(21,128,61,.04)}
+.lg-ledger tr.lg-ob td{background:rgba(245,158,11,.07)}
+.lg-ledger tr.lg-total td{background:var(--surface-2);font-weight:700;border-top:2px solid var(--border)}
+.lg-del-btn{padding:1px 6px;border-radius:4px;border:1px solid var(--red);background:transparent;color:var(--red);font-size:10px;cursor:pointer;line-height:1.5;margin-left:5px;opacity:.7}
+.lg-del-btn:hover{opacity:1;background:var(--red);color:#fff}
+/* ── Ledger Improvements ── */
+.lg-filter{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:14px;padding:10px 12px;background:var(--surface-2);border-radius:10px;border:1px solid var(--border)}
+.lg-filter-pill{padding:5px 13px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--text-2);font-size:11.5px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
+.lg-filter-pill.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 6px rgba(47,111,237,.25)}
+.lg-filter-pill:hover:not(.active){background:var(--accent-lt);color:var(--accent);border-color:var(--accent)}
+.lg-filter-dates{display:flex;gap:6px;align-items:center;margin-top:8px;width:100%}
+.lg-filter-dates input{padding:5px 9px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;background:var(--surface);color:var(--text);flex:1;min-width:0}
+.lg-filter-dates button{padding:5px 12px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.cd-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.cd-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;background:var(--surface-2);border:1px solid var(--border);font-size:12px;color:var(--text-2)}
+.lg-ledger tr.lg-sale>td:first-child{border-left:3px solid rgba(220,38,38,.5)}
+.lg-ledger tr.lg-pay>td:first-child{border-left:3px solid rgba(21,128,61,.6)}
+.lg-ledger tr.lg-ob>td:first-child{border-left:3px solid var(--amber)}
+.lg-ledger tr.lg-total>td{background:var(--surface-2);font-weight:700;border-top:2px solid var(--border)}
+.lg-bal-ok{display:inline-block;background:var(--green-lt);color:var(--green);font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:10px;border:1px solid var(--green)}
+.lg-bal-due{color:var(--red);font-weight:700}
+.lg-bal-adv{color:var(--green);font-weight:700}
+.lg-count-badge{display:inline-block;background:var(--accent-lt);color:var(--accent);font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px}
+.cd-hdr-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;padding-bottom:12px;border-bottom:1.5px solid var(--border-soft)}
+.cd-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#1d4ed8);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0;box-shadow:0 3px 10px rgba(47,111,237,.25)}
+.cd-name-line{font-size:15px;font-weight:800;color:var(--text);line-height:1.2}
+.cd-meta-line{font-size:11.5px;color:var(--muted);margin-top:2px}
+.lg-no-data{text-align:center;padding:30px 16px;color:var(--muted)}
+.lg-no-data .lg-nd-icon{font-size:32px;margin-bottom:8px}
+.lg-no-data .lg-nd-txt{font-size:13px;font-weight:600}
+.lg-no-data .lg-nd-sub{font-size:11.5px;margin-top:4px}
+
+.qpay-box{background:var(--surface-2);border:1.5px solid var(--accent);border-radius:10px;padding:14px;margin-bottom:14px}
+.qpay-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+@media(max-width:480px){.qpay-grid{grid-template-columns:1fr}}
+.qpay-grid label{font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:3px}
+.qpay-grid input,.qpay-grid select{width:100%;padding:7px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;background:var(--surface);color:var(--text);box-sizing:border-box}
+
 
 /* FORMULA BOX */
 .fx{background:var(--ink);color:#e3e5ec;padding:12px 14px;border-radius:var(--rs);font-family:'SF Mono','Courier New',monospace;font-size:11.5px;margin:8px 0;overflow-x:auto;line-height:1.65;white-space:pre}
@@ -1244,7 +1307,7 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
 .d-kpi.red .dk-lbl::before{content:'⏳';background:var(--red-lt)}
 .d-kpi.pur .dk-lbl::before{content:'📈';background:var(--purple-lt)}
 
-/* ── Bricks Sold modal ── */
+/* ── Bricks Sold modal ─������������� */
 #brickModal .bm-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border-soft); font-size:13px; }
 #brickModal .bm-row:last-child { border-bottom:none; }
 #brickModal .bm-bar { height:5px; background:var(--border-soft); border-radius:4px; overflow:hidden; margin-top:4px; }
@@ -1477,7 +1540,7 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
           <button class="emodal-close" onclick="closeClearModal()">✕</button>
         </div>
         <div class="al al-e" style="margin-bottom:14px">
-          ⚠️ <strong>Warning: This will permanently delete all data</strong> — including sales, production, expenses, inventory, payments, and staff records. This action cannot be undone.
+          ��️ <strong>Warning: This will permanently delete all data</strong> — including sales, production, expenses, inventory, payments, and staff records. This action cannot be undone.
         </div>
         <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Enter the admin password to confirm:</p>
         <div style="position:relative;margin-bottom:6px">
@@ -2309,7 +2372,7 @@ function renderBrickModal() {
       <textarea id="e-rem" placeholder="Vendor name, bill number, approved by whom, etc."></textarea>
     </div>
     <div class="br">
-      <button class="btn b-grn" onclick="saveExp()">💾 Save Expense</button>
+      <button class="btn b-grn" onclick="saveExp()">���� Save Expense</button>
       <button class="btn b-out" onclick="clearExp()">🗑️ Clear Form</button>
     </div>
   </div>
@@ -2543,7 +2606,7 @@ function renderBrickModal() {
         <tr><td>🔴 Outstanding Receivables</td><td id="pl-d-m">₹0</td><td id="pl-d-a">₹0</td></tr>
         <tr><td>🏭 Bricks Produced</td><td id="pl-bp-m">0</td><td id="pl-bp-a">0</td></tr>
         <tr><td>🛒 Bricks Sold</td><td id="pl-bs-m">0</td><td id="pl-bs-a">0</td></tr>
-        <tr><td>📊 Avg Rate per Brick (₹)</td><td id="pl-ar-m">₹0</td><td id="pl-ar-a">₹0</td></tr>
+        <tr><td>📊 Avg Rate per Brick (���)</td><td id="pl-ar-m">₹0</td><td id="pl-ar-a">₹0</td></tr>
       </tbody>
     </table>
   </div>
@@ -2637,13 +2700,15 @@ function renderBrickModal() {
 
 <!-- ========== CUSTOMER DETAIL MODAL ========== -->
 <div class="emodal-bg" id="custDetailModal" onclick="if(event.target===this)closeCustDetail()">
- <div class="emodal" style="max-width:760px">
+ <div class="emodal" style="max-width:860px">
   <div class="emodal-hdr">
    <h3 id="cdTitle">👤 Customer</h3>
    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-    <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="openPrintRange()">🖨️ Print / Share Bill</button>
-    <button onclick="sendWhatsApp()" style="padding:6px 14px;border-radius:8px;border:none;background:#25D366;color:#fff;font-size:12px;font-weight:700;cursor:pointer">💬 WhatsApp</button>
-    <button class="emodal-close" onclick="closeCustDetail()">✕</button>
+    <button class="btn b-grn" style="padding:6px 12px;font-size:12px" onclick="_toggleCdPay(true)">&#43; Record Payment</button>
+    <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="printCustBill(null,null)">&#128424; Print Statement</button>
+    <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="_exportCustLedger()">&#128229; Export CSV</button>
+    <button onclick="sendWhatsApp()" style="padding:6px 14px;border-radius:8px;border:none;background:#25D366;color:#fff;font-size:12px;font-weight:700;cursor:pointer">&#128172; WhatsApp</button>
+    <button class="emodal-close" onclick="closeCustDetail()">&#10005;</button>
    </div>
   </div>
   <div id="cdBody"></div>
@@ -3248,7 +3313,7 @@ function renderSyncModal() {
   }
   if (_syncReady && _syncCode) {
     body.innerHTML = `
-      <div class="al al-s">✅ Connected — your data syncs automatically across any device using shop code <strong>${_syncCode}</strong>.</div>
+      <div class="al al-s">�� Connected — your data syncs automatically across any device using shop code <strong>${_syncCode}</strong>.</div>
       <div style="margin-top:10px;color:var(--muted)">Share this code with other devices to access the same data. Keep it private.</div>
       <div class="br">
         <button class="btn b-out" onclick="syncDisconnect()">Disconnect this device</button>
@@ -4129,12 +4194,11 @@ function buildCustMap(db){
     if(parseDate(p.date) > parseDate(c.last)) c.last = p.date;
   });
 
-  // Step 4: for customers with NO payments recorded, use sale-level recv
+  // Step 4: ALWAYS add sale-level recv — additive with payments module
   db.sales.forEach(s=>{
     const c = map[s.cust];
     if(!c) return;
-    const hasPayments = (db.payments||[]).some(p=>p.cust===s.cust);
-    if(!hasPayments) c.recv += parseFloat(s.recv)||0;
+    c.recv += parseFloat(s.recv)||0;
   });
 
   // Step 5: final balance
@@ -4207,7 +4271,7 @@ function renderCustomers(){
       <tbody>` + custList.map(([n,d])=>{
         const badge = d.bal>0 ? statusBadge(d.bal===d.total?'Pending':'CREDIT') : (d.bal<0 ? '<span class="b bg">💰 Advance</span>' : '<span class="b bg">✅ Clear</span>');
         return `<tr style="cursor:pointer" onclick="openCustDetail('${n.replace(/'/g,"\\'")}')">
-          <td><strong>${n}</strong><div style="font-size:11px;color:var(--muted)">${d.phone||'No phone on record'}</div></td>
+          <td><strong>${n}</strong><div style="font-size:11px;color:var(--muted)">${d.phone||'No phone on record'}</div><div style="margin-top:3px">${(()=>{ const tf=computeFIFO(db,n),tss=Object.values(tf.saleStatus); const tc=tss.filter(s=>s.status==='CLEARED').length,tp=tss.filter(s=>s.status==='PARTIAL').length,td2=tss.filter(s=>s.status==='PENDING').length; return `${tc?`<span style="font-size:10px;background:#dcfce7;color:#15803d;padding:1px 6px;border-radius:6px;font-weight:700;margin-right:3px">\u2713${tc}</span>`:''} ${tp?`<span style="font-size:10px;background:#fef3c7;color:#92400e;padding:1px 6px;border-radius:6px;font-weight:700;margin-right:3px">\u25b3${tp}</span>`:''} ${td2?`<span style="font-size:10px;background:#fee2e2;color:#b91c1c;padding:1px 6px;border-radius:6px;font-weight:700">\u25b3${td2}</span>`:''}`;})()}</div></td>
           <td style="text-align:right">${iR(d.total)}</td>
           <td style="text-align:right;color:var(--green)">${iR(d.recv)}</td>
           <td style="text-align:right;font-weight:700;color:${d.bal>0?'var(--red)':'var(--green)'}">${iR(Math.abs(d.bal))}</td>
@@ -4235,6 +4299,7 @@ function renderCustomers(){
         <div><span class="lbl">${d.bal<0?'Advance Credit':'Balance Due'}</span><strong style="color:${d.bal>0?'var(--red)':'var(--green)'}">${iR(Math.abs(d.bal))}</strong></div>
         <div><span class="lbl">Orders</span><strong>${d.count}</strong></div>
       </div>
+      ${(()=>{ const cf=computeFIFO(db,n),ss=Object.values(cf.saleStatus); const nc=ss.filter(s=>s.status==='CLEARED').length,np=ss.filter(s=>s.status==='PARTIAL').length,nd=ss.filter(s=>s.status==='PENDING').length; return ss.length?`<div class="cu-fifo">${nc?`<span class="cu-fifo-tag clr">\u2713 ${nc} Cleared</span>`:''} ${np?`<span class="cu-fifo-tag par">\u25b3 ${np} Partial</span>`:''} ${nd?`<span class="cu-fifo-tag pen">\u25b3 ${nd} Pending</span>`:''}</div>`:''})()}
       <div class="pb"><div class="pf" style="width:${pct}%;background:${pct===100?'var(--green)':pct>0?'var(--amber)':'var(--red)'}"></div></div>
       <div class="cu-foot">
         <span>🗓️ Last order: ${d.last}</span>
@@ -4249,421 +4314,653 @@ function renderCustomers(){
   document.getElementById('followUpTbl').innerHTML = fuRows.length ? fuRows.map(([n,d],i)=>`<tr><td>${i+1}</td><td><strong>${n}</strong></td><td style="color:var(--blue)">${d.phone||'—'}</td><td>${iR(d.total)}</td><td style="color:var(--green)">${iR(d.recv)}</td><td style="color:var(--red)"><strong>${iR(d.bal)}</strong></td><td>${d.count}</td><td>${d.last}</td><td>${statusBadge(d.bal===d.total?'Pending':'Partial')}</td></tr>`).join('') : '<tr><td colspan="9" class="empty" style="color:var(--green)">✅ All payments collected!</td></tr>';
 }
 
-// ===================== CUSTOMER DETAIL MODAL =====================
+// ===================== CUSTOMER DETAIL MODAL (REMODELED) =====================
 let _cdCust = '';
+let _cdQPOpen = false;
+let _cdFrom = null;
+let _cdTo = null;
+let _cdCustom = false;
 
-function openCustDetail(name){
-  const db = loadDB();
-  const allCusts = buildCustMap(db);
-  const d = allCusts[name];
-  if(!d) return;
-  _cdCust = name;
-
-  document.getElementById('cdTitle').innerHTML = `👤 ${name}`;
-
-  const ob = (db.openingBalances||[]).find(o=>o.name===name);
-
-  // Build a unified, time-ordered transaction list: sales + payments
-  const sales = db.sales.filter(s=>s.cust===name).map(s=>({
-    kind:'sale', date:s.date, time:s.time||'', amt:s.total, recv:s.recv, bal:s.bal,
-    status:s.status, vehicle:s.vehicle, site:s.site, qty:s.qty, rem:s.rem, id:s.id
-  }));
-  const payments = db.payments.filter(p=>p.cust===name).map(p=>({
-    kind:'payment', date:p.date, time:p.time||'', amt:p.amount, mode:p.mode, rem:p.rem, id:p.id
-  }));
-  const all = [...sales, ...payments].sort((a,b)=>parseDate(b.date)-parseDate(a.date) || (b.id-a.id));
-
-  const pct = d.total>0 ? Math.min(100,Math.round(d.recv/d.total*100)) : 100;
-
-  // Opening balance banner in summary
-  const obBanner = ob ? `
-    <div class="al al-w" style="margin-bottom:12px;font-size:12.5px">
-      ⚖️ <strong>Opening Balance: ${iR(ob.bal)}</strong> brought forward from previous records
-      ${ob.date?` (as of ${ob.date})`:''} ${ob.note?`— ${ob.note}`:''}
-      &nbsp;<button onclick="showPg('opening',document.querySelectorAll('.nt')[8]);closeCustDetail()" 
-        style="font-size:11px;padding:2px 8px;border-radius:10px;border:1px solid var(--amber);background:transparent;color:var(--amber);cursor:pointer;font-family:inherit">
-        Edit ↗
-      </button>
-    </div>` : '';
-
-  const summary = `
-    ${obBanner}
-    <div class="kg" style="margin-bottom:14px">
-      <div class="kc acc"><div class="kl">Grand Total${ob?' (incl. OB)':''}</div><div class="kv">${iR(d.total)}</div></div>
-      <div class="kc grn"><div class="kl">Total Received</div><div class="kv">${iR(d.recv)}</div></div>
-      <div class="kc red"><div class="kl">${d.bal<0?'Advance Credit':'Balance Due'}</div><div class="kv" style="color:${d.bal<0?'var(--green)':''}">${iR(Math.abs(d.bal))}</div></div>
-      <div class="kc blu"><div class="kl">Bricks Bought</div><div class="kv">${iN(d.qty)}</div></div>
-      <div class="kc pur"><div class="kl">Orders</div><div class="kv">${d.count}</div></div>
-      <div class="kc amb"><div class="kl">Payment Progress</div><div class="kv">${pct}%</div></div>
-    </div>
-    <div class="pb" style="height:7px;margin-bottom:14px"><div class="pf" style="width:${pct}%;background:${pct===100?'var(--green)':'var(--amber)'}"></div></div>
-    <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px">
-      ${d.phone?`📞 ${d.phone} &nbsp;·&nbsp; `:''}${d.site?`📍 ${d.site} &nbsp;·&nbsp; `:''}${d.vehicle?`🚛 ${d.vehicle}`:''}
-    </div>`;
-
-  // Opening balance as first item in timeline (oldest)
-  const obTimelineItem = ob ? `<li>
-    <div class="tl-icon" style="background:var(--amber-lt);color:var(--amber)">⚖️</div>
-    <div class="tl-body">
-      <div class="tl-row"><strong>Opening Balance (Brought Forward)</strong><strong style="color:var(--amber)">${iR(ob.bal)}</strong></div>
-      <div class="tl-row tl-meta"><span>${ob.date||''}${ob.note?' · 📝 '+ob.note:''}</span><span class="b ba">B/F</span></div>
-    </div>
-  </li>` : '';
-
-  const timeline = (all.length || ob) ? `<ul class="tl">` + all.map(t=>{
-    if(t.kind==='sale'){
-      return `<li>
-        <div class="tl-icon sale">🧾</div>
-        <div class="tl-body">
-          <div class="tl-row"><strong>Sale — ${iN(t.qty)} bricks</strong><strong>${iR(t.amt)}</strong></div>
-          <div class="tl-row tl-meta"><span>${t.date}${t.time?' · '+t.time:''}${t.vehicle?' · 🚛 '+t.vehicle:''}${t.site?' · 📍 '+t.site:''}</span><span>${statusBadge(t.status)}</span></div>
-          <div class="tl-row tl-meta"><span>Sale Amount: <span style="color:var(--accent)">${iR(t.amt)}</span> &nbsp;|&nbsp; ${t.rem?'<span style="color:var(--muted)">'+t.rem+'</span>':''}</span></div>
-          ${t.rem?`<div class="tl-meta">📝 ${t.rem}</div>`:''}
-        </div>
-      </li>`;
-    } else {
-      return `<li>
-        <div class="tl-icon pay">💵</div>
-        <div class="tl-body">
-          <div class="tl-row"><strong>Payment Received</strong><strong style="color:var(--green)">${iR(t.amt)}</strong></div>
-          <div class="tl-row tl-meta"><span>${t.date}${t.time?' · '+t.time:''}</span><span class="b bb">${t.mode||'—'}</span></div>
-          ${t.rem?`<div class="tl-meta">📝 ${t.rem}</div>`:''}
-        </div>
-      </li>`;
+// Shared: build running-balance ledger (used by modal + print)
+// ── FIFO PAYMENT ENGINE ────────────────────────────────────────────────
+function computeFIFO(db, custName) {
+  const sales = (db.sales || []).filter(s => s.cust === custName)
+    .slice().sort((a,b) => new Date(a.date) - new Date(b.date));
+  const payments = (db.payments || []).filter(p => p.cust === custName)
+    .slice().sort((a,b) => new Date(a.date) - new Date(b.date));
+  // each sale starts with its own recv already applied
+  const remaining = {};
+  sales.forEach(s => {
+    const recv = Number(s.recv) || 0;
+    const total = Number(s.total) || 0;
+    remaining[s.id] = Math.max(0, total - recv);
+  });
+  const saleStatus = {};
+  sales.forEach(s => {
+    const total = Number(s.total) || 0;
+    const recv  = Number(s.recv)  || 0;
+    saleStatus[s.id] = { id: s.id, date: s.date, total, recvAtDelivery: recv, paidExtra: 0, status: recv >= total ? 'CLEARED' : recv > 0 ? 'PARTIAL' : 'PENDING', adjustments: [] };
+  });
+  const payAdj = {};
+  payments.forEach(p => {
+    let left = Number(p.amount) || 0;
+    const adj = [];
+    for (const s of sales) {
+      if (left <= 0) break;
+      if (remaining[s.id] <= 0) continue;
+      const take = Math.min(left, remaining[s.id]);
+      remaining[s.id] -= take;
+      left -= take;
+      saleStatus[s.id].paidExtra += take;
+      const newPaid = saleStatus[s.id].recvAtDelivery + saleStatus[s.id].paidExtra;
+      saleStatus[s.id].status = newPaid >= saleStatus[s.id].total ? 'CLEARED' : newPaid > 0 ? 'PARTIAL' : 'PENDING';
+      adj.push({ saleId: s.id, saleDate: s.date, amount: take, cleared: remaining[s.id] <= 0 });
+      saleStatus[s.id].adjustments.push({ paymentId: p.id, amount: take });
     }
-  }).join('') + obTimelineItem + `</ul>` : '<p class="empty">No transactions found for this customer.</p>';
+    payAdj[p.id] = { id: p.id, date: p.date, total: Number(p.amount)||0, adjustments: adj, leftover: left };
+  });
+  return { saleStatus, payAdj };
+}
+function fifoBadgeHtml(f) {
+  if (!f) return '';
+  if (f.status === 'CLEARED') return '<span class="fifo-badge fifo-ok">\u2713 CLEARED</span>';
+  if (f.status === 'PARTIAL') {
+    const paid = f.recvAtDelivery + f.paidExtra;
+    return '<span class="fifo-badge fifo-par">\u25b3 PARTIAL \u2014 \u20b9' + paid.toLocaleString('en-IN') + ' paid</span>';
+  }
+  return '<span class="fifo-badge fifo-pen">\u25b3 PENDING</span>';
+}
+function fifoAdjHtml(adj) {
+  if (!adj || !adj.adjustments || !adj.adjustments.length) return '';
+  const iR = v => '\u20b9' + Number(v).toLocaleString('en-IN');
+  const parts = adj.adjustments.map(a => (a.cleared ? '\u2713 ' : '\u25b3 ') + a.saleDate + ' \u2014 ' + iR(a.amount)).join(' &nbsp; ');
+  return '<div class="fifo-adj"><span style="color:#6b7280;font-size:11px">Adjusted: </span>' + parts + (adj.leftover > 0 ? ' <span style="color:#9ca3af">(\u20b9' + adj.leftover.toLocaleString('en-IN') + ' unallocated)</span>' : '') + '</div>';
+}
+// ── END FIFO ENGINE ──────────────────────────────────────────────────────
 
-  document.getElementById('cdBody').innerHTML = summary + `<div class="ct" style="margin-top:4px">📜 Transaction History (${all.length}${ob?' + Opening Balance':''})</div>` + timeline;
+function buildRunningLedger(db, custName, fromDate, toDate) {
+  const ob       = (db.openingBalances || []).find(o => o.name === custName);
+  const isFiltered = !!(fromDate && toDate);
+
+  const allSales = db.sales.filter(s => s.cust === custName)
+    .sort((a, b) => parseDate(a.date) - parseDate(b.date) || a.id - b.id);
+  const allPayments = (db.payments || []).filter(p => p.cust === custName)
+    .sort((a, b) => parseDate(a.date) - parseDate(b.date) || a.id - b.id);
+
+  const inRange = d => {
+    if (!isFiltered) return true;
+    const dt = parseDate(d);
+    return dt >= parseDate(fromDate) && dt <= parseDate(toDate);
+  };
+
+  let openingBal = 0;
+  if (!isFiltered) {
+    openingBal = ob ? (ob.bal || 0) : 0;
+  } else {
+    const obAmt        = ob ? (ob.bal || 0) : 0;
+    const salesBef     = allSales.filter(s => parseDate(s.date) < parseDate(fromDate));
+    const paysBef      = allPayments.filter(p => parseDate(p.date) < parseDate(fromDate));
+    const salesBefTot  = salesBef.reduce((a, s) => a + (s.total || 0), 0);
+    const salesRecvBef = salesBef.reduce((a, s) => a + (parseFloat(s.recv) || 0), 0);
+    const paysBefTot   = paysBef.reduce((a, p) => a + (parseFloat(p.amount) || 0), 0);
+    openingBal = Math.max(0, obAmt + salesBefTot - salesRecvBef - paysBefTot);
+  }
+
+  const events = [];
+  allSales.filter(s => inRange(s.date)).forEach(s => {
+    events.push({ date: s.date, sortId: s.id, type: 'sale',
+      debit: s.total, credit: parseFloat(s.recv) || 0,
+      rem: s.rem, vehicle: s.vehicle, site: s.site, qty: s.qty, id: s.id });
+  });
+  allPayments.filter(p => inRange(p.date)).forEach(p => {
+    events.push({ date: p.date, sortId: p.id, type: 'payment',
+      debit: 0, credit: parseFloat(p.amount) || 0,
+      mode: p.mode, rem: p.rem, id: p.id });
+  });
+
+  events.sort((a, b) => {
+    const dd = parseDate(a.date) - parseDate(b.date);
+    if (dd !== 0) return dd;
+    if (a.type === 'sale' && b.type === 'payment') return -1;
+    if (a.type === 'payment' && b.type === 'sale') return  1;
+    return a.sortId - b.sortId;
+  });
+
+  let bal = openingBal;
+  const rows = events.map(e => {
+    bal += e.debit - e.credit;
+    return { ...e, balance: bal };
+  });
+
+  return {
+    openingBal, rows, finalBalance: bal,
+    totalDebit:  rows.reduce((a, r) => a + r.debit,  0),
+    totalCredit: rows.reduce((a, r) => a + r.credit, 0),
+    ob: !isFiltered ? ob : (openingBal > 0 ? { bal: openingBal, isCarryForward: true, date: fromDate } : null)
+  };
+}
+
+function openCustDetail(name) {
+  _cdCust   = name;
+  _cdQPOpen = false;
+  _cdFrom   = null;
+  _cdTo     = null;
+  _cdCustom = false;
+  _renderCustDetail();
   document.getElementById('custDetailModal').classList.add('open');
 }
 
-function closeCustDetail(){
-  document.getElementById('custDetailModal').classList.remove('open');
-  _cdCust = '';
+function _cdSetFilter(preset) {
+  const now = new Date();
+  const fmt = d => String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear();
+  _cdCustom = preset === 'custom';
+  if (preset === 'all')        { _cdFrom = null; _cdTo = null; }
+  else if (preset === 'month') { const f=new Date(now.getFullYear(),now.getMonth(),1); _cdFrom=fmt(f); _cdTo=fmt(now); }
+  else if (preset === '3m')    { const f=new Date(now); f.setMonth(f.getMonth()-3); _cdFrom=fmt(f); _cdTo=fmt(now); }
+  else if (preset === 'custom'){ /* just show inputs, don\'t change dates yet */ }
+  _renderCustDetail();
 }
+
+function _cdApplyCustom() {
+  const fv = document.getElementById('cd-inp-from') && document.getElementById('cd-inp-from').value;
+  const tv = document.getElementById('cd-inp-to')   && document.getElementById('cd-inp-to').value;
+  if (!fv || !tv) { toast('\u26A0 Select both dates'); return; }
+  const [fy,fm,fd]=fv.split('-'); const [ty,tm,td]=tv.split('-');
+  _cdFrom=`${fd}-${fm}-${fy}`; _cdTo=`${td}-${tm}-${ty}`;
+  _renderCustDetail();
+}
+
+function _exportCustLedger() {
+  if (!_cdCust) return;
+  const db     = loadDB();
+  const ledger = buildRunningLedger(db, _cdCust, _cdFrom||null, _cdTo||null);
+  const rows   = [['Date','Type','Description','Vehicle No.','Site','Qty (Bricks)','Debit (Rs)','Credit (Rs)','Running Balance (Rs)','Remarks']];
+  if (ledger.openingBal > 0) {
+    const ob = ledger.ob;
+    rows.push([ob&&ob.date?ob.date:'','Opening Balance',ob&&ob.isCarryForward?'Carry Forward':'Brought Forward','','','',ledger.openingBal,'',ledger.openingBal,'']);
+  }
+  ledger.rows.forEach(r => {
+    rows.push([
+      r.date,
+      r.type==='sale' ? 'Delivery' : 'Payment Received',
+      r.type==='sale' ? (iN(r.qty)+' bricks') : (r.mode||'Cash'),
+      r.vehicle||'', r.site||'',
+      r.type==='sale'?(r.qty||''):'',
+      r.debit>0?r.debit:'', r.credit>0?r.credit:'',
+      r.balance, r.rem||''
+    ]);
+  });
+  const bom = '\uFEFF';
+  const csv = bom + rows.map(row=>row.map(v=>'"'+String(v===null||v===undefined?'':v).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = _cdCust.replace(/\s+/g,'_')+'_Ledger_'+today()+'.csv';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+  toast('\uD83D\uDCE5 Ledger exported as CSV!');
+}
+
+function _renderCustDetail() {
+  const name = _cdCust;
+  if (!name) return;
+  const db  = loadDB();
+  const all = buildCustMap(db);
+  const d   = all[name];
+  if (!d) return;
+
+  // Update title
+  const initAv = name.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2);
+  document.getElementById('cdTitle').innerHTML = `<span style="display:inline-flex;align-items:center;gap:9px"><span class="cd-avatar">${initAv}</span><span class="cd-name-line">${name}</span></span>`;
+
+  const ledger = buildRunningLedger(db, name, _cdFrom||null, _cdTo||null);
+  const dTotal = all[name]; // all-time totals (unfiltered)
+  const pct    = dTotal.total>0 ? Math.min(100,Math.round(dTotal.recv/dTotal.total*100)) : 100;
+  const pctClr = pct===100?'var(--green)':pct>60?'var(--amber)':'var(--red)';
+
+  // Last payment info
+  const allPays = (db.payments||[]).filter(p=>p.cust===name).sort((a,b)=>parseDate(b.date)-parseDate(a.date));
+  const lastPayDate = allPays.length ? allPays[0].date : null;
+  const daysSince = lastPayDate ? Math.floor((new Date()-parseDate(lastPayDate))/(86400000)) : null;
+  const lastPayStr = lastPayDate
+    ? (daysSince===0 ? '&#128994; Paid today' : daysSince===1 ? '&#128993; Paid yesterday' : `&#128308; Last payment ${daysSince} days ago`)
+    : (dTotal.recv===0 ? '&#9888;&#65039; No payment yet' : '');
+
+  // ── KPI strip ────────────────────────────────────────────────
+  const kpi = `<div class="lg-kpi">
+    <div class="lg-kpi-item"><div class="lg-kpi-lbl">Total Billed</div><div class="lg-kpi-val">${iR(dTotal.total)}</div></div>
+    <div class="lg-kpi-item grn"><div class="lg-kpi-lbl">Total Received</div><div class="lg-kpi-val">${iR(dTotal.recv)}</div></div>
+    <div class="lg-kpi-item ${dTotal.bal>0?'red':'grn'}">
+      <div class="lg-kpi-lbl">${dTotal.bal<0?'Advance Credit':'Balance Due'}</div>
+      <div class="lg-kpi-val">${iR(Math.abs(dTotal.bal))}</div>
+    </div>
+    <div class="lg-kpi-item blu"><div class="lg-kpi-lbl">Orders &middot; Bricks</div><div class="lg-kpi-val">${dTotal.count} &middot; ${iN(dTotal.qty)}</div></div>
+  </div>`;
+
+  // ── Progress + last payment ───────────────────────────────────
+  const prog = `<div style="margin:0 0 14px">
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px">
+      <span style="font-weight:600">Payment Progress</span>
+      <span style="display:flex;gap:10px;align-items:center">
+        ${lastPayStr ? `<span style="font-size:11px">${lastPayStr}</span>` : ''}
+        <span style="font-weight:800;color:${pctClr}">${pct}%</span>
+      </span>
+    </div>
+    <div class="pb" style="height:8px;border-radius:6px"><div class="pf" style="width:${pct}%;background:${pctClr};border-radius:6px;transition:width .4s ease"></div></div>
+  </div>`;
+
+  // ── Contact chips ───────────────────────────────────────────────
+  const chips = (dTotal.phone||dTotal.site||dTotal.vehicle) ? `<div class="cd-chips">
+    ${dTotal.phone?`<span class="cd-chip">&#128222; ${dTotal.phone}</span>`:''}
+    ${dTotal.site ?`<span class="cd-chip">&#128205; ${dTotal.site}</span>`:''}
+    ${dTotal.vehicle?`<span class="cd-chip">&#128665; ${dTotal.vehicle}</span>`:''}
+  </div>` : '';
+
+  // ── Filter bar ────────────────────────────────────────────────
+  const activePreset = !_cdFrom ? 'all' : _cdCustom ? 'custom' : 'range';
+  const isThisMonth  = (() => { if(!_cdFrom) return false; const now=new Date(); const f=new Date(now.getFullYear(),now.getMonth(),1); const fmt=d=>String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear(); return _cdFrom===fmt(f); })();
+  const is3m         = !isThisMonth && !!_cdFrom && !_cdCustom;
+
+  const filterBar = `<div class="lg-filter">
+    <span style="font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap">&#128197; Filter:</span>
+    <button class="lg-filter-pill${!_cdFrom&&!_cdCustom?' active':''}" onclick="_cdSetFilter('all')">All Time</button>
+    <button class="lg-filter-pill${isThisMonth?' active':''}" onclick="_cdSetFilter('month')">This Month</button>
+    <button class="lg-filter-pill${is3m?' active':''}" onclick="_cdSetFilter('3m')">Last 3 Months</button>
+    <button class="lg-filter-pill${_cdCustom?' active':''}" onclick="_cdSetFilter('custom')">&#9881;&#65039; Custom</button>
+    ${_cdFrom && !_cdCustom ? `<span style="margin-left:auto;font-size:11px;color:var(--muted);font-weight:600">${_cdFrom} &rarr; ${_cdTo}</span>` : ''}
+    ${_cdCustom ? `<div class="lg-filter-dates">
+      <input type="date" id="cd-inp-from" value="${_cdFrom?_cdFrom.split('-').reverse().join('-'):_localDateStr()}" style="">
+      <span style="font-size:12px;color:var(--muted)">to</span>
+      <input type="date" id="cd-inp-to" value="${_cdTo?_cdTo.split('-').reverse().join('-'):_localDateStr()}">
+      <button onclick="_cdApplyCustom()">Apply</button>
+    </div>` : ''}
+  </div>`;
+
+  // ── Quick pay form ────────────────────────────────────────────
+  const qpForm = `<div id="cdQPay" style="display:${_cdQPOpen?'block':'none'}" class="qpay-box">
+    <div style="font-weight:700;font-size:13px;margin-bottom:10px;color:var(--accent)">&#128179; Record Payment &mdash; ${name}</div>
+    <div class="qpay-grid">
+      <div><label>Date</label><input type="date" id="cdp-date" value="${_localDateStr()}"></div>
+      <div><label>Amount (&#8377;) <span class="req">*</span></label><input type="number" id="cdp-amt" min="0" inputmode="numeric" placeholder="${Math.max(0,Math.round(dTotal.bal))}"></div>
+      <div><label>Payment Mode</label><select id="cdp-mode"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Cheque</option><option>Other</option></select></div>
+      <div><label>Remarks</label><input type="text" id="cdp-rem" placeholder="e.g. cheque no., ref"></div>
+    </div>
+    <div id="cdp-err" style="color:var(--red);font-size:12px;min-height:16px;margin-bottom:6px"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="_saveCdPayment()" style="flex:1;padding:9px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:700;cursor:pointer">&#128190; Save Payment</button>
+      <button onclick="_toggleCdPay(false)" style="padding:9px 14px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text-2);font-size:13px;cursor:pointer">Cancel</button>
+    </div>
+  </div>`;
+
+  // ── Ledger rows ────────────────────────────────────────────────
+  let lRows = '';
+  if (ledger.ob && ledger.openingBal > 0) {
+    lRows += `<tr class="lg-ob">
+      <td style="font-size:11.5px;color:var(--muted)">${ledger.ob.date||'&mdash;'}</td>
+      <td colspan="2"><span style="font-size:11px;background:var(--amber-lt,#fef3c7);color:#92400e;padding:1px 7px;border-radius:8px;font-weight:700;margin-right:6px">B/F</span><strong>Opening Balance</strong></td>
+      <td style="text-align:right;font-weight:600;color:var(--red)">${iR(ledger.openingBal)}</td>
+      <td style="text-align:right;color:var(--muted)">&mdash;</td>
+      <td style="text-align:right;font-weight:700;color:var(--red)">${iR(ledger.openingBal)}</td>
+    </tr>`;
+  }
+  if (ledger.rows.length) {
+    const mFifo = computeFIFO(db, name);
+    ledger.rows.forEach(r => {
+      const balDisp = r.balance === 0
+        ? '<span class="lg-bal-ok">&#10003; Clear</span>'
+        : r.balance < 0
+          ? `<span class="lg-bal-adv">&#8593; ${iR(Math.abs(r.balance))}</span>`
+          : `<span class="lg-bal-due">${iR(r.balance)}</span>`;
+      const delBtn = r.type==='payment'
+        ? `<button class="lg-del-btn" onclick="_delCdPayment(${r.id})" title="Delete this payment">&#10005;</button>` : '';
+      // FIFO badge for sale rows
+      let mfBadge = '';
+      if (r.type === 'sale') {
+        const mf = mFifo.saleStatus[r.id];
+        if (mf) {
+          if (mf.status === 'CLEARED') mfBadge = '<span class="fifo-badge fifo-ok">\u2713 CLEARED</span>';
+          else if (mf.status === 'PARTIAL') mfBadge = `<span class="fifo-badge fifo-par">\u25b3 PARTIAL \u2014 ${iR(mf.recvAtDelivery + mf.paidExtra)} paid</span>`;
+          else mfBadge = '<span class="fifo-badge fifo-pen">\u25b3 PENDING</span>';
+        }
+      }
+      // FIFO adjustment breakdown for payment rows
+      let mfAdj = '';
+      if (r.type === 'payment') {
+        const ma = mFifo.payAdj[r.id];
+        if (ma && ma.adjustments && ma.adjustments.length) {
+          const atags = ma.adjustments.map(a =>
+            `<span style="background:${a.cleared?'#dcfce7':'#fef3c7'};color:${a.cleared?'#15803d':'#92400e'};font-size:10px;padding:1px 6px;border-radius:6px;display:inline-block;margin:1px 2px">${a.cleared?'\u2713':'\u25b3'} ${a.saleDate} \u2014 ${iR(a.amount)}</span>`
+          ).join('');
+          mfAdj = `<div class="fifo-adj" style="margin-top:3px"><span style="font-size:10.5px;color:#6b7280">Adjusted: </span>${atags}${ma.leftover>0?`<span style="font-size:10px;color:#9ca3af"> (\u20b9${ma.leftover.toLocaleString('en-IN')} unallocated)</span>`:''}</div>`;
+        }
+      }
+      lRows += `<tr class="lg-${r.type}">
+        <td style="font-size:11.5px;color:var(--muted);white-space:nowrap">${r.date}</td>
+        <td>${r.type==='sale'
+          ? `<div style="font-weight:700;font-size:12.5px">&#129523; ${iN(r.qty)} bricks${mfBadge}</div>${r.vehicle||r.site?`<div style="font-size:11px;color:var(--muted);margin-top:1px">${r.vehicle?'&#128665; '+r.vehicle:''}${r.vehicle&&r.site?' &middot; ':''}${r.site?'&#128205; '+r.site:''}</div>`:''}`
+          : `<div style="font-size:12.5px">&#128181; Payment <span style="font-size:11px;background:var(--accent-lt);color:var(--accent);padding:1px 7px;border-radius:10px;font-weight:700;margin-left:4px">${r.mode||'Cash'}</span></div>${mfAdj}`}
+          ${r.rem?`<div style="font-size:11px;color:var(--muted);margin-top:2px">&#128221; ${r.rem}</div>`:''}
+        </td>
+        <td style="font-size:11.5px;color:var(--muted);text-align:right">${r.type==='sale'?(r.site||'&mdash;'):''}</td>
+        <td style="text-align:right;font-weight:600;color:${r.debit>0?'var(--red)':'var(--muted)'}">${r.debit>0?iR(r.debit):'&mdash;'}</td>
+        <td style="text-align:right;font-weight:600;color:${r.credit>0?'var(--green)':'var(--muted)'}">${r.credit>0?iR(r.credit):'&mdash;'}${delBtn}</td>
+        <td style="text-align:right">${balDisp}</td>
+      </tr>`;
+    });
+  } else if (!ledger.openingBal) {
+    lRows += `<tr><td colspan="6"><div class="lg-no-data"><div class="lg-nd-icon">&#128218;</div><div class="lg-nd-txt">${_cdFrom?'No entries in this date range':'No transactions yet'}</div><div class="lg-nd-sub">${_cdFrom?'Try a wider range or \'All Time\'':'Sales and payments will appear here'}</div></div></td></tr>`;
+  }
+  // totals row
+  if (ledger.rows.length || ledger.openingBal > 0) {
+    const fin = ledger.finalBalance;
+    const finDisp = fin<=0
+      ? `<span class="lg-bal-ok">${fin<0?'&#8593; Advance '+iR(Math.abs(fin)):'&#10003; All Clear'}</span>`
+      : `<span class="lg-bal-due">${iR(fin)} Due</span>`;
+    lRows += `<tr class="lg-total">
+      <td colspan="3" style="font-size:12px">Totals &mdash; ${ledger.rows.length} entr${ledger.rows.length===1?'y':'ies'}${_cdFrom?` (${_cdFrom} &rarr; ${_cdTo})`:' (All Time)'}</td>
+      <td style="text-align:right;color:var(--red)">${iR(ledger.totalDebit+(ledger.ob?ledger.openingBal:0))}</td>
+      <td style="text-align:right;color:var(--green)">${iR(ledger.totalCredit)}</td>
+      <td style="text-align:right">${finDisp}</td>
+    </tr>`;
+  }
+
+  const entryCount = ledger.rows.length + (ledger.openingBal>0?1:0);
+  document.getElementById('cdBody').innerHTML = kpi + prog + chips + qpForm + filterBar +
+    `<div style="font-weight:700;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">
+      &#128218; Account Ledger <span class="lg-count-badge">${entryCount}</span>${_cdFrom?` <span style="font-size:11px;font-weight:400;color:var(--amber)">&#128197; Filtered</span>`:''}
+    </div>
+    <div class="tw" style="border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <table class="lg-ledger">
+        <thead><tr>
+          <th style="width:90px">Date</th>
+          <th>Description</th>
+          <th style="text-align:right;width:80px">Site</th>
+          <th style="text-align:right;width:90px">Debit (&#8377;)</th>
+          <th style="text-align:right;width:100px">Credit (&#8377;)</th>
+          <th style="text-align:right;width:100px">Balance (&#8377;)</th>
+        </tr></thead>
+        <tbody>${lRows}</tbody>
+      </table>
+    </div>`;
+}
+
+function _toggleCdPay(show) {
+  _cdQPOpen = !!show;
+  const el = document.getElementById('cdQPay');
+  if (el) { el.style.display = show?'block':'none'; if(show) setTimeout(()=>{const a=document.getElementById('cdp-amt');if(a)a.focus();},80); }
+}
+
+function _saveCdPayment() {
+  const db  = loadDB();
+  const err = document.getElementById('cdp-err');
+  const dateVal = document.getElementById('cdp-date').value;
+  const amtVal  = parseFloat(document.getElementById('cdp-amt').value);
+  const mode    = document.getElementById('cdp-mode').value;
+  const rem     = document.getElementById('cdp-rem').value.trim();
+  if (!dateVal)              { err.textContent='\u26A0 Enter a date';return; }
+  if (!amtVal||amtVal<=0)   { err.textContent='\u26A0 Enter a valid amount';return; }
+  err.textContent='';
+  db.payments.push({ id:Date.now()*1000+Math.floor(Math.random()*999), date:fromInput(dateVal), cust:_cdCust, amount:amtVal, mode, rem, time:timeNow() });
+  saveDB(db);
+  toast('\u2713 Payment of '+iR(amtVal)+' recorded!');
+  document.getElementById('cdp-amt').value='';
+  document.getElementById('cdp-rem').value='';
+  _cdQPOpen=false;
+  _renderCustDetail();
+  renderCustomers();
+  if(typeof refreshAll==='function') refreshAll();
+}
+
+function _delCdPayment(id) {
+  if(!confirm('Delete this payment entry?')) return;
+  const db=loadDB();
+  db.payments=(db.payments||[]).filter(p=>String(p.id)!==String(id));
+  saveDB(db);
+  toast('&#128465; Payment deleted.');
+  _renderCustDetail();
+  renderCustomers();
+  if(typeof refreshAll==='function') refreshAll();
+}
+
+function closeCustDetail() {
+  document.getElementById('custDetailModal').classList.remove('open');
+  _cdCust='';
+  _cdQPOpen=false;
+  _cdFrom=null;
+  _cdTo=null;
+  _cdCustom=false;
+}
+
+
 
 
 // ══════════════════════════════════════════════════════
 // FEATURE: PRINT DATE RANGE PICKER
-// ══════════════════════════════��═══════════════════════
-function openPrintRange() {
-  if (!_cdCust) return;
-  const db = loadDB();
-  // Set default range: first sale to today
-  const custSales = db.sales.filter(s => s.cust === _cdCust).sort((a,b) => parseDate(a.date) - parseDate(b.date));
-  const firstDate = custSales.length ? custSales[0].date : today();
-  const [fd_d, fd_m, fd_y] = firstDate.split('-');
-  document.getElementById('printFrom').value = toInput(firstDate);
-  document.getElementById('printTo').value   = _localDateStr();
-  document.getElementById('printRangeCustName').textContent = '👤 ' + _cdCust;
-  const modal = document.getElementById('printRangeModal');
-  modal.style.display = 'flex';
-}
-
-function closePrintRange() {
-  document.getElementById('printRangeModal').style.display = 'none';
-}
-
-function setPrintRange(preset) {
-  const now = new Date();
-  let from, to = now;
-  if (preset === 'month') {
-    from = new Date(now.getFullYear(), now.getMonth(), 1);
-  } else if (preset === 'last30') {
-    from = new Date(); from.setDate(from.getDate() - 29);
-  } else {
-    // all time — set a very early date
-    from = new Date(2000, 0, 1);
-  }
-  // Use local date, not UTC (toISOString shifts date in IST timezone)
-  const fmt = d => {
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,'0');
-    const day = String(d.getDate()).padStart(2,'0');
-    return y+'-'+m+'-'+day;
-  };
-  document.getElementById('printFrom').value = fmt(from);
-  document.getElementById('printTo').value   = fmt(to);
-}
-
-function confirmPrintBill() {
-  const fromVal = document.getElementById('printFrom').value;
-  const toVal   = document.getElementById('printTo').value;
-  if (!fromVal || !toVal) { toast('⚠️ Please select both dates'); return; }
-  const [fy, fm, fd] = fromVal.split('-');
-  const [ty, tm, td_] = toVal.split('-');
-  const fromStr = `${fd}-${fm}-${fy}`;
-  const toStr   = `${td_}-${tm}-${ty}`;
-  closePrintRange();
-  printCustBill(fromStr, toStr);
-}
-
-// ── Updated printCustBill with optional date range ──
+// ══════���═══════════════════════��═══════════════════════
 function printCustBill(fromDate, toDate) {
   if (!_cdCust) return;
-  const db = loadDB();
-  const allCusts = buildCustMap(db);
-  const d = allCusts[_cdCust];
-  if (!d) return;
+  const win = window.open('', '_blank');
+  if (!win) { toast('\u26A0 Allow pop-ups to print'); return; }
 
-  const ob = (db.openingBalances || []).find(o => o.name === _cdCust);
-  const isFiltered = !!(fromDate && toDate);
+  const db          = loadDB();
+  const custName    = _cdCust;
+  const allCusts    = buildCustMap(db);
+  const d           = allCusts[custName];
+  const today_      = today();
+  const custDisplay = custName.replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
+  const isFiltered  = !!(fromDate && toDate);
 
-  // Filter sales and payments by date range
-  const allSales = db.sales.filter(s => s.cust === _cdCust)
-    .sort((a, b) => parseDate(a.date) - parseDate(b.date) || a.id - b.id);
-  const allPayments = (db.payments || []).filter(p => p.cust === _cdCust)
-    .sort((a, b) => parseDate(a.date) - parseDate(b.date) || a.id - b.id);
+  const ledger   = buildRunningLedger(db, custName, fromDate || null, toDate || null);
+  const pFifo    = computeFIFO(db, custName);
+  const grandBal = Math.max(0, ledger.finalBalance);
 
-  const inRange = (dateStr) => {
-    if (!isFiltered) return true;
-    const d = parseDate(dateStr);
-    return d >= parseDate(fromDate) && d <= parseDate(toDate);
-  };
+  // ── Build ledger table rows ──────────────────────────────────
+  let tRows = '';
+  if (ledger.ob && ledger.openingBal > 0) {
+    tRows += `<tr style="background:#fefce8">
+      <td>${ledger.ob.date || '\u2014'}</td>
+      <td colspan="2"><strong>${ledger.ob.isCarryForward ? 'Opening Balance (Carried Forward)' : 'Opening Balance (Brought Forward)'}</strong></td>
+      <td style="text-align:right;color:#dc2626;font-weight:600">${iR(ledger.openingBal)}</td>
+      <td style="text-align:right;color:#9ca3af">\u2014</td>
+      <td style="text-align:right;font-weight:700;color:#dc2626">${iR(ledger.openingBal)}</td>
+    </tr>`;
+  }
+  ledger.rows.forEach((r, i) => {
+    const balColor = r.balance > 0 ? '#dc2626' : '#15803d';
+    const balText  = r.balance === 0 ? '\u2713 Clear' : iR(Math.abs(r.balance));
+    const rowBg    = r.type === 'payment' ? 'background:#f0fdf4;border-left:3px solid #15803d;' : (i%2===0 ? 'border-left:3px solid #fecaca;' : 'background:#f9fafb;border-left:3px solid #fecaca;');
 
-  const sales    = isFiltered ? allSales.filter(s => inRange(s.date))    : allSales;
-  const payments = isFiltered ? allPayments.filter(p => inRange(p.date)) : allPayments;
+    // FIFO badge on sale rows — only show if NOT cleared (cleared = normal, no noise)
+    const pf = r.type==='sale' ? pFifo.saleStatus[r.id] : null;
+    let pfBadge = '';
+    if (pf && pf.status !== 'CLEARED') {
+      if (pf.status==='PARTIAL') pfBadge = `<span style="display:inline-block;background:#fef3c7;color:#92400e;font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px;border:1px solid #fcd34d;margin-left:5px">\u25b3 Partial \u2014 ${iR(pf.recvAtDelivery + pf.paidExtra)} recd</span>`;
+      else pfBadge = `<span style="display:inline-block;background:#fee2e2;color:#b91c1c;font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px;border:1px solid #fca5a5;margin-left:5px">Pending</span>`;
+    }
+    // No adjustment breakdown on payment rows in print — keep it clean
+    const paAdj = '';
 
-  // Opening balance: if filtered, calculate running balance up to fromDate
-  // (i.e. OB + all sales/payments BEFORE the range = opening carry-forward)
-  let carryForwardBal = 0;
-  if (isFiltered) {
-    const salesBefore    = allSales.filter(s => parseDate(s.date) < parseDate(fromDate));
-    const paymentsBefore = allPayments.filter(p => parseDate(p.date) < parseDate(fromDate));
-    const obAmt_ = ob ? (ob.bal || 0) : 0;
-    const salesBeforeTotal = salesBefore.reduce((a, s) => a + (s.total || 0), 0);
-    const paidBefore       = paymentsBefore.reduce((a, p) => a + (parseFloat(p.amount) || 0), 0);
-    carryForwardBal = Math.max(0, obAmt_ + salesBeforeTotal - paidBefore);
+    tRows += `<tr style="${rowBg}">
+      <td style="white-space:nowrap;color:#6b7280">${r.date}</td>
+      <td style="font-size:12.5px">${r.type === 'sale'
+        ? `<strong>Delivery \u2014 ${iN(r.qty)} bricks</strong>${pfBadge}${r.vehicle ? '<br><small style="color:#9ca3af">' + r.vehicle + (r.site ? ' \u00b7 ' + r.site : '') + '</small>' : ''}`
+        : `Payment Received${paAdj}`}
+      </td>
+      <td style="font-size:12px">${r.type === 'sale'
+        ? (r.vehicle || '\u2014')
+        : `<span style="display:inline-block;background:#eef3ff;color:#1e3a8a;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px">${r.mode || 'Cash'}</span>`}
+      </td>
+      <td style="text-align:right;font-weight:600;color:${r.debit>0?'#dc2626':'#9ca3af'}">${r.debit>0 ? iR(r.debit) : '\u2014'}</td>
+      <td style="text-align:right;font-weight:600;color:${r.credit>0?'#15803d':'#9ca3af'}">${r.credit>0 ? iR(r.credit) : '\u2014'}</td>
+      <td style="text-align:right;font-weight:700;color:${balColor}">${balText}</td>
+    </tr>`;
+    if (r.rem) tRows += `<tr style="${rowBg}"><td></td><td colspan="5" style="font-size:11px;color:#9ca3af;padding-top:0">&#128221; ${r.rem}</td></tr>`;
+  });
+  if (!ledger.rows.length && !ledger.openingBal) {
+    tRows = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#9ca3af">No transactions in this period</td></tr>';
   }
 
-  const obAmt      = isFiltered ? carryForwardBal : (ob ? (ob.bal || 0) : 0);
-  const salesTotal = sales.reduce((a, s) => a + (s.total || 0), 0);
-  const grandTotal = obAmt + salesTotal;
-  const totalPaidViaPayments = payments.reduce((a, p) => a + (parseFloat(p.amount) || 0), 0);
-  const totalRecvInSales     = sales.reduce((a, s) => a + (parseFloat(s.recv) || 0), 0);
-  const grandRecv  = totalPaidViaPayments > 0 ? totalPaidViaPayments : totalRecvInSales;
-  const grandBal   = Math.max(0, grandTotal - grandRecv);
-  const totalQty   = sales.reduce((a, s) => a + (s.qty || 0), 0);
-
-  const today_           = today();
-  const custNameDisplay  = (_cdCust || '').replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
-
-  const dateRangeLabel = isFiltered
-    ? `Period: <strong>${fromDate}</strong> to <strong>${toDate}</strong>`
-    : `All Transactions`;
-
-  const obRow = (obAmt > 0) ? `
-    <tr class="ob-row">
-      <td>${isFiltered ? fromDate : (ob ? ob.date || '' : '')}</td>
-      <td colspan="3"><strong>${isFiltered ? 'Opening Balance (Carried Forward)' : 'Opening Balance'}</strong>
-        <span style="font-size:10px;color:var(--gray-500)">${isFiltered ? ' — balance before selected period' : ' (Brought forward from previous records)'}</span></td>
-      <td style="text-align:right;font-weight:700;color:var(--navy)">${iR(obAmt)}</td>
-      <td style="text-align:right;color:var(--gray-400)">—</td>
-      <td style="text-align:right;font-weight:700;color:var(--red)">${iR(obAmt)}</td>
-    </tr>` : '';
-
-  const _hasPmts = payments.length > 0;
-  const salesRows = sales.length ? sales.map((s, i) => `
-    <tr class="${i % 2 === 0 ? '' : 'alt'}">
-      <td>${s.date}</td>
-      <td style="text-align:right">${iN(s.qty)}</td>
-      <td>${s.vehicle || '—'}</td>
-      <td>${s.site || '—'}</td>
-      <td style="text-align:right;font-weight:600">${iR(s.total)}</td>
-      <td style="text-align:right;color:var(--green)">${_hasPmts ? '—' : iR(s.recv)}</td>
-      <td style="text-align:right;color:var(--gray-500);font-weight:600">${_hasPmts ? '—' : iR(s.bal)}</td>
-    </tr>`).join('') : '';
-
-  const noSalesRow = (!obAmt && !sales.length)
-    ? `<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">No sales recorded${isFiltered ? ' in this date range' : ''}</td></tr>`
-    : '';
-
-  const paymentRows = payments.length ? payments.map((p, i) => `
-    <tr class="${i % 2 === 0 ? '' : 'alt'}">
-      <td>${p.date}</td>
-      <td><span class="mode-badge">${p.mode || '—'}</span></td>
-      <td style="text-align:right;color:var(--green);font-weight:600">${iR(p.amount)}</td>
-      <td>${p.rem || '—'}</td>
-    </tr>`).join('')
-    : `<tr><td colspan="4" style="text-align:center;color:var(--gray-500);padding:18px">No payments recorded${isFiltered ? ' in this date range' : ''}</td></tr>`;
-
-  const win = window.open('', '_blank');
-  if (!win) { toast('⚠️ Please allow pop-ups to print/share the bill'); return; }
+  // ── Summary box ───────────────────────────────────────────────
+  const sumHTML = `<table style="width:100%;font-size:13px;border-collapse:collapse">
+    ${ledger.openingBal > 0 ? `<tr style="background:#fefce8"><td style="padding:8px 14px">Opening Balance${ledger.ob && ledger.ob.isCarryForward ? ' (C/F)' : ' (B/F)'}</td><td style="text-align:right;padding:8px 14px;font-weight:600">${iR(ledger.openingBal)}</td></tr>` : ''}
+    <tr><td style="padding:8px 14px">Sales Total</td><td style="text-align:right;padding:8px 14px;font-weight:600">${iR(ledger.totalDebit)}</td></tr>
+    <tr style="border-top:1.5px solid #e3e8f0"><td style="padding:8px 14px;font-weight:700">Grand Total</td><td style="text-align:right;padding:8px 14px;font-weight:700">${iR(ledger.openingBal + ledger.totalDebit)}</td></tr>
+    <tr><td style="padding:8px 14px;color:#15803d">Total Received</td><td style="text-align:right;padding:8px 14px;font-weight:600;color:#15803d">${iR(ledger.totalCredit)}</td></tr>
+    <tr style="background:${grandBal>0?'#0f1f3d':'#15803d'}">
+      <td style="padding:10px 14px;font-weight:800;color:#fff">${grandBal>0?'Balance Due':'\u2713 Account Clear'}</td>
+      <td style="text-align:right;padding:10px 14px;font-weight:800;color:${grandBal>0?'#fca5a5':'#fff'}">${iR(grandBal)}</td>
+    </tr>
+  </table>`;
 
   win.document.write(`<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Statement — ${custNameDisplay}</title>
+<html lang="en"><head><meta charset="UTF-8"><title>Statement \u2014 ${custDisplay}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --navy:#0f1f3d;--blue:#1d4ed8;--blue-dark:#1e3a8a;--blue-pale:#eef3ff;
-  --gray-700:#374151;--gray-500:#6b7280;--gray-400:#9ca3af;
-  --gray-200:#e3e8f0;--gray-100:#f5f7fb;
-  --red:#dc2626;--red-pale:#fef2f2;--red-border:#fbd5d5;
-  --green:#15803d;--green-pale:#f0fdf4;--green-border:#bbf0cc;
-}
-body{font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:var(--gray-700);background:#fff}
-.top-bar{height:6px;background:linear-gradient(90deg,var(--blue),var(--navy))}
-.wrap{max-width:800px;margin:0 auto;padding:34px 38px}
-.hdr{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:18px;border-bottom:3px solid var(--blue);margin-bottom:24px}
-.brand{display:flex;align-items:center;gap:14px}
-.brand-mark{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--navy));display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;box-shadow:0 2px 6px rgba(15,31,61,.25)}
-.co-name{font-size:21px;font-weight:800;letter-spacing:-.2px;color:var(--navy)}
-.co-sub{font-size:10.5px;color:var(--gray-500);margin-top:4px;letter-spacing:.4px;text-transform:uppercase;font-weight:600}
-.doc-info{text-align:right}
-.doc-title{display:inline-block;background:var(--blue);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.8px;padding:6px 14px;border-radius:4px;text-transform:uppercase}
-.doc-meta{font-size:11.5px;color:var(--gray-500);margin-top:9px;line-height:1.7}
+:root{--navy:#0f1f3d;--blue:#1d4ed8;--blue-dark:#1e3a8a;--blue-pale:#eef3ff;
+  --g700:#374151;--g500:#6b7280;--g300:#d1d5db;--g100:#f9fafb;
+  --red:#dc2626;--green:#15803d;--gpale:#f0fdf4}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:var(--g700);background:#fff;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+.top-stripe{height:6px;background:linear-gradient(90deg,var(--blue),var(--navy))}
+.wrap{max-width:800px;margin:0 auto;padding:28px 36px}
+.hdr{display:flex;justify-content:space-between;align-items:flex-start;
+  padding-bottom:16px;border-bottom:3px solid var(--blue);margin-bottom:20px}
+.brand-mark{width:44px;height:44px;border-radius:10px;
+  background:linear-gradient(135deg,var(--blue),var(--navy));
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  box-shadow:0 2px 6px rgba(15,31,61,.25);flex-shrink:0}
+.co-name{font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.2px}
+.co-sub{font-size:10px;color:var(--g500);margin-top:3px;text-transform:uppercase;font-weight:600;letter-spacing:.5px}
+.doc-badge{display:inline-block;background:var(--blue);color:#fff;font-size:10px;
+  font-weight:700;letter-spacing:.8px;padding:5px 14px;border-radius:4px;text-transform:uppercase}
+.doc-meta{font-size:11.5px;color:var(--g500);margin-top:8px;line-height:1.75}
 .doc-meta strong{color:var(--navy)}
-.range-badge{display:inline-block;background:#fef3c7;color:#92400e;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid #fcd34d;margin-top:6px}
-.meta-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding:16px 20px;border:1px solid var(--gray-200);border-left:4px solid var(--blue);border-radius:8px;background:var(--gray-100)}
-.to-label{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-500);font-weight:700;margin-bottom:4px}
-.to-name{font-size:18px;font-weight:700;color:var(--navy)}
-.to-phone{font-size:12px;color:var(--gray-500);margin-top:3px}
-.bal-chip{text-align:right;padding:10px 20px;border-radius:8px;min-width:150px;border:1px solid var(--gray-200);background:#fff}
-.bal-chip.due{background:var(--red-pale);border-color:var(--red-border)}
-.bal-chip.ok{background:var(--green-pale);border-color:var(--green-border)}
-.bal-chip .bc-label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--gray-500);font-weight:700}
-.bal-chip.due .bc-val{color:var(--red)}
-.bal-chip.ok .bc-val{color:var(--green)}
-.bal-chip .bc-val{font-size:21px;font-weight:800;margin-top:4px}
-.sec{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--navy);margin:24px 0 10px;padding-bottom:8px;border-bottom:2px solid var(--blue-pale)}
-.sec::before{content:'';width:4px;height:13px;background:var(--blue);border-radius:2px}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-th{background:var(--blue-dark);color:#fff;padding:9px 11px;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;text-align:left}
-td{padding:9px 11px;border-bottom:1px solid var(--gray-200);vertical-align:middle}
-tr.alt td{background:var(--gray-100)}
-tr.ob-row td{background:var(--blue-pale)}
-tr.foot td{background:#eef1f6;font-weight:700;border-top:1.5px solid var(--gray-200);border-bottom:none;color:var(--navy)}
-.mode-badge{display:inline-block;background:var(--blue-pale);color:var(--blue-dark);font-size:11px;font-weight:600;padding:3px 9px;border-radius:4px}
-.sum-wrap{display:flex;justify-content:flex-end;margin-top:20px}
-.sum-box{width:300px;border:1px solid var(--gray-200);border-radius:8px;overflow:hidden}
-.sum-box table{font-size:13px}
-.sum-box td{padding:9px 16px;border-bottom:1px solid var(--gray-100)}
-.sum-box td:last-child{text-align:right;font-weight:600}
-.sum-box tr.ob-r td{background:var(--blue-pale);color:var(--blue-dark);font-size:12px}
-.sum-box tr.bal-row td{font-size:15px;font-weight:800;border-bottom:none}
-.sum-box tr.bal-row.due td{background:var(--navy);color:#fff}
-.sum-box tr.bal-row.due td:last-child{color:#fca5a5}
-.sum-box tr.bal-row.clear td{background:var(--green);color:#fff}
-.foot-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:34px;padding-top:16px;border-top:1px solid var(--gray-200)}
-.foot-txt{font-size:11px;color:var(--gray-500);line-height:1.8}
-.foot-txt strong{color:var(--navy)}
-.sign-box{text-align:center;width:140px}
-.sign-line{border-top:1.5px solid var(--navy);margin-top:54px;padding-top:6px;font-size:10.5px;color:var(--gray-500);font-weight:600}
-@media print{
-  .no-print{display:none!important}
-  th,.top-bar,.doc-title,tr.foot td,.sum-box tr.bal-row.due td,.sum-box tr.bal-row.clear td,.bal-chip,.ob-row td{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-}
-.no-print{max-width:800px;margin:0 auto 16px;padding:0 38px;display:flex;gap:10px;align-items:center}
-.no-print button{padding:9px 22px;border-radius:6px;border:none;font-size:13px;font-weight:600;cursor:pointer}
-.bp{background:var(--blue);color:#fff}
-.bc{background:var(--gray-100);color:var(--navy)}
+.range-pill{display:inline-block;background:#fef3c7;color:#92400e;font-size:11px;
+  font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid #fcd34d;margin-top:6px}
+.meta-row{display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:20px;padding:14px 18px;border:1px solid var(--g300);
+  border-left:4px solid var(--blue);border-radius:8px;background:var(--g100)}
+.cust-name{font-size:17px;font-weight:800;color:var(--navy)}
+.cust-phone{font-size:12px;color:var(--g500);margin-top:2px}
+.bal-chip{text-align:right;padding:10px 18px;border-radius:8px;border:1px solid var(--g300);min-width:140px}
+.bal-chip.due{background:#fef2f2;border-color:#fbd5d5}
+.bal-chip.ok{background:var(--gpale);border-color:#bbf0cc}
+.bc-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--g500);font-weight:700}
+.bc-val{font-size:20px;font-weight:800;margin-top:3px}
+.bc-val.due{color:var(--red)}.bc-val.ok{color:var(--green)}
+.sec{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--navy);
+  margin:22px 0 10px;padding-bottom:7px;border-bottom:2px solid var(--blue-pale)}
+.sec::before{content:'';width:4px;height:12px;background:var(--blue);border-radius:2px}
+table.lt{width:100%;border-collapse:collapse;font-size:12.5px}
+table.lt th{background:var(--blue-dark);color:#fff;padding:8px 11px;font-size:10.5px;
+  font-weight:600;text-transform:uppercase;letter-spacing:.4px;text-align:left}
+table.lt td{padding:8px 11px;border-bottom:1px solid var(--g300)}
+.sum-box{width:300px;border:1px solid var(--g300);border-radius:8px;overflow:hidden;margin-left:auto;margin-top:20px}
+.foot-row{display:flex;justify-content:space-between;align-items:flex-end;
+  margin-top:30px;padding-top:14px;border-top:1px solid var(--g300);
+  font-size:11px;color:var(--g500);line-height:1.8}
+.sign-line{border-top:1.5px solid var(--navy);margin-top:50px;padding-top:5px;
+  font-size:10.5px;color:var(--g500);font-weight:600;text-align:center;width:140px}
+/* Control bar */
+.ctrl{max-width:800px;margin:0 auto;padding:12px 36px;display:flex;gap:8px;
+  align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--g300);background:var(--g100)}
+.ctrl label{font-size:12px;font-weight:600;color:var(--g700);display:flex;align-items:center;gap:5px}
+.ctrl input[type=date]{padding:5px 9px;border:1.5px solid var(--g300);border-radius:6px;font-size:12px;color:var(--g700)}
+.btn-print{background:var(--blue);color:#fff;padding:7px 16px;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}
+.btn-ref{background:var(--navy);color:#fff;padding:7px 16px;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}
+.btn-all{background:var(--g100);color:var(--navy);border:1.5px solid var(--g300);padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
+.btn-cls{background:#f3f4f6;color:#374151;padding:7px 16px;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
+@media print{.ctrl{display:none!important}}
 </style></head>
 <body>
-<div class="no-print" style="padding-top:16px">
-  <button class="bp" onclick="window.print()">🖨️ Print / Save PDF</button>
-  <button class="bc" onclick="window.close()">✕ Close</button>
-  ${isFiltered ? `<span style="font-size:12px;color:#92400e;background:#fef3c7;padding:5px 12px;border-radius:20px;border:1px solid #fcd34d;font-weight:600">📅 ${fromDate} → ${toDate}</span>` : ''}
+<div class="ctrl">
+  <strong style="font-size:13px">&#128196; ${custDisplay}</strong>
+  <label>From <input type="date" id="wFrom" value="${isFiltered && fromDate ? fromDate.split('-').reverse().join('-') : ''}"></label>
+  <label>To <input type="date" id="wTo" value="${today().split('-').reverse().join('-')}"></label>
+  <button class="btn-ref" onclick="_regen()">&#128260; Refresh</button>
+  <button class="btn-all" onclick="document.getElementById('wFrom').value='';_regen()">All Time</button>
+  <button class="btn-print" onclick="window.print()">&#128424; Print / PDF</button>
+  <button class="btn-cls" onclick="window.close()">&#10005; Close</button>
 </div>
-<div class="top-bar"></div>
+<div class="top-stripe"></div>
 <div class="wrap">
 
 <div class="hdr">
-  <div class="brand">
-    <div class="brand-mark">🧱</div>
+  <div style="display:flex;align-items:center;gap:13px">
+    <div class="brand-mark">&#129523;</div>
     <div>
       <div class="co-name">BMD FLYASH BRICKS</div>
-      <div class="co-sub">Fly Ash Brick Plant · Operations &amp; Management</div>
+      <div class="co-sub">Fly Ash Brick Plant &middot; Operations &amp; Management</div>
     </div>
   </div>
-  <div class="doc-info">
-    <span class="doc-title">Statement of Account</span>
+  <div style="text-align:right">
+    <span class="doc-badge">Statement of Account</span>
+    <div style="font-size:10.5px;color:var(--g500);margin-top:5px">Bill No: <strong style="color:var(--navy)">${'BMD/'+String(new Date().getFullYear()).slice(-2)+'/'+String(Math.floor(Date.now()/1000)%10000).padStart(4,'0')}</strong></div>
     <div class="doc-meta">
       Printed: <strong>${today_}</strong><br>
-      ${isFiltered ? `Period: <strong>${fromDate}</strong> to <strong>${toDate}</strong>` : 'All Transactions'}
+      ${isFiltered ? `Period: <strong>${fromDate}</strong> &rarr; <strong>${toDate}</strong>` : 'All Transactions'}
     </div>
-    ${isFiltered ? `<div class="range-badge">📅 Custom Date Range</div>` : ''}
+    ${isFiltered ? '<div class="range-pill">&#128197; Custom Range</div>' : ''}
   </div>
 </div>
 
 <div class="meta-row">
   <div>
-    <div class="to-label">Statement For</div>
-    <div class="to-name">${custNameDisplay}</div>
-    ${d.phone ? `<div class="to-phone">📞 ${d.phone}</div>` : ''}
+    <div style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--g500);font-weight:700;margin-bottom:4px">Statement For</div>
+    <div class="cust-name">${custDisplay}</div>
+    ${d && d.phone ? `<div class="cust-phone">&#128222; ${d.phone}</div>` : ''}
   </div>
-  <div class="${grandBal > 0 ? 'bal-chip due' : 'bal-chip ok'}">
-    <div class="bc-label">${grandBal > 0 ? 'Balance Due' : 'Account Clear'}${isFiltered ? ' (Period)' : ''}</div>
-    <div class="bc-val">${iR(grandBal)}</div>
+  <div class="bal-chip ${grandBal > 0 ? 'due' : 'ok'}">
+    <div class="bc-lbl">${grandBal > 0 ? 'Balance Due' : 'Account Clear'}${isFiltered ? ' (Period)' : ''}</div>
+    <div class="bc-val ${grandBal > 0 ? 'due' : 'ok'}">${iR(grandBal)}</div>
   </div>
 </div>
 
-<div class="sec">Sales &amp; Deliveries</div>
-<table>
+<div class="sec">Account Ledger &mdash; Running Balance Statement</div>
+<table class="lt">
   <thead><tr>
     <th>Date</th>
-    <th style="text-align:right">Qty (Bricks)</th>
-    <th>Vehicle No.</th>
-    <th>Delivery Site</th>
-    <th style="text-align:right">Amount (₹)</th>
-    <th style="text-align:right">Received (₹)</th>
-    <th style="text-align:right">Balance (₹)</th>
+    <th>Description</th>
+    <th>Details</th>
+    <th style="text-align:right">Debit (&#8377;)</th>
+    <th style="text-align:right">Credit (&#8377;)</th>
+    <th style="text-align:right">Balance (&#8377;)</th>
   </tr></thead>
-  <tbody>${obRow}${salesRows}${noSalesRow}</tbody>
-  ${sales.length ? `<tr class="foot">
-    <td>Total — ${sales.length} entr${sales.length !== 1 ? 'ies' : 'y'}</td>
-    <td style="text-align:right">${iN(totalQty)}</td>
-    <td colspan="2"></td>
-    <td style="text-align:right">${iR(salesTotal)}</td>
-    <td style="text-align:right;color:var(--green)">${iR(grandRecv)}</td>
-    <td style="text-align:right;color:${grandBal > 0 ? 'var(--red)' : 'var(--green)'}">${iR(grandBal)}</td>
-  </tr>` : ''}
+  <tbody>${tRows}</tbody>
 </table>
 
-<div class="sec">Payments Received</div>
-<table>
-  <thead><tr>
-    <th>Date</th><th>Mode</th>
-    <th style="text-align:right">Amount (₹)</th>
-    <th>Remarks</th>
-  </tr></thead>
-  <tbody>${paymentRows}</tbody>
-  ${payments.length ? `<tr class="foot">
-    <td colspan="2">Total — ${payments.length} payment${payments.length !== 1 ? 's' : ''}</td>
-    <td style="text-align:right;color:var(--green)">${iR(grandRecv)}</td>
-    <td></td>
-  </tr>` : ''}
-</table>
-
-<div class="sum-wrap">
-  <div class="sum-box">
-    <table>
-      ${obAmt > 0 ? `<tr class="ob-r"><td>${isFiltered ? 'Opening Balance (C/F)' : 'Opening Balance (B/F)'}</td><td>${iR(obAmt)}</td></tr>` : ''}
-      <tr><td>Sales Total${isFiltered ? ' (Period)' : ''}</td><td>${iR(salesTotal)}</td></tr>
-      <tr><td><strong>Grand Total</strong></td><td><strong>${iR(grandTotal)}</strong></td></tr>
-      <tr><td>Total Received${isFiltered ? ' (Period)' : ''}</td><td style="color:var(--green)">${iR(grandRecv)}</td></tr>
-      <tr class="bal-row ${grandBal > 0 ? 'due' : 'clear'}">
-        <td>${grandBal > 0 ? 'Balance Due' : 'Account Clear'}</td><td>${iR(grandBal)}</td>
-      </tr>
-    </table>
-  </div>
-</div>
+<div class="sum-box">${sumHTML}</div>
 
 <div class="foot-row">
-  <div class="foot-txt">
-    This is a computer-generated statement of account.<br>
+  <div>
+    Computer-generated statement &mdash; please verify before payment.<br>
+    <strong>Pay via:</strong> Cash &nbsp;/&nbsp; UPI &nbsp;/&nbsp; Bank Transfer<br>
     ${isFiltered ? `<strong>Period:</strong> ${fromDate} to ${toDate}<br>` : ''}
-    <strong>Generated:</strong> ${today_} &nbsp;·&nbsp; <strong>BMD Flyash Bricks</strong>
+    <strong>Generated:</strong> ${today_} &nbsp;&middot;&nbsp; <strong>BMD Flyash Bricks</strong>
   </div>
-  <div class="sign-box">
-    <div class="sign-line">Authorised Signatory</div>
-  </div>
+  <div class="sign-line">Authorised Signatory</div>
 </div>
 
 </div>
+<script>
+function _regen(){
+  var f=document.getElementById('wFrom').value;
+  var t=document.getElementById('wTo').value;
+  if(window.opener&&!window.opener.closed){
+    function fmtBack(v){if(!v)return null;var p=v.split('-');return p[2]+'-'+p[1]+'-'+p[0];}
+    window.opener.printCustBill(fmtBack(f),fmtBack(t)||null);
+    window.close();
+  }
+}
+<\/script>
 </body></html>`);
   win.document.close();
-  setTimeout(() => win.focus(), 300);
+  setTimeout(() => win.focus(), 200);
 }
+
 
 
 // ===================== CHARTS =====================
@@ -4737,9 +5034,8 @@ function renderMonthlySummary(resetExpanded){
   db.sales.forEach(s=>{const mk=monthOf(s.date);if(!allMonths[mk])allMonths[mk]={sales:0,cash:0,prod:0,exp:0};allMonths[mk].sales+=s.total;});
   // Use payments module for cash received per month
   (db.payments||[]).forEach(p=>{const mk=monthOf(p.date);if(!allMonths[mk])allMonths[mk]={sales:0,cash:0,prod:0,exp:0};allMonths[mk].cash+=(parseFloat(p.amount)||0);});
-  // Fallback: if no payments module data at all, use sale-level recv
-  const _hasAnyPayments=(db.payments||[]).length>0;
-  if(!_hasAnyPayments) db.sales.forEach(s=>{const mk=monthOf(s.date);if(allMonths[mk])allMonths[mk].cash+=s.recv;});
+  // Always include sale-level recv (upfront payment at delivery) — additive with payments module
+  db.sales.forEach(s=>{const mk=monthOf(s.date);if(allMonths[mk])allMonths[mk].cash+=(s.recv||0);});
   db.prod.forEach(p=>{const mk=monthOf(p.date);if(!allMonths[mk])allMonths[mk]={sales:0,cash:0,prod:0,exp:0};allMonths[mk].prod+=p.bricks});
   db.exp.forEach(e=>{const mk=monthOf(e.date);if(!allMonths[mk])allMonths[mk]={sales:0,cash:0,prod:0,exp:0};allMonths[mk].exp+=e.amt});
 
@@ -4843,7 +5139,13 @@ function renderMonthlySummary(resetExpanded){
       db.sales.filter(s=>monthOf(s.date)===mk).forEach(s=>{
         const dd=s.date.split('-')[0];
         if(!dayMap[dd])dayMap[dd]={sales:0,cash:0,exp:0,prod:0,txns:0};
-        dayMap[dd].sales+=s.total; dayMap[dd].cash+=s.recv; dayMap[dd].txns+=1;
+        dayMap[dd].sales+=s.total; dayMap[dd].cash+=(s.recv||0); dayMap[dd].txns+=1;
+      });
+      // Also add payments module cash for each day in this month
+      (db.payments||[]).filter(p=>monthOf(p.date)===mk).forEach(p=>{
+        const dd=p.date.split('-')[0];
+        if(!dayMap[dd])dayMap[dd]={sales:0,cash:0,exp:0,prod:0,txns:0};
+        dayMap[dd].cash+=(parseFloat(p.amount)||0);
       });
       db.exp.filter(e=>monthOf(e.date)===mk).forEach(e=>{
         const dd=e.date.split('-')[0];
@@ -4960,10 +5262,9 @@ function renderSalesTable(){
 
   tbody.innerHTML = rows.length ? rows.map(s => {
     const c = cm[s.cust];
-    const hasPayments = (db.payments||[]).some(p=>p.cust===s.cust);
-    const dispRecv  = hasPayments ? '—' : iR(s.recv||0);
-    const dispBal   = hasPayments ? '—' : iR(s.bal||0);
-    const balColor  = hasPayments ? 'var(--muted)' : (s.bal>0?'var(--red)':'var(--green)');
+    const dispRecv  = iR(s.recv||0);
+    const dispBal   = iR(s.bal||0);
+    const balColor  = s.bal>0?'var(--red)':'var(--green)';
     const badge     = c ? statusBadge(c.bal<=0?'PAID/CASH':(s.status||'Pending')) : statusBadge(s.status);
     return `<tr>
       <td class="dt">${s.date}</td>
@@ -5154,8 +5455,9 @@ function refreshAll(){
   const _allCustList=Object.values(_allCustMap);
   const outstanding=_allCustList.reduce((a,c)=>a+(c.bal||0),0);
   const outCusts=_allCustList.filter(c=>c.bal>0).length;
-  // tCash: today's payments received
-  const tCash=(db.payments||[]).filter(p=>p.date===td).reduce((a,p)=>a+(parseFloat(p.amount)||0),0);
+  // tCash: today's cash = payments module entries for today + sale-level recv for today's sales
+  const tCash=(db.payments||[]).filter(p=>p.date===td).reduce((a,p)=>a+(parseFloat(p.amount)||0),0)
+            + (db.sales||[]).filter(s=>s.date===td).reduce((a,s)=>a+(parseFloat(s.recv)||0),0);
   const mSalesAmt=mSales.reduce((a,s)=>a+s.total,0);
   const mExpAmt=mExp.reduce((a,e)=>a+e.amt,0);
   const mProfit=mSalesAmt-mExpAmt;
@@ -5254,10 +5556,9 @@ function filterLedger(){
   const _stMapForRows = buildCustMap(db) || {};
   if(el)el.innerHTML=rows.length?rows.map(s=>{
     const cm = _stMapForRows[s.cust];
-    const hasPayments = (db.payments||[]).some(p=>p.cust===s.cust);
-    const dispRecv = hasPayments ? '—' : iR(s.recv||0);
-    const dispBal  = hasPayments ? '—' : iR(s.bal||0);
-    const dispBalColor = hasPayments ? 'var(--muted)' : (s.bal>0?'var(--red)':'var(--green)');
+    const dispRecv = iR(s.recv||0);
+    const dispBal  = iR(s.bal||0);
+    const dispBalColor = s.bal>0?'var(--red)':'var(--green)';
     const dispStatus = cm ? statusBadge(cm.bal<=0?'PAID/CASH':(s.status||'Pending')) : statusBadge(s.status);
     return `<tr><td class="dt">${s.date}</td><td><strong>${s.cust}</strong></td><td>${s.phone||'—'}</td><td>${s.vehicle||'—'}</td><td>${s.site||'—'}</td><td>${iN(s.qty)}</td><td>${iR(s.total)}</td><td style="color:var(--green)">${dispRecv}</td><td style="color:${dispBalColor}"><strong>${dispBal}</strong></td><td>${dispStatus}</td><td style="color:var(--muted)">${s.rem||'—'}</td></tr>`;
   }).join(''):'<tr><td colspan="11" class="empty">No matching records</td></tr>';
@@ -6744,7 +7045,7 @@ function shareDailySummary(date, sales, cash, exp, qty, orders) {
 
 // ══════════════════════════════════════════════════════
 // FEATURE: BACKUP & RESTORE
-// ══════════════���═══════════════════════════════════════
+// ��═════════════���═════════════���═════════════════════════
 function backupData() {
   const db = loadDB();
   const backup = {
@@ -6852,30 +7153,7 @@ document.querySelectorAll('.nt').forEach(function(t){
 
 
 <!-- ========== PRINT DATE RANGE MODAL ========== -->
-<div id="printRangeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1100;align-items:center;justify-content:center;padding:16px">
-  <div style="background:var(--surface);border-radius:14px;padding:26px;max-width:380px;width:100%;border:1px solid var(--border);box-shadow:var(--shadow-lg)">
-    <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px">🖨️ Print Ledger</div>
-    <div id="printRangeCustName" style="font-size:13px;color:var(--muted);margin-bottom:18px"></div>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div>
-        <label style="font-size:11.5px;font-weight:700;color:var(--text-2);display:block;margin-bottom:5px">From Date</label>
-        <input type="date" id="printFrom" style="width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text);font-size:13px">
-      </div>
-      <div>
-        <label style="font-size:11.5px;font-weight:700;color:var(--text-2);display:block;margin-bottom:5px">To Date</label>
-        <input type="date" id="printTo" style="width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text);font-size:13px">
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
-        <button onclick="setPrintRange('month')" style="padding:6px 12px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-2);font-size:11.5px;font-weight:600;cursor:pointer">This Month</button>
-        <button onclick="setPrintRange('last30')" style="padding:6px 12px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-2);font-size:11.5px;font-weight:600;cursor:pointer">Last 30 Days</button>
-        <button onclick="setPrintRange('all')" style="padding:6px 12px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-2);font-size:11.5px;font-weight:600;cursor:pointer">All Time</button>
-      </div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:20px">
-      <button onclick="confirmPrintBill()" style="flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:700;cursor:pointer">🖨️ Print</button>
-      <button onclick="closePrintRange()" style="padding:10px 18px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text);font-size:13px;font-weight:600;cursor:pointer">Cancel</button>
-    </div>
-  </div>
+
 </div>
 
 </div><!-- /main-content -->
