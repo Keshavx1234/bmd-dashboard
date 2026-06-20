@@ -2606,7 +2606,7 @@ function renderBrickModal() {
         <tr><td>🔴 Outstanding Receivables</td><td id="pl-d-m">₹0</td><td id="pl-d-a">₹0</td></tr>
         <tr><td>🏭 Bricks Produced</td><td id="pl-bp-m">0</td><td id="pl-bp-a">0</td></tr>
         <tr><td>🛒 Bricks Sold</td><td id="pl-bs-m">0</td><td id="pl-bs-a">0</td></tr>
-        <tr><td>📊 Avg Rate per Brick (���)</td><td id="pl-ar-m">₹0</td><td id="pl-ar-a">₹0</td></tr>
+        <tr><td>📊 Avg Rate per Brick (����)</td><td id="pl-ar-m">₹0</td><td id="pl-ar-a">₹0</td></tr>
       </tbody>
     </table>
   </div>
@@ -4322,12 +4322,15 @@ let _cdTo = null;
 let _cdCustom = false;
 
 // Shared: build running-balance ledger (used by modal + print)
-// ── FIFO PAYMENT ENGINE ────────────────────────────────────────────────
-function computeFIFO(db, custName) {
-  const sales = (db.sales || []).filter(s => s.cust === custName)
-    .slice().sort((a,b) => new Date(a.date) - new Date(b.date));
-  const payments = (db.payments || []).filter(p => p.cust === custName)
-    .slice().sort((a,b) => new Date(a.date) - new Date(b.date));
+// ─��� FIFO PAYMENT ENGINE ────────────────────────────────────────────────
+// computeFIFO(db, custName, asOfDate)
+// asOfDate (DD-MM-YYYY): if provided, only counts sales & payments up to that date
+function computeFIFO(db, custName, asOfDate) {
+  const cutoff = asOfDate ? parseDate(asOfDate) : null;
+  const sales = (db.sales || []).filter(s => s.cust === custName && (!cutoff || parseDate(s.date) <= cutoff))
+    .slice().sort((a,b) => parseDate(a.date) - parseDate(b.date) || a.id - b.id);
+  const payments = (db.payments || []).filter(p => p.cust === custName && (!cutoff || parseDate(p.date) <= cutoff))
+    .slice().sort((a,b) => parseDate(a.date) - parseDate(b.date) || a.id - b.id);
   // each sale starts with its own recv already applied
   const remaining = {};
   sales.forEach(s => {
@@ -4605,7 +4608,7 @@ function _renderCustDetail() {
     </tr>`;
   }
   if (ledger.rows.length) {
-    const mFifo = computeFIFO(db, name);
+    const mFifo = computeFIFO(db, name, _cdTo || null);
     ledger.rows.forEach(r => {
       const balDisp = r.balance === 0
         ? '<span class="lg-bal-ok">&#10003; Clear</span>'
@@ -4738,13 +4741,10 @@ function closeCustDetail() {
 // ══════════════════════════════════════════════════════
 // FEATURE: PRINT DATE RANGE PICKER
 // ══════���═══════════════════════��═══════════════════════
-function printCustBill(fromDate, toDate) {
-  if (!_cdCust) return;
-  const win = window.open('', '_blank');
-  if (!win) { toast('\u26A0 Allow pop-ups to print'); return; }
+// Returns the full print HTML string — used by printCustBill AND by _regen in the print window
+function buildPrintHTML(custName, fromDate, toDate) {
 
   const db          = loadDB();
-  const custName    = _cdCust;
   const allCusts    = buildCustMap(db);
   const d           = allCusts[custName];
   const today_      = today();
@@ -4752,7 +4752,7 @@ function printCustBill(fromDate, toDate) {
   const isFiltered  = !!(fromDate && toDate);
 
   const ledger   = buildRunningLedger(db, custName, fromDate || null, toDate || null);
-  const pFifo    = computeFIFO(db, custName);
+  const pFifo    = computeFIFO(db, custName, toDate || null);
   const grandBal = Math.max(0, ledger.finalBalance);
 
   // ── Build ledger table rows ──────────────────────────────────
@@ -4813,7 +4813,7 @@ function printCustBill(fromDate, toDate) {
     </tr>
   </table>`;
 
-  win.document.write(`<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><title>Statement \u2014 ${custDisplay}</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
@@ -4946,17 +4946,25 @@ table.lt td{padding:8px 11px;border-bottom:1px solid var(--g300)}
 
 </div>
 <script>
+var _printCust = ${JSON.stringify(custName)};
+function _fmtBack(v){if(!v)return null;var p=v.split('-');return p[2]+'-'+p[1]+'-'+p[0];}
 function _regen(){
   var f=document.getElementById('wFrom').value;
   var t=document.getElementById('wTo').value;
   if(window.opener&&!window.opener.closed){
-    function fmtBack(v){if(!v)return null;var p=v.split('-');return p[2]+'-'+p[1]+'-'+p[0];}
-    window.opener.printCustBill(fmtBack(f),fmtBack(t)||null);
-    window.close();
+    var html=window.opener.buildPrintHTML(_printCust,_fmtBack(f),_fmtBack(t)||null);
+    document.open();document.write(html);document.close();
   }
 }
 <\/script>
-</body></html>`);
+</body></html>`;
+}
+
+function printCustBill(fromDate, toDate) {
+  if (!_cdCust) return;
+  const win = window.open('', '_blank');
+  if (!win) { toast('\u26A0 Allow pop-ups to print'); return; }
+  win.document.write(buildPrintHTML(_cdCust, fromDate, toDate));
   win.document.close();
   setTimeout(() => win.focus(), 200);
 }
