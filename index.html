@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1968,7 +1970,7 @@ function renderBrickModal() {
         <div class="fg">
           <div class="fl">
             <label>Quantity Sold (Bricks) <span class="req">*</span></label>
-            <input type="number" id="s-qty" placeholder="e.g. 2500" min="0" inputmode="numeric">
+            <input type="number" id="s-qty" placeholder="e.g. 2500" min="0" inputmode="numeric" oninput="document.getElementById('s-summary').textContent='';document.getElementById('rate-preview').textContent=''">
           </div>
           <div class="fl">
             <label>Total Amount (₹) <span class="req">*</span></label>
@@ -2232,7 +2234,7 @@ function renderBrickModal() {
     </div>
     <div style="margin-top:10px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
       <span id="avg-period-label" style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:600">Period</span>
-      <span style="font-size:11px;color:rgba(255,255,255,0.6)">Total: 👨 <strong id="avg-total-male" style="color:#818cf8">0</strong> &nbsp;|&nbsp; 👩 <strong id="avg-total-female" style="color:#c084fc">0</strong> &nbsp;|&nbsp; 🧱 <strong id="avg-total-bricks" style="color:#4ade80">0</strong> bricks</span>
+      <span style="font-size:11px;color:rgba(255,255,255,0.6)">Total: 👨 <strong id="avg-total-male" style="color:#818cf8">0</strong> &nbsp;|&nbsp; ������ <strong id="avg-total-female" style="color:#c084fc">0</strong> &nbsp;|&nbsp; 🧱 <strong id="avg-total-bricks" style="color:#4ade80">0</strong> bricks</span>
     </div>
   </div>
 
@@ -2290,7 +2292,7 @@ function renderBrickModal() {
           <option value="Machine Repair">🔧 Machine Repair / Maintenance</option>
           <option value="Transport">🚛 Transport / Delivery</option>
           <option value="Admin / Office">📝 Admin / Office</option>
-          <option value="Other">📦 Other Expenses</option>
+          <option value="Other">��� Other Expenses</option>
         </select>
       </div>
       <div class="fl">
@@ -3431,7 +3433,21 @@ function loadDB(){
   if(dirty){ try{localStorage.setItem(DB,JSON.stringify(db));}catch(e){} }
   return db;
 }
-function saveDB(d){ d.updatedAt = Date.now(); localStorage.setItem(DB,JSON.stringify(d)); syncPush(); }
+function saveDB(d){
+  d.updatedAt = Date.now();
+  try {
+    localStorage.setItem(DB, JSON.stringify(d));
+  } catch(e) {
+    if(e && (e.name === 'QuotaExceededError' || e.code === 22)) {
+      toast('⚠️ Storage full! Data not saved. Please export a backup and clear old data.');
+    } else {
+      toast('⚠️ Save failed: ' + (e && e.message ? e.message : 'Unknown error'));
+    }
+    console.error('saveDB error:', e);
+    return;
+  }
+  syncPush();
+}
 
 const statusBadge = s => {
   if(!s)return'<span class="b br2">🔴 Pending</span>';
@@ -3681,7 +3697,7 @@ function importXlRows(){
     if(!s.cust||s.qty<=0){skipped++;return;}
     const dup=db.sales.find(e=>e.cust===s.cust&&e.date===s.date&&e.qty===s.qty&&e.total===s.total);
     if(dup){skipped++;return;}
-    db.sales.push({id:Date.now()+Math.random(),time:timeNow(),...s});
+    db.sales.push({id:Date.now()*1000+Math.floor(Math.random()*999),time:timeNow(),...s});
     added++;
   });
   saveDB(db);
@@ -3722,7 +3738,7 @@ function saveLabourPayment(){
   const db = loadDB();
   const week = weekEndingOf(date);
   const desc = `Weekly labour/staff wages — week ending ${week}`+(workers?` (${workers} workers)`:'');
-  db.exp.push({id:Date.now()+Math.random(), date, cat:'Labour Wages', desc, amt,
+  db.exp.push({id:Date.now()*1000+Math.floor(Math.random()*999), date, cat:'Labour Wages', desc, amt,
     rem, time:timeNow(), week, workers});
   saveDB(db);
   toast('✅ Weekly labour payment recorded!');
@@ -3931,13 +3947,20 @@ function saveCustomerPayment(){
 
   const db = loadDB();
 
+  // Calculate customer's outstanding balance BEFORE this payment
+  const priorMap = buildCustMap(db);
+  const priorBal = (priorMap[cust] && priorMap[cust].bal) || 0;
+  const remaining = Math.max(0, amount - priorBal);
+
   // Log the payment — do NOT write back to individual sale rows
   // buildCustMap calculates recv/bal from the payments module directly
-  db.payments.push({id:Date.now()+Math.random(), date, cust, amount, mode, rem, time:timeNow()});
+  db.payments.push({id:Date.now()*1000+Math.floor(Math.random()*999), date, cust, amount, mode, rem, time:timeNow()});
   saveDB(db);
 
-  if(remaining>0){
+  if(remaining > 0 && priorBal === 0){
     toast(`✅ Payment recorded! ₹${Math.round(remaining).toLocaleString('en-IN')} credited as advance (no due balance).`);
+  } else if(remaining > 0){
+    toast(`✅ Payment recorded! ₹${Math.round(remaining).toLocaleString('en-IN')} will be credited as advance.`);
   } else {
     toast('✅ Customer payment recorded!');
   }
@@ -3959,7 +3982,7 @@ function saveVendorPayment(){
   if(!amount || amount<=0){ hint.textContent='⚠️ Enter a valid amount'; return; }
 
   const db = loadDB();
-  db.vendorPayments.push({id:Date.now()+Math.random(), date, vendor, amount, mode, rem, time:timeNow()});
+  db.vendorPayments.push({id:Date.now()*1000+Math.floor(Math.random()*999), date, vendor, amount, mode, rem, time:timeNow()});
   saveDB(db);
   toast('✅ Vendor payment recorded!');
   clearVendorPaymentForm();
@@ -4203,7 +4226,7 @@ function renderCustomers(){
         <div class="cu-avatar">${initials(n)}</div>
         <div>
           <div class="cu-name">${n}</div>
-          <div class="cu-phone">${d.phone?'📞 '+d.phone:'No phone on record'}</div>
+          <div class="cu-phone">${d.phone?'���� '+d.phone:'No phone on record'}</div>
         </div>
       </div>
       <div class="cu-stats">
@@ -4322,7 +4345,7 @@ function closeCustDetail(){
 
 // ══════════════════════════════════════════════════════
 // FEATURE: PRINT DATE RANGE PICKER
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════��═══════════════════════
 function openPrintRange() {
   if (!_cdCust) return;
   const db = loadDB();
@@ -4886,6 +4909,230 @@ function renderMonthlySummary(resetExpanded){
   }
 }
 
+// ===================== SALES TABLE RENDER =====================
+let _salesViewAll = false;
+let _salesSearch  = '';
+let _salesSort    = 'date-desc';
+
+function renderSalesTable(){
+  const db  = loadDB();
+  const svd = document.getElementById('salesViewDate');
+  const dateFilter = svd ? svd.value : '';    // YYYY-MM-DD from input
+  const sortVal = (document.getElementById('salesSortSel')?.value) || _salesSort;
+  _salesSort = sortVal;
+
+  // Convert YYYY-MM-DD → DD-MM-YYYY for comparison with stored dates
+  const toStored = s => { if(!s) return ''; const [y,m,d]=s.split('-'); return d+'-'+m+'-'+y; };
+  const filterDate = toStored(dateFilter);
+
+  let rows = [...db.sales];
+
+  // Filter by search or date
+  if(_salesSearch){
+    const q = _salesSearch.toLowerCase();
+    rows = rows.filter(s =>
+      (s.cust||'').toLowerCase().includes(q) ||
+      (s.phone||'').toLowerCase().includes(q) ||
+      (s.vehicle||'').toLowerCase().includes(q) ||
+      (s.site||'').toLowerCase().includes(q) ||
+      (s.status||'').toLowerCase().includes(q)
+    );
+  } else if(!_salesViewAll && filterDate){
+    rows = rows.filter(s => s.date === filterDate);
+  }
+
+  // Sort
+  rows.sort((a,b) => sortVal==='date-asc' ? a.id-b.id : b.id-a.id);
+
+  // Label
+  const lbl = document.getElementById('salesViewLabel');
+  if(lbl){
+    if(_salesSearch)        lbl.textContent = `Search: "${_salesSearch}" — ${rows.length} result(s)`;
+    else if(_salesViewAll)  lbl.textContent = `All entries — ${rows.length} record(s)`;
+    else                    lbl.textContent = `${filterDate ? filterDate.split('-').reverse().join('-') : 'Today'} — ${rows.length} record(s)`;
+  }
+
+  // Build cust map for accurate bal/status
+  const cm = buildCustMap(db) || {};
+
+  const tbody = document.getElementById('todaySalesTbl');
+  if(!tbody) return;
+
+  tbody.innerHTML = rows.length ? rows.map(s => {
+    const c = cm[s.cust];
+    const hasPayments = (db.payments||[]).some(p=>p.cust===s.cust);
+    const dispRecv  = hasPayments ? '—' : iR(s.recv||0);
+    const dispBal   = hasPayments ? '—' : iR(s.bal||0);
+    const balColor  = hasPayments ? 'var(--muted)' : (s.bal>0?'var(--red)':'var(--green)');
+    const badge     = c ? statusBadge(c.bal<=0?'PAID/CASH':(s.status||'Pending')) : statusBadge(s.status);
+    return `<tr>
+      <td class="dt">${s.date}</td>
+      <td><strong>${s.cust}</strong></td>
+      <td>${s.phone||'—'}</td>
+      <td>${s.vehicle||'—'}</td>
+      <td>${s.site||'—'}</td>
+      <td style="text-align:right">${iN(s.qty)}</td>
+      <td style="text-align:right">${iR(s.total)}</td>
+      <td style="text-align:right;color:var(--green)">${dispRecv}</td>
+      <td style="text-align:right;color:${balColor}"><strong>${dispBal}</strong></td>
+      <td>${badge}</td>
+      <td>${s.rem||'—'}</td>
+      <td><div class="act-cell">
+        <button class="edit-btn" onclick="openEdit('sale',${s.id})" title="Edit">✏️</button>
+        <button class="del-btn"  onclick="delEntry('sale',${s.id})" title="Delete">🗑️</button>
+      </div></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="12" class="empty">No sales entries for this date</td></tr>';
+
+  // Footer stats
+  const tot   = rows.reduce((a,s)=>a+(s.total||0),0);
+  const cash  = rows.reduce((a,s)=>a+(s.recv||0),0);
+  const bal   = rows.reduce((a,s)=>a+(s.bal||0),0);
+  const tST   = document.getElementById('tSTotal');  if(tST)  tST.textContent  = iR(tot);
+  const tSC   = document.getElementById('tSCash');   if(tSC)  tSC.textContent  = iR(cash);
+  const tSB   = document.getElementById('tSBal');    if(tSB)  tSB.textContent  = iR(bal);
+  const tSCnt = document.getElementById('tSCount');  if(tSCnt) tSCnt.textContent = rows.length;
+}
+
+function setSalesViewAll(){
+  _salesViewAll=true; _salesSearch='';
+  const sb=document.getElementById('salesSearchBox'); if(sb) sb.value='';
+  const lbl=document.getElementById('salesViewLabel'); if(lbl) lbl.textContent='';
+  renderSalesTable();
+}
+
+function salesGoToday(){
+  _salesViewAll=false; _salesSearch='';
+  const svd=document.getElementById('salesViewDate'); if(svd) svd.value=_localDateStr();
+  const sb=document.getElementById('salesSearchBox'); if(sb) sb.value='';
+  const lbl=document.getElementById('salesViewLabel'); if(lbl) lbl.textContent='';
+  renderSalesTable();
+}
+
+function onSalesSearch(val){
+  _salesSearch = val.trim();
+  _salesViewAll = !!_salesSearch;
+  const cs=document.getElementById('salesClearSearch');
+  if(cs) cs.style.display=_salesSearch?'':'none';
+  renderSalesTable();
+}
+
+function clearSalesSearch(){
+  _salesSearch=''; _salesViewAll=false;
+  const sb=document.getElementById('salesSearchBox'); if(sb) sb.value='';
+  const cs=document.getElementById('salesClearSearch'); if(cs) cs.style.display='none';
+  renderSalesTable();
+}
+
+// ===================== PRODUCTION TABLE RENDER =====================
+let _prodSort    = 'date-desc';
+let _prodViewAll = false;
+
+function renderProdTable(){
+  const db  = loadDB();
+  const pvd = document.getElementById('prodViewDate');
+  const dateFilter = pvd ? pvd.value : '';
+  const sortVal = (document.getElementById('prodSortSel')?.value) || _prodSort;
+  _prodSort = sortVal;
+
+  const toStored = s => { if(!s) return ''; const [y,m,d]=s.split('-'); return d+'-'+m+'-'+y; };
+  const filterDate = toStored(dateFilter);
+
+  let rows = [...db.prod];
+  if(!_prodViewAll && filterDate) rows = rows.filter(p=>p.date===filterDate);
+  rows.sort((a,b)=>sortVal==='date-asc'?a.id-b.id:b.id-a.id);
+
+  const lbl = document.getElementById('prodViewLabel');
+  if(lbl){
+    if(_prodViewAll) lbl.textContent=`All entries — ${rows.length} record(s)`;
+    else             lbl.textContent=`${filterDate?filterDate.split('-').reverse().join('-'):'Today'} — ${rows.length} record(s)`;
+  }
+
+  const tbody = document.getElementById('prodTbl');
+  if(!tbody) return;
+
+  tbody.innerHTML = rows.length ? rows.map(p=>{
+    const total=(p.male||0)+(p.female||0);
+    const ts=p.ts?new Date(p.ts).toLocaleString('en-IN',{dateStyle:'short',timeStyle:'short'}):'—';
+    return `<tr>
+      <td class="dt">${p.date}</td>
+      <td>${p.shift||'—'}</td>
+      <td style="text-align:right;font-weight:700;color:var(--accent)">${iN(p.bricks||0)}</td>
+      <td style="text-align:center">${p.male||0}</td>
+      <td style="text-align:center">${p.female||0}</td>
+      <td style="text-align:center">${total||'—'}</td>
+      <td>${p.rem||'—'}</td>
+      <td style="color:var(--muted);font-size:11px">${ts}</td>
+      <td><div class="act-cell">
+        <button class="edit-btn" onclick="openEdit('prod',${p.id})" title="Edit">✏️</button>
+        <button class="del-btn"  onclick="delEntry('prod',${p.id})" title="Delete">🗑️</button>
+      </div></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="9" class="empty">No production entries for this date</td></tr>';
+
+  const totBricks=rows.reduce((a,p)=>a+(p.bricks||0),0);
+  const foot=document.getElementById('prodTblFooter');
+  if(foot) foot.textContent=`${rows.length} entr${rows.length===1?'y':'ies'} · Total: ${iN(totBricks)} bricks`;
+}
+
+function setProdViewAll(){
+  _prodViewAll=true;
+  renderProdTable();
+}
+
+// ===================== EXPENSE TABLE RENDER =====================
+let _expSort    = 'date-desc';
+let _expViewAll = false;
+
+function renderExpTable(){
+  const db  = loadDB();
+  const evd = document.getElementById('expViewDate');
+  const dateFilter = evd ? evd.value : '';
+  const sortVal = (document.getElementById('expSortSel')?.value) || _expSort;
+  _expSort = sortVal;
+
+  const toStored = s => { if(!s) return ''; const [y,m,d]=s.split('-'); return d+'-'+m+'-'+y; };
+  const filterDate = toStored(dateFilter);
+
+  let rows = [...db.exp];
+  if(!_expViewAll && filterDate) rows = rows.filter(e=>e.date===filterDate);
+  rows.sort((a,b)=>sortVal==='date-asc'?a.id-b.id:b.id-a.id);
+
+  const lbl = document.getElementById('expViewLabel');
+  if(lbl){
+    if(_expViewAll) lbl.textContent=`All entries — ${rows.length} record(s)`;
+    else            lbl.textContent=`${filterDate?filterDate.split('-').reverse().join('-'):'Today'} — ${rows.length} record(s)`;
+  }
+
+  const tbody = document.getElementById('expTbl');
+  if(!tbody) return;
+
+  tbody.innerHTML = rows.length ? rows.map(e=>{
+    const ts=e.ts?new Date(e.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'—';
+    return `<tr>
+      <td class="dt">${e.date}</td>
+      <td>${ts}</td>
+      <td><span class="b bp">${e.cat||'—'}</span></td>
+      <td>${e.desc||'—'}</td>
+      <td style="text-align:right;font-weight:700;color:var(--red)">${iR(e.amt||0)}</td>
+      <td>${e.rem||'—'}</td>
+      <td><div class="act-cell">
+        <button class="edit-btn" onclick="openEdit('exp',${e.id})" title="Edit">✏️</button>
+        <button class="del-btn"  onclick="delEntry('exp',${e.id})" title="Delete">🗑️</button>
+      </div></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="7" class="empty">No expense entries for this date</td></tr>';
+
+  const tot=rows.reduce((a,e)=>a+(e.amt||0),0);
+  const tEl=document.getElementById('expTodayTotal'); if(tEl) tEl.textContent=iR(tot);
+  const cEl=document.getElementById('expEntryCount'); if(cEl) cEl.textContent=`${rows.length} entr${rows.length===1?'y':'ies'}`;
+}
+
+function setExpViewAll(){
+  _expViewAll=true;
+  renderExpTable();
+}
+
 // ===================== REFRESH ALL =====================
 function refreshAll(){
   const db=loadDB();
@@ -5311,8 +5558,18 @@ function xlsxDownload(wb, filename) {
 function fmtDate(d) { return d || ''; }
 function fmtNum(n) { return isNaN(parseFloat(n)) ? 0 : parseFloat(n); }
 
+// --- XLSX guard helper ---
+function xlsxReady() {
+  if (typeof XLSX === 'undefined') {
+    toast('⚠️ Excel library not loaded. Check your internet connection and try again.');
+    return false;
+  }
+  return true;
+}
+
 // --- SALES ---
 function exportSalesXLSX() {
+  if (!xlsxReady()) return;
   const db = loadDB();
   const rows = db.sales.map(r => ({
     'Date': fmtDate(r.date),
@@ -5338,6 +5595,7 @@ function exportSalesXLSX() {
 
 // --- PRODUCTION ---
 function exportProductionXLSX() {
+  if (!xlsxReady()) return;
   const db = loadDB();
   const rows = db.prod.map(r => ({
     'Date': fmtDate(r.date),
@@ -5359,6 +5617,7 @@ function exportProductionXLSX() {
 
 // --- EXPENSES ---
 function exportExpensesXLSX() {
+  if (!xlsxReady()) return;
   const db = loadDB();
   const expRows = db.exp.map(r => ({
     'Date': fmtDate(r.date),
@@ -5387,6 +5646,7 @@ function exportExpensesXLSX() {
 
 // --- INVENTORY ---
 function exportInventoryXLSX() {
+  if (!xlsxReady()) return;
   const db = loadDB();
   const rows = db.inv.map(r => ({
     'Date': fmtDate(r.date),
@@ -5407,6 +5667,7 @@ function exportInventoryXLSX() {
 
 // --- REPORTS (multi-sheet: Sales Ledger + Expenses + Production) ---
 function exportReportsXLSX() {
+  if (!xlsxReady()) return;
   const db = loadDB();
   const wb = XLSX.utils.book_new();
 
@@ -5452,6 +5713,7 @@ function exportReportsXLSX() {
 
 // --- CUSTOMERS ---
 function exportCustomersXLSX() {
+  if (!xlsxReady()) return;
   const db = loadDB();
   // Use buildCustMap — single source of truth for recv/bal
   const _exportCustMap = buildCustMap(db);
@@ -5483,6 +5745,7 @@ function exportCustomersXLSX() {
 
 // --- PAYMENTS ---
 function exportPaymentsXLSX() {
+  if (!xlsxReady()) return;
   const db = loadDB();
   const wb = XLSX.utils.book_new();
 
@@ -5733,7 +5996,7 @@ function obBulkImport() {
 
   _obBulkRows.forEach(r => {
     const idx = (db.openingBalances||[]).findIndex(o=>o.name.toLowerCase()===r.name.toLowerCase());
-    const entry = { id: Date.now() + Math.random(), name:r.name, phone:r.phone||'', bal:r.bal, date:dateNow, note:'Bulk import' };
+    const entry = { id: Date.now()*1000+Math.floor(Math.random()*999), name:r.name, phone:r.phone||'', bal:r.bal, date:dateNow, note:'Bulk import' };
     if (idx >= 0) { db.openingBalances[idx] = entry; updated++; }
     else          { db.openingBalances.push(entry); added++; }
   });
@@ -5756,6 +6019,7 @@ function obBulkClearPreview() {
 
 // ── Export opening balances ──
 function exportOpeningXLSX() {
+  if (!xlsxReady()) return;
   const db = loadDB();
   const obs = db.openingBalances || [];
   if (!obs.length) { toast('⚠️ No opening balances found to export.'); return; }
@@ -6057,7 +6321,7 @@ async function autoSyncFromGSheet() {
       } else {
         // ADD new
         db.sales.push({
-          id: Date.now() + Math.random(),
+          id: Date.now()*1000+Math.floor(Math.random()*999),
           date, cust,
           phone: get('mobile','phone'),
           site: get('location','site'),
@@ -6259,7 +6523,7 @@ async function syncFromGSheet() {
         }
       } else {
         db.sales.push({
-          id: Date.now() + Math.random(),
+          id: Date.now()*1000+Math.floor(Math.random()*999),
           date, cust, phone, site, vehicle,
           qty, total, status: entryStatus, recv, bal, rem,
           time: timeNow(), source: 'gsheet'
@@ -6317,11 +6581,17 @@ function toggleDark() {
     Chart.defaults.scale.ticks.color = textColor;
   }
 }
-// Apply saved dark mode on load
+// Apply saved dark mode on load — runs immediately to prevent flash
 (function(){
   if(localStorage.getItem('bmd_dark')==='1'){
     document.body.classList.add('dark-mode');
+    // Inline the login screen dark background immediately so there is no light flash
+    var style = document.createElement('style');
+    style.textContent = '#login-screen{background:linear-gradient(150deg,#0d1020 0%,#111420 100%) !important}';
+    document.head.appendChild(style);
     document.addEventListener('DOMContentLoaded',()=>{
+      // Remove the inline override — body.dark-mode CSS takes over from here
+      if(style.parentNode) style.parentNode.removeChild(style);
       const btn = document.getElementById('dark-toggle');
       if(btn) btn.textContent='☀️';
     });
@@ -6474,7 +6744,7 @@ function shareDailySummary(date, sales, cash, exp, qty, orders) {
 
 // ══════════════════════════════════════════════════════
 // FEATURE: BACKUP & RESTORE
-// ══════════════════════════════════════════════════════
+// ══════════════���═══════════════════════════════════════
 function backupData() {
   const db = loadDB();
   const backup = {
@@ -6512,9 +6782,16 @@ function restoreData(input) {
         input.value = '';
         return;
       }
-      localStorage.setItem('bmd_db', JSON.stringify(data));
-      statusEl.innerHTML = '<span style="color:var(--green)">✅ Restore successful! Reloading...</span>';
-      setTimeout(() => location.reload(), 1200);
+      localStorage.setItem(DB, JSON.stringify(data));
+      statusEl.innerHTML = '<span style="color:var(--green)">✅ Restore successful! Data loaded.</span>';
+      try{
+        if(typeof dbCache!=='undefined'){ dbCache = data; }
+        if(typeof render==='function') render();
+        if(typeof updateDashboard==='function') updateDashboard();
+      }catch(e){}
+      setTimeout(() => {
+        statusEl.innerHTML = '<span style="color:var(--green)">✅ Restore completed. If data is not visible, reopen the app.</span>';
+      }, 500);
     } catch (err) {
       statusEl.innerHTML = '<span style="color:var(--red)">❌ ' + err.message + '</span>';
       input.value = '';
