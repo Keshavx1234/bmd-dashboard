@@ -3812,25 +3812,8 @@ function confirmDelete(){
   const db=loadDB();
   const numId=_delId;
 
-  if(_delType==='payments'){
-    // Reverse the effect of this customer payment on sale balances before removing it
-    const p = db.payments.find(x=>parseFloat(x.id)===numId);
-    if(p){
-      let remaining = (p.applied!=null) ? p.applied : p.amount;
-      // Reverse against the customer's most-recently-paid sales first (best-effort)
-      const custSales = db.sales
-        .filter(s=>s.cust===p.cust && s.recv>0)
-        .sort((a,b)=>parseDate(b.date)-parseDate(a.date) || b.id-a.id);
-      for(const s of custSales){
-        if(remaining<=0) break;
-        const revert = Math.min(remaining, s.recv);
-        s.recv = Math.max(0, (s.recv||0) - revert);
-        s.bal  = (s.total||0) - s.recv;
-        if(s.bal>0 && s.status==='PAID/CASH') s.status='Pending';
-        remaining -= revert;
-      }
-    }
-  }
+  // Payments are stored separately — no need to revert sale rows
+  // buildCustMap recalculates balances from payments module automatically
 
   // If the entry being deleted came from GSheet, remember its fingerprint
   // so auto-sync never re-imports it
@@ -3948,23 +3931,9 @@ function saveCustomerPayment(){
 
   const db = loadDB();
 
-  // Apply payment against this customer's outstanding sales, oldest date first
-  let remaining = amount;
-  const custSales = db.sales
-    .filter(s=>s.cust===cust && s.bal>0)
-    .sort((a,b)=>parseDate(a.date)-parseDate(b.date) || a.id-b.id);
-
-  for(const s of custSales){
-    if(remaining<=0) break;
-    const apply = Math.min(remaining, s.bal);
-    s.recv = (s.recv||0) + apply;
-    s.bal  = Math.max(0, (s.bal||0) - apply);
-    remaining -= apply;
-    if(s.bal===0) s.status = 'PAID/CASH';
-  }
-
-  // Log the payment entry (track how much was applied to sales vs left as advance)
-  db.payments.push({id:Date.now()+Math.random(), date, cust, amount, applied:amount-remaining, advance:remaining, mode, rem, time:timeNow()});
+  // Log the payment — do NOT write back to individual sale rows
+  // buildCustMap calculates recv/bal from the payments module directly
+  db.payments.push({id:Date.now()+Math.random(), date, cust, amount, mode, rem, time:timeNow()});
   saveDB(db);
 
   if(remaining>0){
@@ -4325,7 +4294,7 @@ function openCustDetail(name){
         <div class="tl-body">
           <div class="tl-row"><strong>Sale — ${iN(t.qty)} bricks</strong><strong>${iR(t.amt)}</strong></div>
           <div class="tl-row tl-meta"><span>${t.date}${t.time?' · '+t.time:''}${t.vehicle?' · 🚛 '+t.vehicle:''}${t.site?' · 📍 '+t.site:''}</span><span>${statusBadge(t.status)}</span></div>
-          <div class="tl-row tl-meta"><span>Received: <span style="color:var(--green)">${iR(t.recv)}</span> &nbsp;|&nbsp; Balance: <span style="color:${t.bal>0?'var(--red)':'var(--green)'}">${iR(t.bal)}</span></span></div>
+          <div class="tl-row tl-meta"><span>Sale Amount: <span style="color:var(--accent)">${iR(t.amt)}</span> &nbsp;|&nbsp; ${t.rem?'<span style="color:var(--muted)">'+t.rem+'</span>':''}</span></div>
           ${t.rem?`<div class="tl-meta">📝 ${t.rem}</div>`:''}
         </div>
       </li>`;
@@ -4470,6 +4439,7 @@ function printCustBill(fromDate, toDate) {
       <td style="text-align:right;font-weight:700;color:var(--red)">${iR(obAmt)}</td>
     </tr>` : '';
 
+  const _hasPmts = payments.length > 0;
   const salesRows = sales.length ? sales.map((s, i) => `
     <tr class="${i % 2 === 0 ? '' : 'alt'}">
       <td>${s.date}</td>
@@ -4477,8 +4447,8 @@ function printCustBill(fromDate, toDate) {
       <td>${s.vehicle || '—'}</td>
       <td>${s.site || '—'}</td>
       <td style="text-align:right;font-weight:600">${iR(s.total)}</td>
-      <td style="text-align:right;color:var(--green)">${iR(s.recv)}</td>
-      <td style="text-align:right;color:${s.bal > 0 ? 'var(--red)' : 'var(--green)'};font-weight:600">${iR(s.bal)}</td>
+      <td style="text-align:right;color:var(--green)">${_hasPmts ? '—' : iR(s.recv)}</td>
+      <td style="text-align:right;color:var(--gray-500);font-weight:600">${_hasPmts ? '—' : iR(s.bal)}</td>
     </tr>`).join('') : '';
 
   const noSalesRow = (!obAmt && !sales.length)
@@ -5035,7 +5005,17 @@ function filterLedger(){
   const st=document.getElementById('ledStatus')?.value||'';
   const rows=db.sales.filter(s=>(!q||(s.cust.toLowerCase().includes(q)||(s.vehicle||'').toLowerCase().includes(q)))&&(!st||s.status===st)).sort((a,b)=>b.id-a.id).slice(0,100);
   const el=document.getElementById('ledgerTbl');
-  if(el)el.innerHTML=rows.length?rows.map(s=>`<tr><td class="dt">${s.date}</td><td><strong>${s.cust}</strong></td><td>${s.phone||'—'}</td><td>${s.vehicle||'—'}</td><td>${s.site||'—'}</td><td>${iN(s.qty)}</td><td>${iR(s.total)}</td><td style="color:var(--green)">${iR(s.recv)}</td><td style="color:${s.bal>0?'var(--red)':'var(--green)'}"><strong>${iR(s.bal)}</strong></td><td>${statusBadge(s.status)}</td><td style="color:var(--muted)">${s.rem||'—'}</td></tr>`).join(''):'<tr><td colspan="11" class="empty">No matching records</td></tr>';
+  // recv/bal from buildCustMap for accurate display
+  const _stMapForRows = buildCustMap(db);
+  if(el)el.innerHTML=rows.length?rows.map(s=>{
+    const cm = _stMapForRows[s.cust];
+    const hasPayments = (db.payments||[]).some(p=>p.cust===s.cust);
+    const dispRecv = hasPayments ? '—' : iR(s.recv||0);
+    const dispBal  = hasPayments ? '—' : iR(s.bal||0);
+    const dispBalColor = hasPayments ? 'var(--muted)' : (s.bal>0?'var(--red)':'var(--green)');
+    const dispStatus = cm ? statusBadge(cm.bal<=0?'PAID/CASH':(s.status||'Pending')) : statusBadge(s.status);
+    return `<tr><td class="dt">${s.date}</td><td><strong>${s.cust}</strong></td><td>${s.phone||'—'}</td><td>${s.vehicle||'—'}</td><td>${s.site||'—'}</td><td>${iN(s.qty)}</td><td>${iR(s.total)}</td><td style="color:var(--green)">${dispRecv}</td><td style="color:${dispBalColor}"><strong>${dispBal}</strong></td><td>${dispStatus}</td><td style="color:var(--muted)">${s.rem||'—'}</td></tr>`;
+  }).join(''):'<tr><td colspan="11" class="empty">No matching records</td></tr>';
   const expRows=[...db.exp].sort((a,b)=>b.id-a.id).slice(0,100);
   const expEl=document.getElementById('expLedgerTbl');
   if(expEl)expEl.innerHTML=expRows.length?expRows.map(e=>`<tr><td class="dt">${e.date}</td><td><span class="b bp">${e.cat}</span></td><td>${e.desc}</td><td><strong>${iR(e.amt)}</strong></td><td style="color:var(--muted)">${e.rem||'—'}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">No expense records</td></tr>';
