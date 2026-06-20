@@ -4921,10 +4921,8 @@ function refreshAll(){
   // Recent sales: recv/bal shown per-sale row (sale-level is fine here for row detail)
   // But status badge corrected using overall cust balance
   document.getElementById('recentSalesTbl').innerHTML=rs.length?rs.map(s=>{
-    const custTotals=_allCustMap[s.cust];
-    const dispRecv=s.recv||0;
-    const dispBal=s.bal||0;
-    return `<tr><td class="dt">${s.date}</td><td><strong>${s.cust}</strong></td><td style="color:var(--muted)">${s.vehicle||'—'}</td><td style="color:var(--muted)">${s.site||'—'}</td><td>${iN(s.qty)}</td><td>${iR(s.total)}</td><td style="color:var(--green)">${iR(dispRecv)}</td><td style="color:${dispBal>0?'var(--red)':'var(--green)'}"><strong>${iR(dispBal)}</strong></td><td>${statusBadge(custTotals&&custTotals.bal<=0?'PAID/CASH':s.status)}</td></tr>`;
+    const custTotals=(_allCustMap||{})[s.cust];
+    return `<tr><td class="dt">${s.date}</td><td><strong>${s.cust}</strong></td><td style="color:var(--muted)">${s.vehicle||'—'}</td><td style="color:var(--muted)">${s.site||'—'}</td><td>${iN(s.qty)}</td><td>${iR(s.total)}</td><td style="color:var(--green)">—</td><td style="color:var(--muted)"><strong>—</strong></td><td>${statusBadge(custTotals&&custTotals.bal<=0?'PAID/CASH':s.status)}</td></tr>`;
   }).join(''):'<tr><td colspan="9" class="empty">No sales yet</td></tr>';
 
   // Monthly summary — interactive
@@ -4933,7 +4931,7 @@ function refreshAll(){
   // Follow-up widget
   // Follow-up: use buildCustMap balances (already computed above)
   const dueCusts={};
-  Object.entries(_allCustMap).filter(([,c])=>c.bal>0).forEach(([name,c])=>{
+  Object.entries(_allCustMap||{}).filter(([,c])=>c.bal>0).forEach(([name,c])=>{
     dueCusts[name]={bal:c.bal,phone:c.phone,last:c.last};
   });
   const dueList=Object.entries(dueCusts).sort((a,b)=>b[1].bal-a[1].bal);
@@ -5006,7 +5004,7 @@ function filterLedger(){
   const rows=db.sales.filter(s=>(!q||(s.cust.toLowerCase().includes(q)||(s.vehicle||'').toLowerCase().includes(q)))&&(!st||s.status===st)).sort((a,b)=>b.id-a.id).slice(0,100);
   const el=document.getElementById('ledgerTbl');
   // recv/bal from buildCustMap for accurate display
-  const _stMapForRows = buildCustMap(db);
+  const _stMapForRows = buildCustMap(db) || {};
   if(el)el.innerHTML=rows.length?rows.map(s=>{
     const cm = _stMapForRows[s.cust];
     const hasPayments = (db.payments||[]).some(p=>p.cust===s.cust);
@@ -5775,10 +5773,10 @@ function exportOpeningXLSX() {
   toast('✅ Opening balances exported successfully.');
 }
 
-setHeader();
-initForms();
-refreshAll();
-syncInit();
+try { setHeader(); } catch(e) { console.error('setHeader error:', e); }
+try { initForms(); } catch(e) { console.error('initForms error:', e); }
+try { refreshAll(); } catch(e) { console.error('refreshAll error:', e); }
+try { syncInit(); } catch(e) { console.error('syncInit error:', e); }
 
 // ── Stock Widget ──────────────────────────────
 let _stockDays = 0; // default All
@@ -6408,6 +6406,7 @@ function showDailySummary() {
   const netCash = totalCash - totalExp;
 
   const box = document.getElementById('dailySummaryBox');
+  if (!box) return;
   const [dd,mm,yy] = td.split('-');
   const dateStr = new Date(yy,mm-1,dd).toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
@@ -6539,13 +6538,18 @@ function doLogin() {
   setTimeout(function() {
     btn.classList.remove('loading');
     if (USERS[u] && USERS[u] === p) {
-      // Trigger red sweep reveal
+      const loginEl = document.getElementById('login-screen');
       const sweep = document.getElementById('app-reveal');
-      sweep.classList.add('go');
-      setTimeout(function(){
-        document.getElementById('login-screen').style.display = 'none';
-        sweep.style.display = 'none';
-      }, 700);
+      if (sweep) {
+        sweep.classList.add('go');
+        setTimeout(function(){
+          if (loginEl) loginEl.style.display = 'none';
+          sweep.style.display = 'none';
+        }, 700);
+      } else {
+        // Fallback if sweep element missing
+        if (loginEl) loginEl.style.display = 'none';
+      }
     } else {
       errEl.classList.add('show');
       document.getElementById('lf-pass').value = '';
