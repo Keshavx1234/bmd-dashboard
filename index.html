@@ -884,6 +884,59 @@ tbody td {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 
+
+/* ── DARK MODE ── */
+body.dark-mode {
+  --bg:          #0f1117;
+  --surface:     #1a1d27;
+  --surface-2:   #20232f;
+  --surface-3:   #272a38;
+  --border:      #2e3145;
+  --border-soft: #252839;
+  --text:        #e8ecf4;
+  --text-2:      #9aa3b8;
+  --muted:       #5f6880;
+  --accent:      #4f8eff;
+  --accent-2:    #7aaeff;
+  --accent-lt:   rgba(79,142,255,.15);
+  --accent-soft: rgba(79,142,255,.07);
+  --green:       #22c55e;
+  --green-lt:    rgba(34,197,94,.12);
+  --red:         #f87171;
+  --red-lt:      rgba(248,113,113,.12);
+  --amber:       #fbbf24;
+  --amber-lt:    rgba(251,191,36,.12);
+  --gold:        #f0bb4d;
+  --sand:        #0f1117;
+  --ink:         #e8ecf4;
+  --navy:        #1a1d27;
+  --shadow-sm:  0 1px 2px rgba(0,0,0,.3);
+  --shadow-md:  0 8px 24px rgba(0,0,0,.4);
+  --shadow-lg:  0 20px 48px rgba(0,0,0,.5);
+}
+body.dark-mode .sidebar { background: var(--surface); border-right: 1px solid var(--border); }
+body.dark-mode input, body.dark-mode select, body.dark-mode textarea {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+body.dark-mode .card { background: var(--surface); border-color: var(--border); }
+body.dark-mode table th { background: var(--surface-2) !important; color: var(--text-2) !important; }
+body.dark-mode table td { border-color: var(--border-soft); }
+body.dark-mode tr:hover td { background: var(--surface-2) !important; }
+body.dark-mode mark { background: #7a6c00 !important; color: #fff !important; }
+body.dark-mode .nt { color: var(--text-2); }
+body.dark-mode .nt:hover, body.dark-mode .nt.active { background: var(--accent-lt); color: var(--accent); }
+body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#111420 100%); }
+#dark-toggle {
+  position: fixed; bottom: 18px; right: 18px; z-index: 500;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--surface); border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-md); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; transition: transform .2s;
+}
+#dark-toggle:hover { transform: scale(1.12); }
 </style>
 </head>
 <body>
@@ -992,6 +1045,7 @@ tbody td {
 <!-- MAIN CONTENT -->
 <div class="main-content">
 
+<button id="dark-toggle" onclick="toggleDark()" title="Toggle Dark Mode">🌙</button>
 <div id="toast"></div>
 
 <!-- ========== DELETE CONFIRM MODAL ========== -->
@@ -1453,7 +1507,12 @@ tbody td {
 
     <!-- Follow-up -->
     <div class="d-card" style="margin-bottom:12px">
-      <div class="d-card-title">🔴 Follow-Up Required · Outstanding Balances</div>
+      <div class="d-card-title" style="display:flex;justify-content:space-between;align-items:center">
+        <span>📋 Daily Cash Summary</span>
+        <button onclick="showDailySummary()" style="padding:5px 12px;border-radius:7px;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);font-size:11px;font-weight:700;cursor:pointer">🖨️ Print / Share</button>
+      </div>
+      <div id="dailySummaryBox" style="display:none;font-size:12.5px;padding:10px 0"></div>
+      <div class="d-card-title" style="margin-top:14px">🔴 Follow-Up Required · Outstanding Balances</div>
       <div id="dashFollowUp"><p class="empty" style="color:var(--green)">✅ All balances cleared. No follow-up required.</p></div>
     </div>
 
@@ -1842,22 +1901,12 @@ function renderBrickModal() {
   #pg-sales .qe-section-title{font-size:10.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);margin:0 0 13px;display:flex;align-items:center;gap:9px}
   #pg-sales .qe-section-title::after{content:'';flex:1;height:1px;background:var(--border-soft)}
 
-  #pg-sales .bulk-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:13px}
-  #pg-sales .bulk-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  #pg-sales .bulk-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r)}
-  #pg-sales table.bulk-table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1150px}
-  #pg-sales table.bulk-table th{background:var(--surface-2);color:var(--text-2);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:9px 8px;border-bottom:1.5px solid var(--border);text-align:left;white-space:nowrap}
-  #pg-sales table.bulk-table td{padding:4px;border-bottom:1px solid var(--border-soft);vertical-align:middle}
-  #pg-sales table.bulk-table tr:hover td{background:var(--surface-2)}
-  #pg-sales table.bulk-table input,#pg-sales table.bulk-table select{width:100%;border:1.5px solid transparent;background:transparent;padding:7px 8px;font-size:12.5px;border-radius:6px;color:var(--text);font-family:inherit}
-  #pg-sales table.bulk-table input:focus,#pg-sales table.bulk-table select:focus{outline:none;border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 2px rgba(47,111,237,.12)}
-  #pg-sales table.bulk-table .bal-cell{font-weight:700;text-align:right;padding-right:14px;white-space:nowrap}
+
   #pg-sales .row-num{color:var(--muted);font-size:11px;text-align:center;width:24px}
   #pg-sales .row-del,#pg-sales .row-copy{background:none;border:none;cursor:pointer;font-size:13px;padding:4px 6px;border-radius:6px;color:var(--muted)}
   #pg-sales .row-del:hover{background:var(--red-lt);color:var(--red)}
   #pg-sales .row-copy:hover{background:var(--accent-lt);color:var(--accent)}
-  #pg-sales .bulk-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border-soft)}
-  #pg-sales .bulk-summary{font-size:12px;color:var(--muted)}
+
 
   #pg-sales .se-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:6px 0 11px}
   #pg-sales .se-search{position:relative;flex:1;min-width:220px;max-width:380px}
@@ -1883,11 +1932,7 @@ function renderBrickModal() {
   <div id="gsheet-log" style="margin:-6px 0 16px;font-size:12px;color:var(--muted);display:none;padding:8px 10px;background:var(--surface-2);border-radius:6px;border:1px solid var(--border-soft)"></div>
 
   <!-- MODE TABS -->
-  <div class="sd-tabs">
-    <button id="modeManual" class="sd-tab on" onclick="switchMode('manual')">✏️ Quick Entry</button>
-    <button id="modeBulk" class="sd-tab" onclick="switchMode('bulk')">📑 Bulk Entry</button>
-    <button id="modePaste" class="sd-tab" onclick="switchMode('paste')">📂 Import Excel</button>
-  </div>
+  <!-- Mode tabs: bulk entry removed, only quick entry remains -->
 
   <!-- ===== QUICK ENTRY PANEL (single sale) ===== -->
   <div id="panel-manual">
@@ -1927,7 +1972,14 @@ function renderBrickModal() {
           </div>
           <div class="fl">
             <label>Total Amount (₹) <span class="req">*</span></label>
-            <input type="number" id="s-total" placeholder="e.g. 12000" min="0" inputmode="numeric">
+            <div style="display:flex;gap:6px;align-items:center">
+              <input type="number" id="s-total" placeholder="e.g. 12000" min="0" inputmode="numeric" style="flex:1">
+              <button type="button" onclick="calcTotal()" title="Auto-calculate from rate" style="padding:8px 12px;border-radius:8px;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">🧮 Calc</button>
+            </div>
+            <div class="hint" style="display:flex;align-items:center;gap:6px;margin-top:4px">
+              Rate: ₹<input type="number" id="s-rate" placeholder="per brick" min="0" step="0.01" inputmode="decimal" style="width:80px;padding:3px 6px;border-radius:5px;border:1px solid var(--border);font-size:11.5px;background:var(--surface-2)" oninput="saveRate(this.value)"> /brick
+              <span id="rate-preview" style="color:var(--muted);font-size:11px"></span>
+            </div>
           </div>
           <div class="fl">
             <label>Payment Status <span class="req">*</span></label>
@@ -1964,95 +2016,9 @@ function renderBrickModal() {
   </div>
 
   <!-- ===== BULK ENTRY PANEL (multi-row, spreadsheet-style) ===== -->
-  <div id="panel-bulk" style="display:none">
-    <div class="al al-i">📑 <strong>Bulk Entry:</strong> Add several deliveries at once, like a spreadsheet. Use the ⬆️ button to copy date/site/vehicle/status from the row above, then click <strong>Save All</strong> — incomplete rows are skipped automatically.</div>
-    <div class="card">
-      <div class="bulk-toolbar">
-        <div class="bulk-actions">
-          <button class="btn b-out" style="padding:7px 14px;font-size:12px" onclick="addBulkRows(1)">➕ Add Row</button>
-          <button class="btn b-out" style="padding:7px 14px;font-size:12px" onclick="addBulkRows(5)">➕ Add 5 Rows</button>
-          <button class="btn b-out" style="padding:7px 14px;font-size:12px" onclick="clearBulkRows()">🗑️ Clear All</button>
-        </div>
-        <div class="bulk-actions">
-          <label style="font-size:12px;color:var(--muted);font-weight:600">Set date for all rows:</label>
-          <input type="date" id="bulkDateAll" style="padding:6px 10px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:12.5px;background:var(--surface-2);color:var(--text)">
-          <button class="btn b-out" style="padding:7px 14px;font-size:12px" onclick="applyBulkDateAll()">Apply</button>
-        </div>
-      </div>
-      <div class="bulk-wrap">
-        <table class="bulk-table">
-          <thead><tr>
-            <th></th><th>Date</th><th>Customer Name</th><th>Phone</th><th>Vehicle No.</th><th>Site / Location</th>
-            <th style="text-align:right">Qty</th><th style="text-align:right">Total ₹</th><th>Status</th>
-            <th style="text-align:right">Received ₹</th><th style="text-align:right">Balance ₹</th><th>Remarks</th><th></th>
-          </tr></thead>
-          <tbody id="bulkTbl"></tbody>
-        </table>
-      </div>
-      <div class="bulk-footer">
-        <div class="bulk-summary" id="bulkSummary">0 rows ready to save</div>
-        <button class="btn b-acc" onclick="saveBulkEntries()">💾 Save All Entries</button>
-      </div>
-    </div>
-  </div>
 
   <!-- ===== EXCEL UPLOAD PANEL ===== -->
-  <div id="panel-paste" style="display:none">
-    <div class="al al-i">
-      📂 <strong>How to use:</strong> Click <strong>Choose Excel File</strong> below → select your <strong>SALES_REPORT.xlsx</strong> → the system will auto-detect columns and show a preview → click <strong>Import Rows</strong>.<br>
-      <span style="margin-top:4px;display:block;color:var(--green)">✅ Works with <strong>.xlsx</strong> and <strong>.xls</strong> files. Header row is auto-skipped. No column mapping needed.</span>
-    </div>
-
-    <!-- File Upload Area -->
-    <div class="card" style="margin-bottom:13px">
-      <div class="ct">📂 Upload Your Excel File</div>
-
-      <!-- Drop zone -->
-      <div id="xlDropZone" onclick="document.getElementById('xlFileInput').click()"
-        style="border:2.5px dashed var(--border);border-radius:var(--rs);padding:28px;text-align:center;cursor:pointer;background:var(--surface-2);transition:border-color .2s,background .2s"
-        ondragover="event.preventDefault();this.style.borderColor='var(--accent)';this.style.background='var(--accent-lt)'"
-        ondragleave="this.style.borderColor='var(--border)';this.style.background='var(--surface-2)'"
-        ondrop="event.preventDefault();this.style.borderColor='var(--border)';this.style.background='var(--surface-2)';handleXlDrop(event)">
-        <div style="font-size:32px;margin-bottom:8px">📊</div>
-        <div style="font-weight:700;font-size:14px;margin-bottom:4px">Click to choose Excel file or drag &amp; drop here</div>
-        <div style="font-size:12px;color:var(--muted)">Supports .xlsx and .xls — SALES_REPORT.xlsx recommended</div>
-      </div>
-      <input type="file" id="xlFileInput" accept=".xlsx,.xls" style="display:none" onchange="handleXlFile(this.files[0])">
-
-      <div id="xlFileInfo" style="margin-top:10px;font-size:12.5px;display:none">
-        <span id="xlFileName" style="font-weight:600;color:var(--accent)"></span>
-        <span id="xlSheetSelect" style="margin-left:10px"></span>
-      </div>
-      <div id="xlError" style="margin-top:8px;font-size:12px;color:var(--red);display:none"></div>
-    </div>
-
-    <!-- Column Header Matcher (shown after file loads) -->
-    <div class="card" id="xlColCard" style="display:none;margin-bottom:13px">
-      <div class="ct">🗂️ Column Detection — Auto-matched from your header row</div>
-      <div id="xlColStatus" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
-      <div id="xlColMapper" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:8px"></div>
-      <div style="margin-top:10px;font-size:11.5px;color:var(--muted)">💡 If a field shows <strong>—</strong>, set the correct column letter manually using the dropdowns above.</div>
-    </div>
-
-    <!-- Preview -->
-    <div id="xlPreviewWrap" style="display:none">
-      <div class="st">Preview — Rows to be Imported</div>
-      <div class="card">
-        <div id="xlPreviewInfo" style="font-size:12.5px;margin-bottom:10px"></div>
-        <div class="tw">
-          <table>
-            <thead><tr><th>#</th><th>Date</th><th>Customer Name</th><th>Phone</th><th>Location</th><th>Qty</th><th>Total (₹)</th><th>Vehicle No.</th><th>Status</th><th>Received (₹)</th><th>Balance (₹)</th><th>Remarks</th></tr></thead>
-            <tbody id="xlPreviewTbl"></tbody>
-          </table>
-        </div>
-        <div id="xlPreviewFooter" class="tf"></div>
-        <div class="br">
-          <button class="btn b-acc" onclick="importXlRows()">📥 Import Rows into System</button>
-          <button class="btn b-out" onclick="clearXlUpload()">🗑️ Clear</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Import Excel panel removed -->
 
   <!-- ===== SALES TABLE (date filtered + search) ===== -->
   <div class="se-toolbar">
@@ -2062,7 +2028,7 @@ function renderBrickModal() {
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <label style="font-size:12px;font-weight:600;color:var(--muted)">📅 Date:</label>
-      <input type="date" id="salesViewDate" style="padding:6px 10px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:13px;background:var(--surface-2);color:var(--text)" onchange="_salesViewAll=false;_salesSearch='';document.getElementById('salesSearchBox').value='';renderSalesTable()">
+      <input type="date" id="salesViewDate" style="padding:6px 10px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:13px;background:var(--surface-2);color:var(--text)" onchange="_salesViewAll=false;_salesSearch='';document.getElementById('salesSearchBox').value='';document.getElementById('salesViewLabel') && (document.getElementById('salesViewLabel').textContent='');renderSalesTable()">
       <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="salesGoToday()">Today</button>
       <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="setSalesViewAll()">All</button>
       <label style="font-size:12px;font-weight:600;color:var(--muted)">⇕ Sort:</label>
@@ -2279,7 +2245,7 @@ function renderBrickModal() {
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <label style="font-size:12px;font-weight:600;color:var(--muted)">📅 View date:</label>
       <input type="date" id="prodViewDate" style="padding:6px 10px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:13px;background:var(--surface-2);color:var(--text)" onchange="renderProdTable()">
-      <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="document.getElementById('prodViewDate').value=toInput(today());renderProdTable()">Today</button>
+      <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="document.getElementById('prodViewDate').value=_localDateStr();renderProdTable()">Today</button>
       <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="setProdViewAll()">All Entries</button>
       <label style="font-size:12px;font-weight:600;color:var(--muted)">⇕ Sort:</label>
       <select id="prodSortSel" style="padding:6px 10px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:13px;background:var(--surface-2);color:var(--text)" onchange="_prodSort=this.value;renderProdTable()">
@@ -2408,7 +2374,7 @@ function renderBrickModal() {
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <label style="font-size:12px;font-weight:600;color:var(--muted)">📅 View date:</label>
       <input type="date" id="expViewDate" style="padding:6px 10px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:13px;background:var(--surface-2);color:var(--text)" onchange="renderExpTable()">
-      <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="document.getElementById('expViewDate').value=toInput(today());renderExpTable()">Today</button>
+      <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="document.getElementById('expViewDate').value=_localDateStr();renderExpTable()">Today</button>
       <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="setExpViewAll()">All Entries</button>
       <label style="font-size:12px;font-weight:600;color:var(--muted)">⇕ Sort:</label>
       <select id="expSortSel" style="padding:6px 10px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:13px;background:var(--surface-2);color:var(--text)" onchange="_expSort=this.value;renderExpTable()">
@@ -2672,8 +2638,9 @@ function renderBrickModal() {
  <div class="emodal" style="max-width:760px">
   <div class="emodal-hdr">
    <h3 id="cdTitle">👤 Customer</h3>
-   <div style="display:flex;gap:8px;align-items:center">
-    <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="printCustBill()">🖨️ Print / Share Bill</button>
+   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="openPrintRange()">🖨️ Print / Share Bill</button>
+    <button onclick="sendWhatsApp()" style="padding:6px 14px;border-radius:8px;border:none;background:#25D366;color:#fff;font-size:12px;font-weight:700;cursor:pointer">💬 WhatsApp</button>
     <button class="emodal-close" onclick="closeCustDetail()">✕</button>
    </div>
   </div>
@@ -2905,6 +2872,22 @@ function renderBrickModal() {
 
 <!-- ==================== SETUP GUIDE ==================== -->
 <div id="pg-setup" class="pg">
+  <!-- BACKUP & RESTORE -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+    <div class="st" style="margin:0">🗄️ Backup & Restore Data</div>
+  </div>
+  <div class="card" style="padding:18px;margin-bottom:22px">
+    <p style="font-size:13px;color:var(--text-2);margin:0 0 14px">Download a full backup of all your data (sales, payments, customers, production, expenses). Restore from any previous backup file.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button onclick="backupData()" style="padding:9px 20px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-weight:700;font-size:13px;cursor:pointer">⬇️ Download Backup</button>
+      <label style="padding:9px 20px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface-2);font-weight:700;font-size:13px;cursor:pointer;color:var(--text)">
+        ⬆️ Restore from Backup
+        <input type="file" id="restore-file" accept=".json" style="display:none" onchange="restoreData(this)">
+      </label>
+    </div>
+    <div id="restore-status" style="margin-top:10px;font-size:12px;color:var(--muted)"></div>
+  </div>
+
   <div class="st">Part A — Google Sheets Structure (8 Tabs)</div>
   <div class="card">
     <table class="sht">
@@ -3344,7 +3327,15 @@ function normalizeDate(s){
 }
 
 // today() → DD-MM-YYYY
-const today = () => { const d=new Date(); return String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear(); };
+const today = () => {
+  const d = new Date();
+  return String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear();
+};
+// toInput uses local date not UTC
+const _localDateStr = () => {
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+};
 
 // Convert DD-MM-YYYY → JS Date object
 const parseDate = s => {
@@ -3709,601 +3700,7 @@ function clearXlUpload(){
 }
 
 // ===================== MODE SWITCH =====================
-function switchMode(mode){
-  document.getElementById('panel-manual').style.display=mode==='manual'?'':'none';
-  document.getElementById('panel-bulk').style.display=mode==='bulk'?'':'none';
-  document.getElementById('panel-paste').style.display=mode==='paste'?'':'none';
-  document.getElementById('modeManual').className='sd-tab'+(mode==='manual'?' on':'');
-  document.getElementById('modeBulk').className='sd-tab'+(mode==='bulk'?' on':'');
-  document.getElementById('modePaste').className='sd-tab'+(mode==='paste'?' on':'');
-  if(mode==='bulk') renderBulkTable();
-}
 
-// ===================== BULK ENTRY (multi-row sales) =====================
-let _bulkRows = [];
-let _bulkSeq = 1;
-
-function newBulkRow(){
-  const last = _bulkRows[_bulkRows.length-1];
-  return {
-    _id: _bulkSeq++,
-    date: (last&&last.date) || toInput(today()),
-    cust:'', phone:'',
-    vehicle:(last&&last.vehicle)||'',
-    site:(last&&last.site)||'',
-    qty:'', total:'', status:'', recv:'', rem:''
-  };
-}
-
-function ensureBulkSeed(){
-  if(!_bulkRows.length){ for(let i=0;i<5;i++) _bulkRows.push(newBulkRow()); }
-}
-
-function addBulkRows(n){
-  for(let i=0;i<n;i++) _bulkRows.push(newBulkRow());
-  renderBulkTable();
-  setTimeout(()=>{
-    const lastRow=_bulkRows[_bulkRows.length-1];
-    const el=document.getElementById('bk-cust-'+lastRow._id);
-    if(el) el.focus();
-  },30);
-}
-
-function clearBulkRows(){
-  if(_bulkRows.some(r=>r.cust&&r.cust.trim()) && !confirm('Clear all bulk entry rows? Unsaved data will be lost.')) return;
-  _bulkRows=[];
-  ensureBulkSeed();
-  renderBulkTable();
-}
-
-function removeBulkRow(id){
-  _bulkRows=_bulkRows.filter(r=>r._id!==id);
-  if(!_bulkRows.length) ensureBulkSeed();
-  renderBulkTable();
-}
-
-function copyBulkRowAbove(id){
-  const idx=_bulkRows.findIndex(r=>r._id===id);
-  if(idx<=0) return;
-  const above=_bulkRows[idx-1], row=_bulkRows[idx];
-  row.date=above.date; row.site=above.site; row.vehicle=above.vehicle; row.status=above.status;
-  renderBulkTable();
-}
-
-function bulkUpdate(id,field,value){
-  const row=_bulkRows.find(r=>r._id===id);
-  if(!row) return;
-  row[field]=value;
-  if(field==='total'||field==='recv'){
-    const bal=Math.max(0,(parseFloat(row.total)||0)-(parseFloat(row.recv)||0));
-    const balEl=document.getElementById('bk-bal-'+id);
-    if(balEl){ balEl.textContent=iR(bal); balEl.style.color=bal>0?'var(--red)':'var(--green)'; }
-  }
-  updateBulkSummary();
-}
-
-function applyBulkDateAll(){
-  const v=document.getElementById('bulkDateAll').value;
-  if(!v) return;
-  _bulkRows.forEach(r=>r.date=v);
-  renderBulkTable();
-}
-
-function bulkRowValid(row){
-  return !!(row.date && row.cust && row.cust.trim() && parseFloat(row.qty)>0 && parseFloat(row.total)>0 && row.status);
-}
-
-function updateBulkSummary(){
-  const filled=_bulkRows.filter(r=>r.cust&&r.cust.trim());
-  const valid=_bulkRows.filter(bulkRowValid);
-  const el=document.getElementById('bulkSummary');
-  if(el) el.textContent=`${_bulkRows.length} row${_bulkRows.length!==1?'s':''} · ${valid.length} ready to save`+(filled.length>valid.length?` · ${filled.length-valid.length} incomplete`:'');
-}
-
-function renderBulkTable(){
-  ensureBulkSeed();
-  const tbl=document.getElementById('bulkTbl');
-  if(!tbl) return;
-  tbl.innerHTML=_bulkRows.map((r,i)=>{
-    const bal=Math.max(0,(parseFloat(r.total)||0)-(parseFloat(r.recv)||0));
-    return `<tr>
-      <td class="row-num">${i+1}</td>
-      <td><input type="date" value="${r.date||''}" oninput="bulkUpdate(${r._id},'date',this.value)"></td>
-      <td><input type="text" id="bk-cust-${r._id}" placeholder="Customer name" value="${(r.cust||'').replace(/"/g,'&quot;')}" oninput="bulkUpdate(${r._id},'cust',this.value)" list="custList"></td>
-      <td><input type="tel" placeholder="Phone" value="${r.phone||''}" oninput="bulkUpdate(${r._id},'phone',this.value)"></td>
-      <td><input type="text" placeholder="Vehicle" value="${(r.vehicle||'').replace(/"/g,'&quot;')}" oninput="bulkUpdate(${r._id},'vehicle',this.value)"></td>
-      <td><input type="text" placeholder="Site" value="${(r.site||'').replace(/"/g,'&quot;')}" oninput="bulkUpdate(${r._id},'site',this.value)"></td>
-      <td><input type="number" min="0" style="text-align:right" placeholder="0" value="${r.qty||''}" oninput="bulkUpdate(${r._id},'qty',this.value)"></td>
-      <td><input type="number" min="0" style="text-align:right" placeholder="0" value="${r.total||''}" oninput="bulkUpdate(${r._id},'total',this.value)"></td>
-      <td><select onchange="bulkUpdate(${r._id},'status',this.value)">
-            <option value="" ${!r.status?'selected':''}>—</option>
-            <option value="PAID/CASH" ${r.status==='PAID/CASH'?'selected':''}>✅ Paid</option>
-            <option value="CREDIT" ${r.status==='CREDIT'?'selected':''}>🔶 Credit</option>
-            <option value="Pending" ${r.status==='Pending'?'selected':''}>🔴 Pending</option>
-          </select></td>
-      <td><input type="number" min="0" style="text-align:right" placeholder="0" value="${r.recv||''}" oninput="bulkUpdate(${r._id},'recv',this.value)"></td>
-      <td class="bal-cell" id="bk-bal-${r._id}" style="color:${bal>0?'var(--red)':'var(--green)'}">${iR(bal)}</td>
-      <td><input type="text" placeholder="Remarks" value="${(r.rem||'').replace(/"/g,'&quot;')}" oninput="bulkUpdate(${r._id},'rem',this.value)"></td>
-      <td style="white-space:nowrap">
-        ${i>0?`<button class="row-copy" title="Copy date/site/vehicle/status from row above" onclick="copyBulkRowAbove(${r._id})">⬆️</button>`:''}
-        <button class="row-del" title="Remove row" onclick="removeBulkRow(${r._id})">✕</button>
-      </td>
-    </tr>`;
-  }).join('');
-  updateBulkSummary();
-}
-
-function saveBulkEntries(){
-  const valid=_bulkRows.filter(bulkRowValid);
-  if(!valid.length){ toast('⚠️ No complete rows to save — fill Date, Customer, Qty, Total and Status'); return; }
-  const db=loadDB();
-  valid.forEach((r,i)=>{
-    const total=parseFloat(r.total)||0, recv=parseFloat(r.recv)||0;
-    db.sales.push({
-      id:Date.now()+i+Math.random(),
-      date:fromInput(r.date),
-      cust:toTitleCase(r.cust.trim()),
-      phone:r.phone||'', site:r.site||'', vehicle:r.vehicle||'',
-      qty:parseFloat(r.qty)||0, total, status:r.status, recv,
-      bal:Math.max(0,total-recv), rem:r.rem||'', time:timeNow()
-    });
-  });
-  saveDB(db);
-  _bulkRows=_bulkRows.filter(r=>!bulkRowValid(r) && r.cust && r.cust.trim());
-  ensureBulkSeed();
-  renderBulkTable();
-  refreshAll();
-  toast(`✅ Saved ${valid.length} sale${valid.length!==1?'s':''}!`);
-}
-
-// ===================== DATE / STATUS UTILS (used by xl import) =====================
-// normalizeDate is defined earlier in UTILS
-
-function normalizeStatus(s){
-  if(!s)return'Pending';
-  const u=String(s).toUpperCase().trim();
-  if(u.includes('PAID')||u.includes('CASH'))return'PAID/CASH';
-  if(u.includes('CREDIT'))return'CREDIT';
-  if(u.includes('PENDING')||u.includes('NOT YET')||u.includes('NO'))return'Pending';
-  return s||'Pending';
-}
-
-// ===================== SALES TABLE RENDERER =====================
-let _salesViewAll = false;
-let _salesSearch = '';
-let _salesSort = 'date-desc';
-
-function salesGoToday(){
-  _salesViewAll = false;
-  _salesSearch = '';
-  document.getElementById('salesSearchBox').value = '';
-  document.getElementById('salesViewDate').value = toInput(today());
-  renderSalesTable();
-}
-
-function setSalesViewAll(){
-  _salesViewAll = true;
-  _salesSearch = '';
-  document.getElementById('salesSearchBox').value = '';
-  renderSalesTable();
-}
-
-function onSalesSearch(val){
-  _salesSearch = val.trim().toLowerCase();
-  if(_salesSearch) _salesViewAll = true;   // search across all entries
-  const clearBtn = document.getElementById('salesClearSearch');
-  if(clearBtn) clearBtn.style.display = _salesSearch ? '' : 'none';
-  renderSalesTable();
-}
-
-function clearSalesSearch(){
-  _salesSearch = '';
-  _salesViewAll = false;
-  document.getElementById('salesSearchBox').value = '';
-  document.getElementById('salesClearSearch').style.display = 'none';
-  renderSalesTable();
-}
-
-function renderSalesTable(){
-  const db = loadDB();
-  const svd = document.getElementById('salesViewDate');
-  const label = document.getElementById('salesViewLabel');
-  const hint  = document.getElementById('salesSearchHint');
-
-  let rows = [...db.sales].sort((a,b)=>parseDate(b.date)-parseDate(a.date)||b.id-a.id);
-
-  // ── Apply date filter (unless searching) ──────────────────────────────────
-  if(!_salesSearch && !_salesViewAll){
-    const viewDate = svd ? fromInput(svd.value) : today();
-    rows = rows.filter(s=>s.date===viewDate);
-    if(label) label.innerHTML = rows.length
-      ? `Showing <strong>${rows.length}</strong> entr${rows.length!==1?'ies':'y'} for <strong>${viewDate}</strong>`
-      : `No entries for <strong>${viewDate}</strong>. &nbsp;<a href="#" onclick="setSalesViewAll();return false" style="color:var(--accent)">Show all</a>`;
-    if(hint) hint.textContent = '';
-  } else if(_salesViewAll && !_salesSearch){
-    if(label) label.innerHTML = `<strong>All ${rows.length} entries</strong>. &nbsp;<a href="#" onclick="_salesViewAll=false;renderSalesTable();return false" style="color:var(--accent)">Back to date view</a>`;
-    if(hint) hint.textContent = '';
-  }
-
-  // ── Apply search filter ───────────────────────────────────────────────────
-  if(_salesSearch){
-    const q = _salesSearch;
-    // Check if query looks like a date (digits/slashes/dashes) → match date field too
-    const looksLikeDate = /[\d\/\-]/.test(q);
-    const before = rows.length;
-    rows = rows.filter(s=>{
-      const fields = [s.cust, s.phone, s.vehicle, s.site, s.status, s.rem, s.time].map(v=>String(v||'').toLowerCase());
-      if(looksLikeDate) fields.push(String(s.date||'').toLowerCase());
-      // Also match partial date like "10-06" or "jun" style
-      return fields.some(f=>f.includes(q)) || String(s.qty).includes(q) || String(s.total).includes(q);
-    });
-    if(label) label.innerHTML = `<strong>${rows.length}</strong> result${rows.length!==1?'s':''} for "<strong>${_salesSearch}</strong>"`;
-    if(hint) hint.textContent = rows.length < before ? `(filtered from ${before} total entries)` : '';
-  }
-
-  // ── Apply sort ─────────────────────────────────────────────────────────────
-  rows = [...rows].sort((a,b)=>{
-    const da = a.date||'', db_ = b.date||'';
-    if(da===db_) return b.id-a.id;
-    return _salesSort==='date-asc' ? (da<db_?-1:1) : (da>db_?-1:1);
-  });
-
-  // ── Render table ──────────────────────────────────────────────────────────
-  const tbl = document.getElementById('todaySalesTbl');
-  if(tbl) tbl.innerHTML = rows.length
-    ? rows.map(s=>{
-        const hl = v => {
-          if(!_salesSearch || !v) return String(v||'—');
-          const idx = String(v).toLowerCase().indexOf(_salesSearch);
-          if(idx<0) return String(v);
-          return String(v).slice(0,idx)+'<mark style="background:#fff176;border-radius:2px">'+String(v).slice(idx,idx+_salesSearch.length)+'</mark>'+String(v).slice(idx+_salesSearch.length);
-        };
-        return `<tr>
-          <td class="dt" style="font-weight:600;white-space:nowrap">${hl(s.date)}</td>
-          <td><strong>${hl(s.cust)}</strong></td>
-          <td style="color:var(--muted)">${hl(s.phone)||'—'}</td>
-          <td style="color:var(--muted)">${hl(s.vehicle)||'—'}</td>
-          <td style="color:var(--muted)">${hl(s.site)||'—'}</td>
-          <td style="text-align:right;font-weight:600">${iN(s.qty)}</td>
-          <td style="text-align:right;font-weight:600">${iR(s.total)}</td>
-          <td style="text-align:right;color:var(--green);font-weight:600">${iR(s.recv)}</td>
-          <td style="text-align:right;font-weight:700;color:${s.bal>0?'var(--red)':'var(--green)'}">${iR(s.bal)}</td>
-          <td>${statusBadge(s.status)}</td>
-          <td style="max-width:120px;color:var(--muted);font-size:12px">${hl(s.rem)||'—'}</td>
-          <td><div class="act-cell"><button class="edit-btn" onclick="openEdit('sales',${s.id})" title="Edit">✏️</button><button class="del-btn" onclick="delEntry('sales',${s.id})" title="Delete">🗑️</button></div></td>
-        </tr>`;
-      }).join('')
-    : `<tr><td colspan="12" class="empty">${_salesSearch ? '🔍 No results matching "'+_salesSearch+'"' : 'No entries found'}</td></tr>`;
-
-  const totAmt  = rows.reduce((a,s)=>a+s.total,0);
-  const totCash = rows.reduce((a,s)=>a+s.recv,0);
-  const totBal  = rows.reduce((a,s)=>a+s.bal,0);
-  const el = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
-  el('tSTotal', iR(totAmt));
-  el('tSCash',  iR(totCash));
-  el('tSBal',   iR(totBal));
-  el('tSCount', rows.length);
-}
-
-// ===================== EXPENSE TABLE RENDERER =====================
-let _expViewAll = false;
-let _expSort = 'date-desc';
-
-function setExpViewAll(){
-  _expViewAll = true;
-  renderExpTable();
-}
-
-function renderExpTable(){
-  const db = loadDB();
-  const evd = document.getElementById('expViewDate');
-  const label = document.getElementById('expViewLabel');
-
-  let rows;
-  if(_expViewAll){
-    rows = [...db.exp].sort((a,b)=>b.id-a.id);
-    if(label) label.innerHTML = `<strong>All entries</strong> — ${rows.length} total. <a href="#" onclick="_expViewAll=false;renderExpTable();return false" style="color:var(--accent)">Back to date view</a>`;
-  } else {
-    const viewDate = evd ? fromInput(evd.value) : today();
-    rows = db.exp.filter(e=>e.date===viewDate).sort((a,b)=>b.id-a.id);
-    if(label) label.innerHTML = rows.length
-      ? `Showing <strong>${rows.length}</strong> entr${rows.length!==1?'ies':'y'} for <strong>${viewDate}</strong>`
-      : `No entries for <strong>${viewDate}</strong>. <a href="#" onclick="setExpViewAll();return false" style="color:var(--accent)">Show all entries</a>`;
-  }
-
-  rows = [...rows].sort((a,b)=>{
-    const da = a.date||'', db_ = b.date||'';
-    if(da===db_) return b.id-a.id;
-    return _expSort==='date-asc' ? (da<db_?-1:1) : (da>db_?-1:1);
-  });
-
-  const tbl = document.getElementById('expTbl');
-  if(tbl) tbl.innerHTML = rows.length
-    ? rows.map(e=>`<tr>
-        <td class="dt">${e.date}</td>
-        <td>${e.time||'—'}</td>
-        <td><span class="b bp">${e.cat}</span></td>
-        <td>${e.desc}</td>
-        <td><strong style="color:var(--red)">${iR(e.amt)}</strong></td>
-        <td style="color:var(--muted)">${e.rem||'—'}</td>
-        <td><div class="act-cell"><button class="edit-btn" onclick="openEdit('exp',${e.id})" title="Edit">✏️</button><button class="del-btn" onclick="delEntry('exp',${e.id})" title="Delete">🗑️</button></div></td>
-      </tr>`).join('')
-    : '<tr><td colspan="7" class="empty">No entries found</td></tr>';
-
-  const tot = rows.reduce((a,e)=>a+e.amt,0);
-  const el = (id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=v; };
-  el('expTodayTotal', iR(tot));
-  el('expEntryCount', rows.length + ' entr' + (rows.length!==1?'ies':'y'));
-}
-
-// ===================== PRODUCTION TABLE RENDERER =====================
-let _prodViewAll = false;
-let _prodSort = 'date-desc';
-
-function switchProdMode(mode){
-  document.getElementById('prod-panel-manual').style.display = mode==='manual'?'':'none';
-  document.getElementById('prod-panel-import').style.display = mode==='import'?'':'none';
-  document.getElementById('prodModeManual').className='btn '+(mode==='manual'?'b-blu':'b-out');
-  document.getElementById('prodModeImport').className='btn '+(mode==='import'?'b-blu':'b-out');
-}
-
-function setProdViewAll(){
-  _prodViewAll = true;
-  renderProdTable();
-}
-
-function renderProdTable(){
-  const db = loadDB();
-  const pvd = document.getElementById('prodViewDate');
-  const label = document.getElementById('prodViewLabel');
-  let rows;
-  if(_prodViewAll){
-    rows = [...db.prod].sort((a,b)=>b.id-a.id);
-    if(label) label.innerHTML = `<strong>All entries</strong> — ${rows.length} total. <a href="#" onclick="_prodViewAll=false;renderProdTable();return false" style="color:var(--blue)">Back to date view</a>`;
-  } else {
-    const viewDate = pvd ? fromInput(pvd.value) : today();
-    rows = db.prod.filter(p=>p.date===viewDate).sort((a,b)=>b.id-a.id);
-    if(label) label.innerHTML = rows.length
-      ? `Showing <strong>${rows.length}</strong> entr${rows.length!==1?'ies':'y'} for <strong>${viewDate}</strong>`
-      : `No entries for <strong>${viewDate}</strong>. <a href="#" onclick="setProdViewAll();return false" style="color:var(--blue)">Show all entries</a>`;
-  }
-  rows = [...rows].sort((a,b)=>{
-    const da = a.date||'', db_ = b.date||'';
-    if(da===db_) return b.id-a.id;
-    return _prodSort==='date-asc' ? (da<db_?-1:1) : (da>db_?-1:1);
-  });
-  const tbl = document.getElementById('prodTbl');
-  if(tbl) tbl.innerHTML = rows.length
-    ? rows.map(p=>`<tr>
-        <td class="dt">${p.date}</td>
-        <td><span class="b bb">${p.shift}</span></td>
-        <td><strong style="color:var(--blue)">${iN(p.bricks)}</strong></td>
-        <td style="color:var(--green)">${p.male||0}</td>
-        <td style="color:var(--purple)">${p.female||0}</td>
-        <td>${(p.male||0)+(p.female||0)}</td>
-        <td style="color:var(--muted);max-width:150px">${p.rem||'—'}</td>
-        <td>${p.time||'—'}</td>
-        <td><div class="act-cell"><button class="edit-btn" onclick="openEdit('prod',${p.id})" title="Edit">✏️</button><button class="del-btn" onclick="delEntry('prod',${p.id})" title="Delete">🗑️</button></div></td>
-      </tr>`).join('')
-    : '<tr><td colspan="9" class="empty">No production entries found</td></tr>';
-  const totBricks = rows.reduce((a,p)=>a+p.bricks,0);
-  const totMale   = rows.reduce((a,p)=>a+(p.male||0),0);
-  const totFemale = rows.reduce((a,p)=>a+(p.female||0),0);
-  const foot = document.getElementById('prodTblFooter');
-  if(foot) foot.innerHTML = rows.length ? `Total: <strong style="color:var(--blue)">${iN(totBricks)} bricks</strong> &nbsp;|&nbsp; 👨 <strong>${totMale}</strong> male &nbsp;|&nbsp; 👩 <strong>${totFemale}</strong> female &nbsp;|&nbsp; Total workers: <strong>${totMale+totFemale}</strong>` : '';
-}
-
-// ===================== PRODUCTION EXCEL IMPORT =====================
-const PROD_XL_FIELDS = [
-  {key:'timestamp', label:'Timestamp',              keywords:['timestamp','time stamp'],   skip:true},
-  {key:'date',      label:'Date',                   keywords:['date','dt']},
-  {key:'shift',     label:'Shift',                  keywords:['shift']},
-  {key:'bricks',    label:'Number of Bricks',       keywords:['brick','produced','number of brick','qty']},
-  {key:'male',      label:'No of Male Workers',     keywords:['male','man','men']},
-  {key:'female',    label:'No of Female Workers',   keywords:['female','woman','women']},
-  {key:'rem',       label:'Remarks',                keywords:['remark','note','comment']},
-];
-
-let _prodXlRows = [];
-let _prodXlColMap = {};
-
-function handleProdDrop(e){
-  const file=e.dataTransfer.files[0];
-  if(file) handleProdFile(file);
-}
-
-function handleProdFile(file){
-  if(!file) return;
-  const err=document.getElementById('prodXlError');
-  err.style.display='none';
-  if(!/\.xlsx?$/i.test(file.name)){err.textContent='⚠️ Please select an .xlsx or .xls file.';err.style.display='';return;}
-  document.getElementById('prodFileName').textContent='📄 '+file.name;
-  document.getElementById('prodFileInfo').style.display='';
-  const reader=new FileReader();
-  reader.onload=function(e){
-    try{
-      const data=new Uint8Array(e.target.result);
-      const wb=XLSX.read(data,{type:'array',cellDates:true});
-      parseProdSheet(wb, wb.SheetNames[0]);
-    }catch(ex){
-      document.getElementById('prodXlError').textContent='❌ Could not read file: '+ex.message;
-      document.getElementById('prodXlError').style.display='';
-    }
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-function parseProdSheet(wb, sheetName){
-  const ws=wb.Sheets[sheetName];
-  const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,dateNF:'dd-mm-yyyy'});
-  if(!rows||rows.length<2){document.getElementById('prodXlError').textContent='⚠️ Sheet appears empty.';document.getElementById('prodXlError').style.display='';return;}
-  let headerIdx=0;
-  for(let i=0;i<Math.min(5,rows.length);i++){if(rows[i].some(c=>c&&String(c).trim())){headerIdx=i;break;}}
-  const headers=rows[headerIdx].map(c=>String(c||'').trim());
-  _prodXlColMap={};
-  PROD_XL_FIELDS.forEach(f=>{
-    let best=-1;
-    headers.forEach((h,ci)=>{const hl=h.toLowerCase();if(f.keywords.some(kw=>hl.includes(kw))&&best===-1)best=ci;});
-    _prodXlColMap[f.key]=best;
-  });
-  // Build col mapper UI
-  const card=document.getElementById('prodColCard');
-  const mapper=document.getElementById('prodColMapper');
-  const status=document.getElementById('prodColStatus');
-  card.style.display='';
-  const opts=['<option value="-1">— not in sheet —</option>']
-    .concat(headers.map((h,i)=>`<option value="${i}">Col ${i+1}: ${h||'(blank)'}</option>`)).join('');
-  mapper.innerHTML=PROD_XL_FIELDS.map(f=>{
-    const v=_prodXlColMap[f.key]!==-1?_prodXlColMap[f.key]:-1;
-    const ok=v>=0;
-    return`<div class="fl"><label style="color:${ok?'var(--green)':'var(--muted)'}">${ok?'✅':'⬜'} ${f.label}${f.skip?' <span style=\"color:var(--muted);font-weight:400\">(skip)</span>':''}</label>
-      <select id="prodcol_${f.key}" onchange="onProdColChange()" style="font-size:12px;padding:5px">
-        ${opts.replace(`value="${v}"`,`value="${v}" selected`)}
-      </select></div>`;
-  }).join('');
-  const matched=Object.values(_prodXlColMap).filter(v=>v>=0).length;
-  status.innerHTML=`<span style="color:${matched>=3?'var(--green)':'var(--amber)'}">Auto-detected ${matched}/${PROD_XL_FIELDS.length} columns.</span>`;
-  // Parse data rows
-  const dataRows=rows.slice(headerIdx+1).filter(r=>r.some(c=>c&&String(c).trim()!=''));
-  _prodXlRows=dataRows.map(r=>prodRowToEntry(r,_prodXlColMap)).filter(p=>p&&p.bricks>0);
-  renderProdPreview();
-}
-
-function onProdColChange(){
-  PROD_XL_FIELDS.forEach(f=>{const el=document.getElementById('prodcol_'+f.key);if(el)_prodXlColMap[f.key]=parseInt(el.value);});
-  // Re-parse
-}
-
-function prodGet(row,map,key,fallback=''){
-  const i=map[key];
-  if(i===undefined||i<0||i>=row.length)return fallback;
-  return String(row[i]||'').trim();
-}
-
-function prodRowToEntry(row,map){
-  const dateRaw=prodGet(row,map,'date');
-  const date=normalizeDate(dateRaw);
-  const shiftRaw=prodGet(row,map,'shift');
-  const shift=normalizeShift(shiftRaw);
-  const bricks=parseFloat(String(prodGet(row,map,'bricks')).replace(/[^\d.]/g,''))||0;
-  const male=parseInt(String(prodGet(row,map,'male')).replace(/[^\d]/g,''))||0;
-  const female=parseInt(String(prodGet(row,map,'female')).replace(/[^\d]/g,''))||0;
-  const rem=prodGet(row,map,'rem');
-  if(bricks<=0)return null;
-  return{date,shift,bricks,male,female,rem};
-}
-
-function normalizeShift(s){
-  if(!s)return'Morning';
-  const u=s.toUpperCase().trim();
-  if(u.includes('MORNING')||u==='MORNING')return'Morning';
-  if(u.includes('EVENING'))return'Evening';
-  if(u.includes('NIGHT'))return'Night Shift';
-  if(u.includes('FULL')||u.includes('DAY'))return'Full Day';
-  return s;
-}
-
-function renderProdPreview(){
-  const wrap=document.getElementById('prodPreviewWrap');
-  const tbl=document.getElementById('prodPreviewTbl');
-  const info=document.getElementById('prodPreviewInfo');
-  const footer=document.getElementById('prodPreviewFooter');
-  if(!_prodXlRows.length){
-    wrap.style.display='';
-    info.innerHTML='<span style="color:var(--red)">⚠️ No valid rows found. Check that Bricks and Date columns are correctly mapped.</span>';
-    tbl.innerHTML=''; footer.innerHTML=''; return;
-  }
-  wrap.style.display='';
-  info.innerHTML=`<span style="color:var(--green);font-weight:600">✅ ${_prodXlRows.length} rows ready to import.</span>`;
-  tbl.innerHTML=_prodXlRows.map((p,i)=>`<tr>
-    <td>${i+1}</td><td class="dt">${p.date}</td>
-    <td><span class="b bb">${p.shift}</span></td>
-    <td><strong style="color:var(--blue)">${iN(p.bricks)}</strong></td>
-    <td style="color:var(--green)">${p.male||0}</td>
-    <td style="color:var(--purple)">${p.female||0}</td>
-    <td>${(p.male||0)+(p.female||0)}</td>
-    <td style="color:var(--muted)">${p.rem||'—'}</td>
-  </tr>`).join('');
-  const totB=_prodXlRows.reduce((a,p)=>a+p.bricks,0);
-  const totM=_prodXlRows.reduce((a,p)=>a+(p.male||0),0);
-  const totF=_prodXlRows.reduce((a,p)=>a+(p.female||0),0);
-  footer.innerHTML=`<span>Rows: <strong>${_prodXlRows.length}</strong></span><span>Total Bricks: <strong style="color:var(--blue)">${iN(totB)}</strong></span><span>👨 Male: <strong>${totM}</strong></span><span>👩 Female: <strong>${totF}</strong></span>`;
-}
-
-function importProdRows(){
-  if(!_prodXlRows.length){toast('⚠️ No rows to import.');return;}
-  const db=loadDB();
-  let added=0,skipped=0;
-  _prodXlRows.forEach(p=>{
-    const dup=db.prod.find(e=>e.date===p.date&&e.shift===p.shift&&e.bricks===p.bricks);
-    if(dup){skipped++;return;}
-    db.prod.push({id:Date.now()+Math.random(),time:timeNow(),...p});
-    added++;
-  });
-  saveDB(db);
-  clearProdUpload();
-  refreshAll();
-  toast(`✅ Imported ${added} production rows!${skipped?' ('+skipped+' skipped — duplicates)':''}`);
-}
-
-function clearProdUpload(){
-  _prodXlRows=[];_prodXlColMap={};
-  document.getElementById('prodFileInput').value='';
-  document.getElementById('prodFileInfo').style.display='none';
-  document.getElementById('prodColCard').style.display='none';
-  document.getElementById('prodPreviewWrap').style.display='none';
-  document.getElementById('prodXlError').style.display='none';
-}
-
-// ===================== SAVE FUNCTIONS =====================
-function saveSale(){
-  const date=fromInput(document.getElementById('s-date').value);
-  const cust=toTitleCase(document.getElementById('s-cust').value.trim());
-  const qty=parseFloat(document.getElementById('s-qty').value);
-  const total=parseFloat(document.getElementById('s-total').value);
-  const status=document.getElementById('s-status').value;
-  if(!date||!cust||!qty||!total||!status){toast('⚠️ Fill all required fields (marked with *)');return;}
-  const recv=parseFloat(document.getElementById('s-recv').value)||0;
-  const bal=Math.max(0,total-recv);
-  const db=loadDB();
-  db.sales.push({id:Date.now(),date,cust,phone:document.getElementById('s-phone').value,site:document.getElementById('s-site').value,vehicle:document.getElementById('s-vehicle').value,qty,total,status,recv,bal,rem:document.getElementById('s-rem').value,time:timeNow()});
-  saveDB(db);
-  toast('✅ Sale saved successfully!');
-  clearSale();
-  refreshAll();
-}
-function clearSale(){['s-cust','s-phone','s-site','s-vehicle','s-qty','s-total','s-recv','s-bal','s-rem'].forEach(id=>document.getElementById(id).value='');document.getElementById('s-status').value='';document.getElementById('s-date').value=toInput(today());document.getElementById('s-summary').textContent=''}
-
-function saveProd(){
-  const date=fromInput(document.getElementById('p-date').value);
-  const shift=document.getElementById('p-shift').value;
-  const bricks=parseFloat(document.getElementById('p-bricks').value);
-  if(!date||!shift||!bricks){toast('⚠️ Fill all required fields');return;}
-  const male=parseInt(document.getElementById('p-male').value)||0;
-  const female=parseInt(document.getElementById('p-female').value)||0;
-  const db=loadDB();
-  db.prod.push({id:Date.now(),date,shift,bricks,male,female,rem:document.getElementById('p-rem').value,time:timeNow()});
-  saveDB(db);
-  toast('✅ Production entry saved!');
-  clearProd();
-  refreshAll();
-}
-function clearProd(){['p-bricks','p-rem','p-male','p-female'].forEach(id=>document.getElementById(id).value='');document.getElementById('p-shift').value='';document.getElementById('p-date').value=toInput(today())}
-
-function saveExp(){
-  const date=fromInput(document.getElementById('e-date').value);
-  const cat=document.getElementById('e-cat').value;
-  const desc=document.getElementById('e-desc').value.trim();
-  const amt=parseFloat(document.getElementById('e-amt').value);
-  if(!date||!cat||!desc||!amt){toast('⚠️ Fill all required fields');return;}
-  const db=loadDB();
-  db.exp.push({id:Date.now(),date,cat,desc,amt,rem:document.getElementById('e-rem').value,time:timeNow()});
-  saveDB(db);
-  toast('✅ Expense saved!');
-  clearExp();
-  refreshAll();
-}
-function clearExp(){['e-desc','e-amt','e-rem'].forEach(id=>document.getElementById(id).value='');document.getElementById('e-cat').value='';document.getElementById('e-date').value=toInput(today())}
 
 // ===================== WEEKLY LABOUR / STAFF PAYMENTS =====================
 // Helper: get the Saturday (week-ending) date for any given date, as DD-MM-YYYY
@@ -4395,7 +3792,7 @@ function saveInv(){
   clearInv();
   refreshAll();
 }
-function clearInv(){['inv-qty','inv-vendor','inv-amt'].forEach(id=>document.getElementById(id).value='');document.getElementById('inv-mat').value='';document.getElementById('inv-type').value='';document.getElementById('inv-unit').value='Kg';document.getElementById('inv-date').value=toInput(today())}
+function clearInv(){['inv-qty','inv-vendor','inv-amt'].forEach(id=>document.getElementById(id).value='');document.getElementById('inv-mat').value='';document.getElementById('inv-type').value='';document.getElementById('inv-unit').value='Kg';document.getElementById('inv-date').value=_localDateStr()}
 
 let _delType = '', _delId = null;
 
@@ -4521,7 +3918,7 @@ function clearCustomerPaymentForm(){
   document.getElementById('cp-mode').value = 'Cash';
   document.getElementById('cp-rem').value = '';
   document.getElementById('cp-bal').value = '₹0';
-  document.getElementById('cp-date').value = toInput(today());
+  document.getElementById('cp-date').value = _localDateStr();
   document.getElementById('cp-hint').textContent = '';
 }
 
@@ -4531,7 +3928,7 @@ function clearVendorPaymentForm(){
   document.getElementById('vp-mode').value = 'Cash';
   document.getElementById('vp-rem').value = '';
   document.getElementById('vp-bal').value = '₹0';
-  document.getElementById('vp-date').value = toInput(today());
+  document.getElementById('vp-date').value = _localDateStr();
   document.getElementById('vp-hint').textContent = '';
 }
 
@@ -4606,7 +4003,7 @@ function renderPayments(){
   const m = thisMonth();
 
   // Customer side
-  const custDue = db.sales.reduce((a,s)=>a+(s.bal||0),0);
+  const custDue = Object.values(buildCustMap(db)).reduce((a,c)=>a+(c.bal||0),0);
   const custRecvM = db.payments.filter(p=>monthOf(p.date)===m).reduce((a,p)=>a+p.amount,0);
   const el=(id,v)=>{const e=document.getElementById(id); if(e) e.textContent=v;};
   el('pay-custDue', iR(custDue));
@@ -4681,8 +4078,8 @@ function renderPayments(){
   }
 
   // Default date inputs to today if empty
-  const cpd=document.getElementById('cp-date'); if(cpd&&!cpd.value) cpd.value=toInput(today());
-  const vpd=document.getElementById('vp-date'); if(vpd&&!vpd.value) vpd.value=toInput(today());
+  const cpd=document.getElementById('cp-date'); if(cpd&&!cpd.value) cpd.value=_localDateStr();
+  const vpd=document.getElementById('vp-date'); if(vpd&&!vpd.value) vpd.value=_localDateStr();
 }
 
 // ===================== CUSTOMERS MODULE =====================
@@ -4953,93 +4350,167 @@ function closeCustDetail(){
   _cdCust = '';
 }
 
-// Generate a printable / shareable bill (statement of account) for the
-// currently-open customer and show it in a new tab for printing/saving as PDF.
-function printCustBill(){
-  if(!_cdCust) return;
+
+// ══════════════════════════════════════════════════════
+// FEATURE: PRINT DATE RANGE PICKER
+// ══════════════════════════════════════════════════════
+function openPrintRange() {
+  if (!_cdCust) return;
+  const db = loadDB();
+  // Set default range: first sale to today
+  const custSales = db.sales.filter(s => s.cust === _cdCust).sort((a,b) => parseDate(a.date) - parseDate(b.date));
+  const firstDate = custSales.length ? custSales[0].date : today();
+  const [fd_d, fd_m, fd_y] = firstDate.split('-');
+  document.getElementById('printFrom').value = toInput(firstDate);
+  document.getElementById('printTo').value   = _localDateStr();
+  document.getElementById('printRangeCustName').textContent = '👤 ' + _cdCust;
+  const modal = document.getElementById('printRangeModal');
+  modal.style.display = 'flex';
+}
+
+function closePrintRange() {
+  document.getElementById('printRangeModal').style.display = 'none';
+}
+
+function setPrintRange(preset) {
+  const now = new Date();
+  let from, to = now;
+  if (preset === 'month') {
+    from = new Date(now.getFullYear(), now.getMonth(), 1);
+  } else if (preset === 'last30') {
+    from = new Date(); from.setDate(from.getDate() - 29);
+  } else {
+    // all time — set a very early date
+    from = new Date(2000, 0, 1);
+  }
+  // Use local date, not UTC (toISOString shifts date in IST timezone)
+  const fmt = d => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    return y+'-'+m+'-'+day;
+  };
+  document.getElementById('printFrom').value = fmt(from);
+  document.getElementById('printTo').value   = fmt(to);
+}
+
+function confirmPrintBill() {
+  const fromVal = document.getElementById('printFrom').value;
+  const toVal   = document.getElementById('printTo').value;
+  if (!fromVal || !toVal) { toast('⚠️ Please select both dates'); return; }
+  const [fy, fm, fd] = fromVal.split('-');
+  const [ty, tm, td_] = toVal.split('-');
+  const fromStr = `${fd}-${fm}-${fy}`;
+  const toStr   = `${td_}-${tm}-${ty}`;
+  closePrintRange();
+  printCustBill(fromStr, toStr);
+}
+
+// ── Updated printCustBill with optional date range ──
+function printCustBill(fromDate, toDate) {
+  if (!_cdCust) return;
   const db = loadDB();
   const allCusts = buildCustMap(db);
   const d = allCusts[_cdCust];
-  if(!d) return;
+  if (!d) return;
 
-  const ob = (db.openingBalances||[]).find(o=>o.name===_cdCust);
-  const sales = db.sales.filter(s=>s.cust===_cdCust).sort((a,b)=>parseDate(a.date)-parseDate(b.date) || a.id-b.id);
-  const payments = db.payments.filter(p=>p.cust===_cdCust).sort((a,b)=>parseDate(a.date)-parseDate(b.date) || a.id-b.id);
+  const ob = (db.openingBalances || []).find(o => o.name === _cdCust);
+  const isFiltered = !!(fromDate && toDate);
 
-  const obRow = ob ? `
-    <tr class="ob-row">
-      <td>${ob.date||''}</td>
-      <td colspan="3"><strong>Opening Balance</strong> <span style="font-size:10px;color:var(--gray-500)">(Brought forward from previous records)</span></td>
-      <td style="text-align:right;font-weight:700;color:var(--navy)">${iR(ob.bal)}</td>
-      <td style="text-align:right;color:var(--gray-400)">—</td>
-      <td style="text-align:right;font-weight:700;color:var(--red)">${iR(ob.bal)}</td>
-    </tr>` : '';
+  // Filter sales and payments by date range
+  const allSales = db.sales.filter(s => s.cust === _cdCust)
+    .sort((a, b) => parseDate(a.date) - parseDate(b.date) || a.id - b.id);
+  const allPayments = (db.payments || []).filter(p => p.cust === _cdCust)
+    .sort((a, b) => parseDate(a.date) - parseDate(b.date) || a.id - b.id);
 
-  let runBal = ob ? (ob.bal||0) : 0;
-  const salesRows = sales.length ? sales.map((s,i)=>{
-    runBal += (s.total||0);
-    const payments_before = payments.filter(p=>parseDate(p.date)<=parseDate(s.date));
-    return `<tr class="${i%2===0?'':'alt'}">
-      <td>${s.date}</td>
-      <td style="text-align:right">${iN(s.qty)}</td>
-      <td>${s.vehicle||'—'}</td>
-      <td>${s.site||'—'}</td>
-      <td style="text-align:right;font-weight:600">${iR(s.total)}</td>
-      <td style="text-align:right;color:var(--green)">${iR(s.recv)}</td>
-      <td style="text-align:right;color:${s.bal>0?'var(--red)':'var(--green)'};font-weight:600">${iR(s.bal)}</td>
-    </tr>`;
-  }).join('') : '';
+  const inRange = (dateStr) => {
+    if (!isFiltered) return true;
+    const d = parseDate(dateStr);
+    return d >= parseDate(fromDate) && d <= parseDate(toDate);
+  };
 
-  const noSalesRow = (!ob && !sales.length) ? `<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">No sales recorded</td></tr>` : '';
+  const sales    = isFiltered ? allSales.filter(s => inRange(s.date))    : allSales;
+  const payments = isFiltered ? allPayments.filter(p => inRange(p.date)) : allPayments;
 
-  const paymentRows = payments.length ? payments.map((p,i)=>`<tr class="${i%2===0?'':'alt'}">
-      <td>${p.date}</td>
-      <td><span class="mode-badge">${p.mode||'—'}</span></td>
-      <td style="text-align:right;color:var(--green);font-weight:600">${iR(p.amount)}</td>
-      <td>${p.rem||'—'}</td>
-    </tr>`).join('') : `<tr><td colspan="4" style="text-align:center;color:var(--gray-500);padding:18px">No payments recorded</td></tr>`;
+  // Opening balance: if filtered, calculate running balance up to fromDate
+  // (i.e. OB + all sales/payments BEFORE the range = opening carry-forward)
+  let carryForwardBal = 0;
+  if (isFiltered) {
+    const salesBefore    = allSales.filter(s => parseDate(s.date) < parseDate(fromDate));
+    const paymentsBefore = allPayments.filter(p => parseDate(p.date) < parseDate(fromDate));
+    const obAmt_ = ob ? (ob.bal || 0) : 0;
+    const salesBeforeTotal = salesBefore.reduce((a, s) => a + (s.total || 0), 0);
+    const paidBefore       = paymentsBefore.reduce((a, p) => a + (parseFloat(p.amount) || 0), 0);
+    carryForwardBal = Math.max(0, obAmt_ + salesBeforeTotal - paidBefore);
+  }
 
-  const today_ = today();
-  const custNameDisplay = (_cdCust||'').replace(/\w\S*/g, t => t.charAt(0).toUpperCase()+t.slice(1).toLowerCase());
-  const obAmt      = ob ? (ob.bal||0) : 0;
-  const salesTotal = sales.reduce((a,s)=>a+(s.total||0),0);
+  const obAmt      = isFiltered ? carryForwardBal : (ob ? (ob.bal || 0) : 0);
+  const salesTotal = sales.reduce((a, s) => a + (s.total || 0), 0);
   const grandTotal = obAmt + salesTotal;
-  // Total received = all payments; fallback to sale-level recv if no payments recorded
-  const totalPaidViaPayments = payments.reduce((a,p)=>a+(parseFloat(p.amount)||0),0);
-  const totalRecvInSales = sales.reduce((a,s)=>a+(parseFloat(s.recv)||0),0);
+  const totalPaidViaPayments = payments.reduce((a, p) => a + (parseFloat(p.amount) || 0), 0);
+  const totalRecvInSales     = sales.reduce((a, s) => a + (parseFloat(s.recv) || 0), 0);
   const grandRecv  = totalPaidViaPayments > 0 ? totalPaidViaPayments : totalRecvInSales;
   const grandBal   = Math.max(0, grandTotal - grandRecv);
-  const totalQty   = sales.reduce((a,s)=>a+(s.qty||0),0);
+  const totalQty   = sales.reduce((a, s) => a + (s.qty || 0), 0);
+
+  const today_           = today();
+  const custNameDisplay  = (_cdCust || '').replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
+
+  const dateRangeLabel = isFiltered
+    ? `Period: <strong>${fromDate}</strong> to <strong>${toDate}</strong>`
+    : `All Transactions`;
+
+  const obRow = (obAmt > 0) ? `
+    <tr class="ob-row">
+      <td>${isFiltered ? fromDate : (ob ? ob.date || '' : '')}</td>
+      <td colspan="3"><strong>${isFiltered ? 'Opening Balance (Carried Forward)' : 'Opening Balance'}</strong>
+        <span style="font-size:10px;color:var(--gray-500)">${isFiltered ? ' — balance before selected period' : ' (Brought forward from previous records)'}</span></td>
+      <td style="text-align:right;font-weight:700;color:var(--navy)">${iR(obAmt)}</td>
+      <td style="text-align:right;color:var(--gray-400)">—</td>
+      <td style="text-align:right;font-weight:700;color:var(--red)">${iR(obAmt)}</td>
+    </tr>` : '';
+
+  const salesRows = sales.length ? sales.map((s, i) => `
+    <tr class="${i % 2 === 0 ? '' : 'alt'}">
+      <td>${s.date}</td>
+      <td style="text-align:right">${iN(s.qty)}</td>
+      <td>${s.vehicle || '—'}</td>
+      <td>${s.site || '—'}</td>
+      <td style="text-align:right;font-weight:600">${iR(s.total)}</td>
+      <td style="text-align:right;color:var(--green)">${iR(s.recv)}</td>
+      <td style="text-align:right;color:${s.bal > 0 ? 'var(--red)' : 'var(--green)'};font-weight:600">${iR(s.bal)}</td>
+    </tr>`).join('') : '';
+
+  const noSalesRow = (!obAmt && !sales.length)
+    ? `<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">No sales recorded${isFiltered ? ' in this date range' : ''}</td></tr>`
+    : '';
+
+  const paymentRows = payments.length ? payments.map((p, i) => `
+    <tr class="${i % 2 === 0 ? '' : 'alt'}">
+      <td>${p.date}</td>
+      <td><span class="mode-badge">${p.mode || '—'}</span></td>
+      <td style="text-align:right;color:var(--green);font-weight:600">${iR(p.amount)}</td>
+      <td>${p.rem || '—'}</td>
+    </tr>`).join('')
+    : `<tr><td colspan="4" style="text-align:center;color:var(--gray-500);padding:18px">No payments recorded${isFiltered ? ' in this date range' : ''}</td></tr>`;
 
   const win = window.open('', '_blank');
-  if(!win){ toast('⚠️ Please allow pop-ups to print/share the bill'); return; }
+  if (!win) { toast('⚠️ Please allow pop-ups to print/share the bill'); return; }
 
   win.document.write(`<!DOCTYPE html>
 <html><head><meta charset="UTF-8"><title>Statement — ${custNameDisplay}</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy:#0f1f3d;
-  --blue:#1d4ed8;
-  --blue-dark:#1e3a8a;
-  --blue-pale:#eef3ff;
-  --gray-700:#374151;
-  --gray-500:#6b7280;
-  --gray-400:#9ca3af;
-  --gray-200:#e3e8f0;
-  --gray-100:#f5f7fb;
-  --red:#dc2626;
-  --red-pale:#fef2f2;
-  --red-border:#fbd5d5;
-  --green:#15803d;
-  --green-pale:#f0fdf4;
-  --green-border:#bbf0cc;
+  --navy:#0f1f3d;--blue:#1d4ed8;--blue-dark:#1e3a8a;--blue-pale:#eef3ff;
+  --gray-700:#374151;--gray-500:#6b7280;--gray-400:#9ca3af;
+  --gray-200:#e3e8f0;--gray-100:#f5f7fb;
+  --red:#dc2626;--red-pale:#fef2f2;--red-border:#fbd5d5;
+  --green:#15803d;--green-pale:#f0fdf4;--green-border:#bbf0cc;
 }
 body{font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:var(--gray-700);background:#fff}
 .top-bar{height:6px;background:linear-gradient(90deg,var(--blue),var(--navy))}
 .wrap{max-width:800px;margin:0 auto;padding:34px 38px}
-
-/* Header */
 .hdr{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:18px;border-bottom:3px solid var(--blue);margin-bottom:24px}
 .brand{display:flex;align-items:center;gap:14px}
 .brand-mark{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--navy));display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;box-shadow:0 2px 6px rgba(15,31,61,.25)}
@@ -5049,8 +4520,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:var(--gray-700
 .doc-title{display:inline-block;background:var(--blue);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.8px;padding:6px 14px;border-radius:4px;text-transform:uppercase}
 .doc-meta{font-size:11.5px;color:var(--gray-500);margin-top:9px;line-height:1.7}
 .doc-meta strong{color:var(--navy)}
-
-/* To / Balance row */
+.range-badge{display:inline-block;background:#fef3c7;color:#92400e;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid #fcd34d;margin-top:6px}
 .meta-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding:16px 20px;border:1px solid var(--gray-200);border-left:4px solid var(--blue);border-radius:8px;background:var(--gray-100)}
 .to-label{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-500);font-weight:700;margin-bottom:4px}
 .to-name{font-size:18px;font-weight:700;color:var(--navy)}
@@ -5062,12 +4532,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:var(--gray-700
 .bal-chip.due .bc-val{color:var(--red)}
 .bal-chip.ok .bc-val{color:var(--green)}
 .bal-chip .bc-val{font-size:21px;font-weight:800;margin-top:4px}
-
-/* Section headers */
 .sec{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--navy);margin:24px 0 10px;padding-bottom:8px;border-bottom:2px solid var(--blue-pale)}
 .sec::before{content:'';width:4px;height:13px;background:var(--blue);border-radius:2px}
-
-/* Tables */
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th{background:var(--blue-dark);color:#fff;padding:9px 11px;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;text-align:left}
 td{padding:9px 11px;border-bottom:1px solid var(--gray-200);vertical-align:middle}
@@ -5075,10 +4541,8 @@ tr.alt td{background:var(--gray-100)}
 tr.ob-row td{background:var(--blue-pale)}
 tr.foot td{background:#eef1f6;font-weight:700;border-top:1.5px solid var(--gray-200);border-bottom:none;color:var(--navy)}
 .mode-badge{display:inline-block;background:var(--blue-pale);color:var(--blue-dark);font-size:11px;font-weight:600;padding:3px 9px;border-radius:4px}
-
-/* Summary */
 .sum-wrap{display:flex;justify-content:flex-end;margin-top:20px}
-.sum-box{width:290px;border:1px solid var(--gray-200);border-radius:8px;overflow:hidden}
+.sum-box{width:300px;border:1px solid var(--gray-200);border-radius:8px;overflow:hidden}
 .sum-box table{font-size:13px}
 .sum-box td{padding:9px 16px;border-bottom:1px solid var(--gray-100)}
 .sum-box td:last-child{text-align:right;font-weight:600}
@@ -5087,26 +4551,26 @@ tr.foot td{background:#eef1f6;font-weight:700;border-top:1.5px solid var(--gray-
 .sum-box tr.bal-row.due td{background:var(--navy);color:#fff}
 .sum-box tr.bal-row.due td:last-child{color:#fca5a5}
 .sum-box tr.bal-row.clear td{background:var(--green);color:#fff}
-.sum-box tr.bal-row.clear td:last-child{color:#fff}
-
-/* Footer */
 .foot-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:34px;padding-top:16px;border-top:1px solid var(--gray-200)}
 .foot-txt{font-size:11px;color:var(--gray-500);line-height:1.8}
 .foot-txt strong{color:var(--navy)}
 .sign-box{text-align:center;width:140px}
 .sign-line{border-top:1.5px solid var(--navy);margin-top:54px;padding-top:6px;font-size:10.5px;color:var(--gray-500);font-weight:600}
-
-/* Print */
 @media print{
   .no-print{display:none!important}
-  th,.top-bar,.doc-title,tr.foot td,.sum-box tr.bal-row.due td,.sum-box tr.bal-row.clear td,.bal-chip{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  th,.top-bar,.doc-title,tr.foot td,.sum-box tr.bal-row.due td,.sum-box tr.bal-row.clear td,.bal-chip,.ob-row td{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
-.no-print{max-width:800px;margin:0 auto 24px;padding:0 38px;display:flex;gap:10px}
+.no-print{max-width:800px;margin:0 auto 16px;padding:0 38px;display:flex;gap:10px;align-items:center}
 .no-print button{padding:9px 22px;border-radius:6px;border:none;font-size:13px;font-weight:600;cursor:pointer}
 .bp{background:var(--blue);color:#fff}
 .bc{background:var(--gray-100);color:var(--navy)}
 </style></head>
 <body>
+<div class="no-print" style="padding-top:16px">
+  <button class="bp" onclick="window.print()">🖨️ Print / Save PDF</button>
+  <button class="bc" onclick="window.close()">✕ Close</button>
+  ${isFiltered ? `<span style="font-size:12px;color:#92400e;background:#fef3c7;padding:5px 12px;border-radius:20px;border:1px solid #fcd34d;font-weight:600">📅 ${fromDate} → ${toDate}</span>` : ''}
+</div>
 <div class="top-bar"></div>
 <div class="wrap">
 
@@ -5121,9 +4585,10 @@ tr.foot td{background:#eef1f6;font-weight:700;border-top:1.5px solid var(--gray-
   <div class="doc-info">
     <span class="doc-title">Statement of Account</span>
     <div class="doc-meta">
-      Date: <strong>${today_}</strong><br>
-      Ref: <strong>BMD/${custNameDisplay.replace(/[^A-Za-z]/g,'').toUpperCase().slice(0,4)}/${today_.split('-').reverse().join('')}</strong>
+      Printed: <strong>${today_}</strong><br>
+      ${isFiltered ? `Period: <strong>${fromDate}</strong> to <strong>${toDate}</strong>` : 'All Transactions'}
     </div>
+    ${isFiltered ? `<div class="range-badge">📅 Custom Date Range</div>` : ''}
   </div>
 </div>
 
@@ -5131,10 +4596,10 @@ tr.foot td{background:#eef1f6;font-weight:700;border-top:1.5px solid var(--gray-
   <div>
     <div class="to-label">Statement For</div>
     <div class="to-name">${custNameDisplay}</div>
-    ${d.phone?`<div class="to-phone">📞 ${d.phone}</div>`:''}
+    ${d.phone ? `<div class="to-phone">📞 ${d.phone}</div>` : ''}
   </div>
-  <div class="${grandBal>0?'bal-chip due':'bal-chip ok'}">
-    <div class="bc-label">${grandBal>0?'Balance Due':'Account Clear'}</div>
+  <div class="${grandBal > 0 ? 'bal-chip due' : 'bal-chip ok'}">
+    <div class="bc-label">${grandBal > 0 ? 'Balance Due' : 'Account Clear'}${isFiltered ? ' (Period)' : ''}</div>
     <div class="bc-val">${iR(grandBal)}</div>
   </div>
 </div>
@@ -5151,40 +4616,41 @@ tr.foot td{background:#eef1f6;font-weight:700;border-top:1.5px solid var(--gray-
     <th style="text-align:right">Balance (₹)</th>
   </tr></thead>
   <tbody>${obRow}${salesRows}${noSalesRow}</tbody>
-  ${sales.length?`<tr class="foot">
-    <td>Total — ${sales.length} entries</td>
+  ${sales.length ? `<tr class="foot">
+    <td>Total — ${sales.length} entr${sales.length !== 1 ? 'ies' : 'y'}</td>
     <td style="text-align:right">${iN(totalQty)}</td>
     <td colspan="2"></td>
     <td style="text-align:right">${iR(salesTotal)}</td>
     <td style="text-align:right;color:var(--green)">${iR(grandRecv)}</td>
-    <td style="text-align:right;color:${grandBal>0?'var(--red)':'var(--green)'}">${iR(grandBal)}</td>
-  </tr>`:''}
+    <td style="text-align:right;color:${grandBal > 0 ? 'var(--red)' : 'var(--green)'}">${iR(grandBal)}</td>
+  </tr>` : ''}
 </table>
 
 <div class="sec">Payments Received</div>
 <table>
   <thead><tr>
-    <th>Date</th>
-    <th>Mode</th>
+    <th>Date</th><th>Mode</th>
     <th style="text-align:right">Amount (₹)</th>
     <th>Remarks</th>
   </tr></thead>
   <tbody>${paymentRows}</tbody>
-  ${payments.length?`<tr class="foot">
-    <td colspan="2">Total — ${payments.length} payments</td>
+  ${payments.length ? `<tr class="foot">
+    <td colspan="2">Total — ${payments.length} payment${payments.length !== 1 ? 's' : ''}</td>
     <td style="text-align:right;color:var(--green)">${iR(grandRecv)}</td>
     <td></td>
-  </tr>`:''}
+  </tr>` : ''}
 </table>
 
 <div class="sum-wrap">
   <div class="sum-box">
     <table>
-      ${ob?`<tr class="ob-r"><td>Opening Balance (B/F)</td><td>${iR(obAmt)}</td></tr>`:''}
-      <tr><td>Sales Total</td><td>${iR(salesTotal)}</td></tr>
+      ${obAmt > 0 ? `<tr class="ob-r"><td>${isFiltered ? 'Opening Balance (C/F)' : 'Opening Balance (B/F)'}</td><td>${iR(obAmt)}</td></tr>` : ''}
+      <tr><td>Sales Total${isFiltered ? ' (Period)' : ''}</td><td>${iR(salesTotal)}</td></tr>
       <tr><td><strong>Grand Total</strong></td><td><strong>${iR(grandTotal)}</strong></td></tr>
-      <tr><td>Total Received</td><td style="color:var(--green)">${iR(grandRecv)}</td></tr>
-      <tr class="bal-row ${grandBal>0?'due':'clear'}"><td>${grandBal>0?'Balance Due':'Account Clear'}</td><td>${iR(grandBal)}</td></tr>
+      <tr><td>Total Received${isFiltered ? ' (Period)' : ''}</td><td style="color:var(--green)">${iR(grandRecv)}</td></tr>
+      <tr class="bal-row ${grandBal > 0 ? 'due' : 'clear'}">
+        <td>${grandBal > 0 ? 'Balance Due' : 'Account Clear'}</td><td>${iR(grandBal)}</td>
+      </tr>
     </table>
   </div>
 </div>
@@ -5192,8 +4658,8 @@ tr.foot td{background:#eef1f6;font-weight:700;border-top:1.5px solid var(--gray-
 <div class="foot-row">
   <div class="foot-txt">
     This is a computer-generated statement of account.<br>
-    For queries: 📞 9437083205 · 7735433825<br>
-    <strong>BMD FLYASH BRICKS</strong> — Fly Ash Brick Plant
+    ${isFiltered ? `<strong>Period:</strong> ${fromDate} to ${toDate}<br>` : ''}
+    <strong>Generated:</strong> ${today_} &nbsp;·&nbsp; <strong>BMD Flyash Bricks</strong>
   </div>
   <div class="sign-box">
     <div class="sign-line">Authorised Signatory</div>
@@ -5201,14 +4667,11 @@ tr.foot td{background:#eef1f6;font-weight:700;border-top:1.5px solid var(--gray-
 </div>
 
 </div>
-<div class="no-print">
-  <button class="bp" onclick="window.print()">🖨️ Print / Save PDF</button>
-  <button class="bc" onclick="window.close()">✕ Close</button>
-</div>
-
 </body></html>`);
   win.document.close();
+  setTimeout(() => win.focus(), 300);
 }
+
 
 // ===================== CHARTS =====================
 let cW,cP,cEC,cRC;
@@ -5510,7 +4973,7 @@ function refreshAll(){
 
   // TODAY'S SALES TAB — init date picker then render
   const svd=document.getElementById('salesViewDate');
-  if(svd&&!svd.value) svd.value=td;
+  if(svd&&!svd.value) svd.value=toInput(td); // must be YYYY-MM-DD for date input
   renderSalesTable();
 
   // Autocomplete for customer
@@ -5590,28 +5053,32 @@ function renderReports(){
   const mExp=db.exp.filter(e=>monthOf(e.date)===mStr);
   const mProd=db.prod.filter(p=>monthOf(p.date)===mStr);
   const sAmt=mSales.reduce((a,s)=>a+s.total,0);
-  const cAmt=mSales.reduce((a,s)=>a+s.recv,0);
+  // cAmt: use payments module for the month; fallback to s.recv if no payments exist
+  const _mPayments=(db.payments||[]).filter(p=>monthOf(p.date)===mStr);
+  const cAmt=_mPayments.length>0 ? _mPayments.reduce((a,p)=>a+(parseFloat(p.amount)||0),0) : mSales.reduce((a,s)=>a+s.recv,0);
   const eAmt=mExp.reduce((a,e)=>a+e.amt,0);
   const pBricks=mProd.reduce((a,p)=>a+p.bricks,0);
   const sBricks=mSales.reduce((a,s)=>a+s.qty,0);
   const profit=sAmt-eAmt;
   const margin=sAmt>0?Math.round(profit/sAmt*100):0;
   document.getElementById('r-sales').textContent=iR(sAmt);
-  document.getElementById('r-cash').textContent=iR(cAmt);
+  document.getElementById('r-cash').textContent=iR(cAmt); // from payments module
   document.getElementById('r-exp').textContent=iR(eAmt);
   document.getElementById('r-prod').textContent=iN(pBricks);
   document.getElementById('r-profit').textContent=iR(profit);
   document.getElementById('r-margin').textContent=margin+'%';
   // P&L table
   const allS=db.sales.reduce((a,s)=>a+s.total,0);
-  const allC=db.sales.reduce((a,s)=>a+s.recv,0);
+  const _allCustMapR=buildCustMap(db);
+  const allC=(db.payments||[]).reduce((a,p)=>a+(parseFloat(p.amount)||0),0) || db.sales.reduce((a,s)=>a+s.recv,0);
   const allE=db.exp.reduce((a,e)=>a+e.amt,0);
   const allProd=db.prod.reduce((a,p)=>a+p.bricks,0);
   const allSold=db.sales.reduce((a,s)=>a+s.qty,0);
-  const allBal=db.sales.reduce((a,s)=>a+s.bal,0);
-  const mBal=mSales.reduce((a,s)=>a+s.bal,0);
+  const allBal=Object.values(_allCustMapR).reduce((a,c)=>a+(c.bal||0),0);
+  // mBal: outstanding for sales in this month (approximate — use cust map overall bal)
+  const mBal=allBal;
   document.getElementById('pl-s-m').textContent=iR(sAmt);document.getElementById('pl-s-a').textContent=iR(allS);
-  document.getElementById('pl-c-m').textContent=iR(cAmt);document.getElementById('pl-c-a').textContent=iR(allC);
+  document.getElementById('pl-c-m').textContent=iR(cAmt);document.getElementById('pl-c-a').textContent=iR(allC); // payments-based
   document.getElementById('pl-e-m').textContent=iR(eAmt);document.getElementById('pl-e-a').textContent=iR(allE);
   document.getElementById('pl-p-m').textContent=iR(profit);document.getElementById('pl-p-a').textContent=iR(allS-allE);
   document.getElementById('pl-d-m').textContent=iR(mBal);document.getElementById('pl-d-a').textContent=iR(allBal);
@@ -5631,8 +5098,7 @@ function renderReports(){
 // ===================== SAMPLE DATA =====================
 // ===================== INIT FORMS =====================
 function initForms(){
-  const t=today();
-  const tInput=toInput(t);
+  const tInput=_localDateStr(); // YYYY-MM-DD local date (timezone-safe)
   ['s-date','p-date','e-date','inv-date','salesViewDate','expViewDate','prodViewDate'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=tInput});
 
   // Auto-calc balance on sales form
@@ -6009,31 +5475,25 @@ function exportReportsXLSX() {
 // --- CUSTOMERS ---
 function exportCustomersXLSX() {
   const db = loadDB();
-  // Build customer summary same way as renderCustomers
-  const custMap = {};
+  // Use buildCustMap — single source of truth for recv/bal
+  const _exportCustMap = buildCustMap(db);
+  // Count orders and lastDate from sales
+  const _orderMap = {};
   db.sales.forEach(r => {
-    const k = r.cust;
-    if (!k) return;
-    if (!custMap[k]) custMap[k] = { name: k, phone: r.phone||'', totalSales:0, totalRecv:0, totalBal:0, orders:0, lastDate:'' };
-    custMap[k].totalSales += fmtNum(r.total);
-    // totalRecv filled from payments below; s.recv only as fallback
-    custMap[k].totalBal   += fmtNum(r.bal);
-    custMap[k].orders++;
-    if (!custMap[k].lastDate || r.date > custMap[k].lastDate) custMap[k].lastDate = r.date;
+    if (!r.cust) return;
+    if (!_orderMap[r.cust]) _orderMap[r.cust] = { orders:0, lastDate:'' };
+    _orderMap[r.cust].orders++;
+    if (!_orderMap[r.cust].lastDate || r.date > _orderMap[r.cust].lastDate) _orderMap[r.cust].lastDate = r.date;
   });
-  // Add any extra payments
-  (db.payments || []).forEach(p => {
-    if (custMap[p.cust]) custMap[p.cust].totalRecv += fmtNum(p.amount||p.amt||0);
-  });
-  const rows = Object.values(custMap).map(c => ({
-    'Customer Name': c.name,
-    'Phone': c.phone,
-    'Total Sales (₹)': c.totalSales,
-    'Amount Received (₹)': c.totalRecv,
-    'Outstanding (₹)': Math.max(0, c.totalSales - c.totalRecv),
-    'No. of Orders': c.orders,
-    'Last Order Date': fmtDate(c.lastDate),
-    'Status': (c.totalSales - c.totalRecv) > 0 ? 'Pending' : 'Cleared'
+  const rows = Object.entries(_exportCustMap).map(([name, c]) => ({
+    'Customer Name': name,
+    'Phone': c.phone || '',
+    'Total Sales (₹)': c.total,
+    'Amount Received (₹)': c.recv,
+    'Outstanding (₹)': c.bal,
+    'No. of Orders': (_orderMap[name]||{}).orders||0,
+    'Last Order Date': fmtDate((_orderMap[name]||{}).lastDate||''),
+    'Status': c.bal > 0 ? 'Pending' : 'Cleared'
   }));
   if (!rows.length) { toast('⚠️ No customer data to export'); return; }
   const ws = XLSX.utils.json_to_sheet(rows);
@@ -6861,6 +6321,230 @@ async function syncFromGSheet() {
   }
 }
 
+
+// ══════════════════════════════════════════════════════
+// FEATURE: DARK MODE
+// ══════════════════════════════════════════════════════
+function toggleDark() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('bmd_dark', isDark ? '1' : '0');
+  document.getElementById('dark-toggle').textContent = isDark ? '☀️' : '🌙';
+  // Update Chart.js colors
+  if (typeof Chart !== 'undefined') {
+    const textColor = isDark ? '#9aa3b8' : '#98a2b5';
+    const gridColor = isDark ? '#2e3145' : '#ebeff5';
+    Chart.defaults.color = textColor;
+    Chart.defaults.borderColor = gridColor;
+    Chart.defaults.scale.grid.color = gridColor;
+    Chart.defaults.scale.ticks.color = textColor;
+  }
+}
+// Apply saved dark mode on load
+(function(){
+  if(localStorage.getItem('bmd_dark')==='1'){
+    document.body.classList.add('dark-mode');
+    document.addEventListener('DOMContentLoaded',()=>{
+      const btn = document.getElementById('dark-toggle');
+      if(btn) btn.textContent='☀️';
+    });
+  }
+})();
+
+// ══════════════════════════════════════════════════════
+// FEATURE: BRICK RATE CALCULATOR
+// ══════════════════════════════════════════════════════
+function saveRate(val) {
+  if(val) localStorage.setItem('bmd_brick_rate', val);
+}
+function calcTotal() {
+  const qty = parseFloat(document.getElementById('s-qty').value) || 0;
+  const rate = parseFloat(document.getElementById('s-rate').value) || parseFloat(localStorage.getItem('bmd_brick_rate')) || 0;
+  if (!qty) { toast('⚠️ Enter quantity first'); return; }
+  if (!rate) { toast('⚠️ Enter rate per brick'); return; }
+  const total = Math.round(qty * rate);
+  document.getElementById('s-total').value = total;
+  document.getElementById('s-rate').value = rate;
+  // Trigger balance recalc
+  const recv = parseFloat(document.getElementById('s-recv').value) || 0;
+  const bal = Math.max(0, total - recv);
+  document.getElementById('s-bal').value = bal;
+  document.getElementById('s-summary').textContent = `${qty.toLocaleString('en-IN')} × ₹${rate} = ${iR(total)}`;
+  document.getElementById('rate-preview').textContent = `= ${iR(total)}`;
+  toast(`🧮 Total = ${iR(total)} (${iN(qty)} × ₹${rate})`);
+}
+// Restore saved rate on page load
+document.addEventListener('DOMContentLoaded', () => {
+  const savedRate = localStorage.getItem('bmd_brick_rate');
+  const rateEl = document.getElementById('s-rate');
+  if (savedRate && rateEl) rateEl.value = savedRate;
+});
+
+// ══════════════════════════════════════════════════════
+// FEATURE: WHATSAPP PAYMENT REMINDER
+// ══════════════════════════════════════════════════════
+function sendWhatsApp() {
+  const db = loadDB();
+  const name = _cdCust;
+  if (!name) { toast('⚠️ No customer selected'); return; }
+  const custMap = buildCustMap(db);
+  const c = custMap[name];
+  if (!c) { toast('⚠️ Customer data not found'); return; }
+  const phone = (c.phone || '').replace(/[^0-9]/g, '');
+  const bal = c.bal || 0;
+  if (bal <= 0) {
+    toast('✅ This customer has no outstanding balance');
+    return;
+  }
+  const msg = `Hello ${name},\n\nThis is a reminder from BMD Flyash Bricks.\n\n` +
+    `📦 Total Purchases: ${iR(c.total)}\n` +
+    `✅ Amount Received: ${iR(c.recv)}\n` +
+    `🔴 Balance Due: *${iR(bal)}*\n\n` +
+    `Kindly arrange payment at your earliest convenience.\n\nThank you! 🙏`;
+  const encoded = encodeURIComponent(msg);
+  const url = phone
+    ? `https://wa.me/91${phone}?text=${encoded}`
+    : `https://wa.me/?text=${encoded}`;
+  window.open(url, '_blank');
+}
+
+// ══════════════════════════════════════════════════════
+// FEATURE: DAILY CASH SUMMARY
+// ══════════════════════════════════════════════════════
+function showDailySummary() {
+  const db = loadDB();
+  const td = today();
+  const tSales = db.sales.filter(s => s.date === td);
+  const tPayments = (db.payments || []).filter(p => p.date === td);
+  const tExp = db.exp.filter(e => e.date === td);
+  const tProd = db.prod.filter(p => p.date === td);
+
+  const totalSales = tSales.reduce((a,s) => a + s.total, 0);
+  const totalQty = tSales.reduce((a,s) => a + s.qty, 0);
+  const totalCash = tPayments.reduce((a,p) => a + (parseFloat(p.amount)||0), 0);
+  const totalExp = tExp.reduce((a,e) => a + e.amt, 0);
+  const totalProd = tProd.reduce((a,p) => a + p.bricks, 0);
+  const custMap = buildCustMap(db);
+  const totalDue = Object.values(custMap).reduce((a,c) => a + (c.bal||0), 0);
+  const netCash = totalCash - totalExp;
+
+  const box = document.getElementById('dailySummaryBox');
+  const [dd,mm,yy] = td.split('-');
+  const dateStr = new Date(yy,mm-1,dd).toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  box.style.display = '';
+  box.innerHTML = `
+    <div style="font-weight:800;font-size:14px;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--accent)">
+      📋 Daily Summary — ${dateStr}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div style="background:var(--surface-2);border-radius:8px;padding:10px;border:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.5px">Sales Today</div>
+        <div style="font-size:18px;font-weight:800;color:var(--accent)">${iR(totalSales)}</div>
+        <div style="font-size:11px;color:var(--muted)">${iN(totalQty)} bricks · ${tSales.length} orders</div>
+      </div>
+      <div style="background:var(--surface-2);border-radius:8px;padding:10px;border:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.5px">Cash Received</div>
+        <div style="font-size:18px;font-weight:800;color:var(--green)">${iR(totalCash)}</div>
+        <div style="font-size:11px;color:var(--muted)">${tPayments.length} payment${tPayments.length!==1?'s':''}</div>
+      </div>
+      <div style="background:var(--surface-2);border-radius:8px;padding:10px;border:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.5px">Expenses</div>
+        <div style="font-size:18px;font-weight:800;color:var(--red)">${iR(totalExp)}</div>
+        <div style="font-size:11px;color:var(--muted)">${tExp.length} entr${tExp.length!==1?'ies':'y'}</div>
+      </div>
+      <div style="background:var(--surface-2);border-radius:8px;padding:10px;border:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.5px">Net Cash In</div>
+        <div style="font-size:18px;font-weight:800;color:${netCash>=0?'var(--green)':'var(--red)'}">${iR(netCash)}</div>
+        <div style="font-size:11px;color:var(--muted)">Cash − Expenses</div>
+      </div>
+    </div>
+    ${tProd.length ? `<div style="font-size:12px;color:var(--muted);margin-bottom:8px">🏭 Produced today: <strong style="color:var(--text)">${iN(totalProd)} bricks</strong></div>` : ''}
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px">🔴 Total outstanding (all customers): <strong style="color:var(--red)">${iR(totalDue)}</strong></div>
+    ${tSales.length ? `<div style="font-size:11.5px;font-weight:700;color:var(--text-2);margin-bottom:6px">Today's Sales:</div>
+    <table style="width:100%;border-collapse:collapse;font-size:11.5px">
+      <tr style="background:var(--surface-2)"><th style="padding:5px 8px;text-align:left">Customer</th><th style="padding:5px 8px;text-align:right">Qty</th><th style="padding:5px 8px;text-align:right">Amount</th><th style="padding:5px 8px;text-align:left">Status</th></tr>
+      ${tSales.map(s=>`<tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:5px 8px"><strong>${s.cust}</strong>${s.vehicle?` <span style="color:var(--muted)">${s.vehicle}</span>`:''}</td><td style="padding:5px 8px;text-align:right">${iN(s.qty)}</td><td style="padding:5px 8px;text-align:right">${iR(s.total)}</td><td style="padding:5px 8px">${statusBadge(s.status)}</td></tr>`).join('')}
+    </table>` : '<div style="color:var(--muted);font-size:12px">No sales recorded today.</div>'}
+    <div style="margin-top:14px;display:flex;gap:8px">
+      <button onclick="printDailySummary()" style="padding:7px 16px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:12px;font-weight:700;cursor:pointer">🖨️ Print</button>
+      <button onclick="shareDailySummary('${td}',${totalSales},${totalCash},${totalExp},${totalQty},${tSales.length})" style="padding:7px 16px;border-radius:7px;border:none;background:#25D366;color:#fff;font-size:12px;font-weight:700;cursor:pointer">💬 Share on WhatsApp</button>
+    </div>`;
+}
+
+function printDailySummary() {
+  const box = document.getElementById('dailySummaryBox');
+  if (!box || box.style.display === 'none') { showDailySummary(); return; }
+  const w = window.open('', '_blank');
+  w.document.write('<html><head><title>Daily Summary</title><style>body{font-family:Inter,sans-serif;padding:20px;font-size:13px}table{width:100%;border-collapse:collapse}th,td{padding:6px 10px;border:1px solid #ddd}th{background:#f5f5f5}</style></head><body>');
+  w.document.write(box.innerHTML);
+  w.document.write('</body></html>');
+  w.document.close();
+  w.print();
+}
+
+function shareDailySummary(date, sales, cash, exp, qty, orders) {
+  const [dd,mm,yy] = date.split('-');
+  const dateStr = new Date(yy,mm-1,dd).toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
+  const msg = `📋 *BMD Flyash Bricks — Daily Summary*\n*${dateStr}*\n\n` +
+    `🧱 Sales: *${iR(sales)}* (${iN(qty)} bricks, ${orders} orders)\n` +
+    `💰 Cash Received: *${iR(cash)}*\n` +
+    `💸 Expenses: *${iR(exp)}*\n` +
+    `📊 Net Cash: *${iR(cash - exp)}*`;
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
+
+// ══════════════════════════════════════════════════════
+// FEATURE: BACKUP & RESTORE
+// ══════════════════════════════════════════════════════
+function backupData() {
+  const db = loadDB();
+  const backup = {
+    version: 2,
+    exportedAt: new Date().toISOString(),
+    appName: 'BMD Flyash Bricks Dashboard',
+    data: db
+  };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'BMD_Backup_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('✅ Backup downloaded successfully!');
+}
+
+function restoreData(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const statusEl = document.getElementById('restore-status');
+  statusEl.textContent = '⏳ Reading backup file...';
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const backup = JSON.parse(e.target.result);
+      const data = backup.data || backup; // support both wrapped and raw
+      // Validate it looks like our DB
+      if (!data.sales || !Array.isArray(data.sales)) {
+        throw new Error('Invalid backup file — not a BMD backup');
+      }
+      if (!confirm(`⚠️ This will REPLACE all current data with the backup from ${backup.exportedAt ? new Date(backup.exportedAt).toLocaleString('en-IN') : 'unknown date'}.\n\nBackup contains:\n• ${data.sales.length} sales\n• ${(data.payments||[]).length} payments\n• ${(data.exp||[]).length} expenses\n\nAre you sure?`)) {
+        statusEl.textContent = 'Restore cancelled.';
+        input.value = '';
+        return;
+      }
+      localStorage.setItem('bmd_db', JSON.stringify(data));
+      statusEl.innerHTML = '<span style="color:var(--green)">✅ Restore successful! Reloading...</span>';
+      setTimeout(() => location.reload(), 1200);
+    } catch (err) {
+      statusEl.innerHTML = '<span style="color:var(--red)">❌ ' + err.message + '</span>';
+      input.value = '';
+    }
+  };
+  reader.readAsText(file);
+}
+
+
 // ── LOGIN LOGIC ───────────────────────────────────────────
 const USERS = { 'admin':'keshavx01' };
 
@@ -6904,6 +6588,34 @@ document.querySelectorAll('.nt').forEach(function(t){
   });
 });
 </script>
+
+
+<!-- ========== PRINT DATE RANGE MODAL ========== -->
+<div id="printRangeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1100;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--surface);border-radius:14px;padding:26px;max-width:380px;width:100%;border:1px solid var(--border);box-shadow:var(--shadow-lg)">
+    <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px">🖨️ Print Ledger</div>
+    <div id="printRangeCustName" style="font-size:13px;color:var(--muted);margin-bottom:18px"></div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <label style="font-size:11.5px;font-weight:700;color:var(--text-2);display:block;margin-bottom:5px">From Date</label>
+        <input type="date" id="printFrom" style="width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text);font-size:13px">
+      </div>
+      <div>
+        <label style="font-size:11.5px;font-weight:700;color:var(--text-2);display:block;margin-bottom:5px">To Date</label>
+        <input type="date" id="printTo" style="width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text);font-size:13px">
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+        <button onclick="setPrintRange('month')" style="padding:6px 12px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-2);font-size:11.5px;font-weight:600;cursor:pointer">This Month</button>
+        <button onclick="setPrintRange('last30')" style="padding:6px 12px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-2);font-size:11.5px;font-weight:600;cursor:pointer">Last 30 Days</button>
+        <button onclick="setPrintRange('all')" style="padding:6px 12px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-2);font-size:11.5px;font-weight:600;cursor:pointer">All Time</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button onclick="confirmPrintBill()" style="flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:700;cursor:pointer">🖨️ Print</button>
+      <button onclick="closePrintRange()" style="padding:10px 18px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text);font-size:13px;font-weight:600;cursor:pointer">Cancel</button>
+    </div>
+  </div>
+</div>
 
 </div><!-- /main-content -->
 </div><!-- /app-shell -->
