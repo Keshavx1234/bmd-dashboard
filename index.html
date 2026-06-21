@@ -346,6 +346,11 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 
 /* mobile sidebar toggle */
 .mobile-toggle{display:none;position:fixed;top:12px;left:12px;z-index:400;width:38px;height:38px;border-radius:8px;border:1px solid var(--border);background:var(--accent);box-shadow:var(--shadow-md);font-size:17px;cursor:pointer;align-items:center;justify-content:center;color:#ffffff}
+/* collapsible sidebar (desktop) */
+.sb-collapse-btn{margin-left:auto;flex-shrink:0;width:26px;height:26px;border-radius:7px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-2);font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.sb-collapse-btn:hover{background:var(--accent-lt);color:var(--accent);border-color:var(--accent)}
+.desk-reopen{display:none;position:fixed;top:12px;left:12px;z-index:400;width:38px;height:38px;border-radius:8px;border:1px solid var(--border);background:var(--accent);box-shadow:var(--shadow-md);font-size:17px;cursor:pointer;align-items:center;justify-content:center;color:#fff}
+@media(min-width:881px){body.sb-collapsed .sidebar{display:none}body.sb-collapsed .desk-reopen{display:flex}}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:290}
 .sidebar-overlay.show{display:block}
 
@@ -881,10 +886,7 @@ tbody td {
 .emodal-hdr h3 { font-family: 'Inter', sans-serif !important; font-size: 14px !important; color: var(--text) !important; letter-spacing: .2px; }
 
 /* ─ Sidebar nav section labels ─ */
-.nav-sep {
-  font-size: 8.5px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--muted); padding: 14px 14px 4px; font-family: 'Inter', sans-serif;
-}
+
 
 /* ─ Report/filter section headers ─ */
 .pg-hdr {
@@ -993,15 +995,74 @@ body.dark-mode mark { background: #7a6c00 !important; color: #fff !important; }
 body.dark-mode .nt { color: var(--text-2); }
 body.dark-mode .nt:hover, body.dark-mode .nt.active { background: var(--accent-lt); color: var(--accent); }
 body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#111420 100%); }
-#dark-toggle {
-  position: fixed; bottom: 18px; right: 18px; z-index: 500;
-  width: 44px; height: 44px; border-radius: 50%;
-  background: var(--surface); border: 1.5px solid var(--border);
-  box-shadow: var(--shadow-md); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; transition: transform .2s;
+/* #dark-toggle now lives inside the sidebar footer; styled by .sb-dark-btn below.
+   (Old fixed/circular floating styles removed so it sticks in the side panel.) */
+
+/* ── Sidebar footer (dark toggle + backup) ── */
+.sb-footer {
+  padding: 10px 10px 12px;
+  border-top: 1px solid var(--border-soft);
+  display: flex; gap: 8px;
+  background: var(--surface);
+  flex-shrink: 0;
 }
-#dark-toggle:hover { transform: scale(1.12); }
+.sb-dark-btn, .sb-backup-btn {
+  flex: 1; padding: 8px 4px;
+  border-radius: 8px; border: 1.5px solid var(--border);
+  background: var(--surface-2); color: var(--text-2);
+  font-size: 11px; font-weight: 600; cursor: pointer;
+  font-family: 'Inter', sans-serif; letter-spacing: .2px;
+  transition: background .15s, border-color .15s, color .15s;
+  white-space: nowrap;
+}
+.sb-dark-btn:hover { background: var(--accent-lt); border-color: var(--accent); color: var(--accent); }
+.sb-backup-btn:hover { background: var(--green-lt); border-color: var(--green); color: var(--green); }
+
+/* ── Nav section separators ── */
+.nav-sep {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted); padding: 12px 14px 3px; font-family: 'Inter', sans-serif;
+  pointer-events: none;
+}
+
+/* ── Aging badges ── */
+.age-ok  { font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--green-lt);color:var(--green); }
+.age-mid { font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--amber-lt);color:#92400e; }
+.age-old { font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--red-lt);color:var(--red); }
+
+/* ── Challan print button ── */
+.challan-btn { background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:4px 5px;border-radius:6px;transition:background .15s,color .15s; }
+.challan-btn:hover { color:var(--blue);background:var(--blue-lt); }
+
+/* ── Edit-payment button ── */
+.ep-btn { background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:4px 5px;border-radius:6px;transition:background .15s,color .15s; }
+.ep-btn:hover { color:var(--accent);background:var(--accent-lt); }
+
+/* ── Today date strip on dashboard ── */
+.today-strip {
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  padding:10px 20px;background:var(--accent-soft);border-bottom:1px solid var(--border-soft);
+  font-size:12px;color:var(--text-2);font-family:'Inter',sans-serif;
+}
+.today-strip strong { color:var(--text);font-weight:700; }
+
+/* ── Credit limit warning ── */
+.cl-warn { font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa; }
+
+/* ── Mobile KPI 2-col ── */
+@media(max-width:600px) {
+  .kg { grid-template-columns:1fr 1fr !important; }
+  .cu-grid { grid-template-columns:1fr !important; }
+  .two { grid-template-columns:1fr !important; }
+  .fg { grid-template-columns:1fr !important; }
+  tbody td { padding:8px 10px !important; font-size:12px !important; }
+  .lg-kpi { grid-template-columns:1fr 1fr !important; }
+}
+/* ── Action buttons: show on row hover (desktop) ── */
+@media(hover:hover) {
+  .act-cell { opacity:.35; transition:opacity .15s; }
+  tr:hover .act-cell { opacity:1; }
+}
 </style>
 </head>
 <body>
@@ -1061,6 +1122,7 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
 </div>
 
 <button class="mobile-toggle" id="mobileToggle" onclick="toggleSidebar()">☰</button>
+<button class="desk-reopen" id="deskReopen" onclick="toggleSidebarCollapse()" title="Open menu">☰</button>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
 <div class="app-shell">
@@ -1075,6 +1137,7 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
         <div class="hdr-sub">Fly Ash Brick Plant · Operations &amp; Management</div>
       </div>
     </div>
+    <button class="sb-collapse-btn" onclick="toggleSidebarCollapse()" title="Collapse menu">«</button>
   </div>
   <div class="hdr-date" id="hdrDate"></div>
   <div style="padding:0 18px 12px">
@@ -1094,23 +1157,31 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
 
   <!-- NAV -->
   <nav class="nav">
+    <div class="nav-sep">Operations</div>
     <div class="nt active" onclick="showPg('dashboard',this)">📊 Dashboard</div>
-    <div class="nt" onclick="showPg('sales',this)">💰 Sales & Dispatch</div>
-    <div class="nt" onclick="showPg('production',this)">🏭 Brick Production</div>
-    <div class="nt" onclick="showPg('expense',this)">💸 Expenses & Wages</div>
-    <div class="nt" onclick="showPg('inventory',this)">📦 Stock & Materials</div>
-    <div class="nt" onclick="showPg('reports',this)">📈 Reports & Analysis</div>
+    <div class="nt" onclick="showPg('sales',this)">💰 Sales &amp; Dispatch</div>
     <div class="nt" onclick="showPg('customers',this)">👤 Customer Ledger</div>
     <div class="nt" onclick="showPg('payments',this)">💳 Receipts</div>
-    <div class="nt" onclick="showPg('opening',this)">⚖️ Opening Balances</div>
-    <div class="nt" onclick="showPg('setup',this)">⚙️ Settings & Guide</div>
+    <div class="nav-sep">Plant</div>
+    <div class="nt" onclick="showPg('production',this)">🏭 Brick Production</div>
+    <div class="nt" onclick="showPg('inventory',this)">📦 Stock &amp; Materials</div>
+    <div class="nav-sep">Finance</div>
+    <div class="nt" onclick="showPg('expense',this)">💸 Expenses &amp; Wages</div>
+    <div class="nt" onclick="showPg('reports',this)">📈 Reports &amp; Analysis</div>
+    <div class="nav-sep">System</div>
+    <div class="nt" onclick="showPg('opening',this)">⚖️ Starting Dues</div>
+    <div class="nt" onclick="showPg('setup',this)">⚙️ Settings &amp; Guide</div>
   </nav>
+  <!-- SIDEBAR FOOTER -->
+  <div class="sb-footer">
+    <button id="dark-toggle" onclick="toggleDark()" title="Toggle Dark Mode" class="sb-dark-btn">🌙 Dark Mode</button>
+    <button onclick="_autoBackupNow()" title="Download backup now" class="sb-backup-btn">💾 Backup</button>
+  </div>
 </aside>
 
 <!-- MAIN CONTENT -->
 <div class="main-content">
 
-<button id="dark-toggle" onclick="toggleDark()" title="Toggle Dark Mode">🌙</button>
 <div id="toast"></div>
 
 <!-- ========== DELETE CONFIRM MODAL ========== -->
@@ -1145,7 +1216,7 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
     <div class="fl"><label>Site / Location</label><input type="text" id="es-site"></div>
     <div class="fl"><label>Vehicle No.</label><input type="text" id="es-vehicle"></div>
     <div class="fl"><label>Quantity (Bricks) <span class="req">*</span></label><input type="number" id="es-qty" min="0" inputmode="numeric"></div>
-    <div class="fl"><label>Total Amount (₹) <span class="req">*</span></label><input type="number" id="es-total" min="0" inputmode="numeric" oninput="esCalcBal()"></div>
+    <div class="fl"><label>Total Amount (���������) <span class="req">*</span></label><input type="number" id="es-total" min="0" inputmode="numeric" oninput="esCalcBal()"></div>
     <div class="fl"><label>Payment Status <span class="req">*</span></label>
      <select id="es-status" onchange="esStatusChange()">
       <option value="">-- Select --</option>
@@ -1189,7 +1260,7 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
       <option value="">-- Select --</option>
       <option value="Raw Material">🏗️ Raw Material</option>
       <option value="Labour Wages">👷 Labour / Wages</option>
-      <option value="Electricity">⚡ Electricity</option>
+      <option value="Electricity">��� Electricity</option>
       <option value="Diesel / Fuel">⛽ Diesel / Fuel</option>
       <option value="Machine Repair">🔧 Machine Repair</option>
       <option value="Transport">🚛 Transport</option>
@@ -1198,7 +1269,7 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
      </select>
     </div>
     <div class="fl"><label>Description <span class="req">*</span></label><input type="text" id="ee-desc"></div>
-    <div class="fl"><label>Amount (₹) <span class="req">*</span></label><input type="number" id="ee-amt" min="0" inputmode="numeric"></div>
+    <div class="fl"><label>Amount (���������) <span class="req">*</span></label><input type="number" id="ee-amt" min="0" inputmode="numeric"></div>
    </div>
    <div class="fl" style="margin-top:11px"><label>Remarks</label><textarea id="ee-rem"></textarea></div>
   </div>
@@ -1390,6 +1461,15 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
     </div>
   </div>
 
+  <!-- QUICK ACTIONS -->
+  <div class="d-quick" style="display:flex;gap:8px;flex-wrap:wrap;padding:16px 20px 0">
+    <button onclick="quickNav('sales')" style="padding:9px 15px;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent)">➕ Sale</button>
+    <button onclick="quickNav('production')" style="padding:9px 15px;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;border:1.5px solid var(--blue);background:var(--blue-lt);color:var(--blue)">➕ Production</button>
+    <button onclick="quickNav('expense')" style="padding:9px 15px;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;border:1.5px solid var(--amber);background:var(--amber-lt);color:#92400e">➕ Expense</button>
+    <button onclick="quickNav('payments')" style="padding:9px 15px;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;border:1.5px solid var(--green);background:var(--green-lt);color:var(--green)">➕ Receipt</button>
+    <button onclick="shareTodayWhatsApp()" style="padding:9px 15px;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;border:none;background:#25D366;color:#fff;margin-left:auto">💬 Send Today to WhatsApp</button>
+  </div>
+
   <!-- KPI Grid — IDs match what refreshAll already writes to -->
   <div class="d-kpis">
     <div class="d-kpi acc">
@@ -1428,6 +1508,9 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
       <div class="dk-sub" id="k-profit-s">this period</div>
     </div>
   </div>
+
+  <!-- NEEDS ATTENTION -->
+  <div id="d-attention"></div>
 
   <!-- BRICKS STOCK WIDGET -->
   <div id="bricks-stock-widget" style="padding:16px 20px 0">
@@ -1726,7 +1809,8 @@ function dRefreshKPIs() {
   document.getElementById('k-due').textContent      = iR(outstanding);
   document.getElementById('k-due-s').textContent    = outCusts + ' customer' + (outCusts!==1?'s':'');
   document.getElementById('k-profit').textContent   = iR(profit);
-  document.getElementById('k-profit-s').textContent = profit >= 0 ? '↑ profitable' : '↓ loss';
+  const _margin = tSalesAmt > 0 ? Math.round((profit / tSalesAmt) * 100) : 0;
+  document.getElementById('k-profit-s').textContent = (profit >= 0 ? '↑ ' : '↓ ') + _margin + '% margin';
 }
 
 // ── Chart helpers ───────────────────────────────────────────────
@@ -1782,7 +1866,7 @@ function dBuildProd() {
   });
 }
 
-// ── Bricks Interactive Modal ────────────────────────────────────
+// ── Bricks Interactive Modal ─��─����─��───��─��─��─��────────────────────
 let _bmTab = 'sold', _bmPeriod = 'month';
 
 function openBrickModal(tab) {
@@ -1999,6 +2083,12 @@ function renderBrickModal() {
   <!-- MODE TABS -->
   <!-- Mode tabs: bulk entry removed, only quick entry remains -->
 
+  <!-- MODE TABS -->
+  <div style="display:inline-flex;gap:6px;margin-bottom:16px">
+    <button id="saleModeManual" class="btn b-acc" style="border-radius:var(--rs);font-size:12.5px;padding:7px 18px" onclick="switchSaleMode('manual')">✏️ Manual Entry</button>
+    <button id="saleModeImport" class="btn b-out" style="border-radius:var(--rs);font-size:12.5px;padding:7px 18px;border:none" onclick="switchSaleMode('import')">📂 Import from Excel</button>
+  </div>
+
   <!-- ===== QUICK ENTRY PANEL (single sale) ===== -->
   <div id="panel-manual">
     <div class="card qe-card">
@@ -2033,7 +2123,7 @@ function renderBrickModal() {
         <div class="fg">
           <div class="fl">
             <label>Quantity Sold (Bricks) <span class="req">*</span></label>
-            <input type="number" id="s-qty" placeholder="e.g. 2500" min="0" inputmode="numeric" oninput="document.getElementById('s-summary').textContent='';document.getElementById('rate-preview').textContent=''">
+            <input type="number" id="s-qty" placeholder="e.g. 2500" min="0" inputmode="numeric" oninput="document.getElementById('s-summary').textContent='';document.getElementById('rate-preview').textContent='';_silentCalc()">
           </div>
           <div class="fl">
             <label>Total Amount (₹) <span class="req">*</span></label>
@@ -2042,7 +2132,7 @@ function renderBrickModal() {
               <button type="button" onclick="calcTotal()" title="Auto-calculate from rate" style="padding:8px 12px;border-radius:8px;border:1.5px solid var(--accent);background:var(--accent-lt);color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">🧮 Calc</button>
             </div>
             <div class="hint" style="display:flex;align-items:center;gap:6px;margin-top:4px">
-              Rate: ₹<input type="number" id="s-rate" placeholder="per brick" min="0" step="0.01" inputmode="decimal" style="width:80px;padding:3px 6px;border-radius:5px;border:1px solid var(--border);font-size:11.5px;background:var(--surface-2)" oninput="saveRate(this.value)"> /brick
+              Rate: ₹<input type="number" id="s-rate" placeholder="per brick" min="0" step="0.01" inputmode="decimal" style="width:80px;padding:3px 6px;border-radius:5px;border:1px solid var(--border);font-size:11.5px;background:var(--surface-2)" oninput="saveRate(this.value);_silentCalc()"> /brick
               <span id="rate-preview" style="color:var(--muted);font-size:11px"></span>
             </div>
           </div>
@@ -2080,10 +2170,55 @@ function renderBrickModal() {
     </div>
   </div>
 
-  <!-- ===== BULK ENTRY PANEL (multi-row, spreadsheet-style) ===== -->
+  <!-- ===== EXCEL IMPORT PANEL (sales) ===== -->
+  <div id="panel-import" style="display:none">
+    <div class="al al-i">
+      📊 <strong>How to use:</strong> Upload your sales Excel file → columns are auto-detected → check the preview → click Import.<br>
+      <span style="margin-top:4px;display:block;color:var(--green)">✅ Recognized columns: <strong>Date · Customer · Phone · Site · Quantity · Total · Vehicle · Status · Received · Remarks</strong></span>
+    </div>
+    <div class="card">
+      <div class="ct">📂 Upload Sales Excel File</div>
+      <div id="xlDropZone" onclick="document.getElementById('xlFileInput').click()"
+        style="border:2.5px dashed var(--border);border-radius:var(--rs);padding:28px;text-align:center;cursor:pointer;background:var(--surface-2);transition:border-color .2s,background .2s"
+        ondragover="event.preventDefault();this.style.borderColor='var(--accent)';this.style.background='var(--accent-lt)'"
+        ondragleave="this.style.borderColor='var(--border)';this.style.background='var(--surface-2)'"
+        ondrop="event.preventDefault();this.style.borderColor='var(--border)';this.style.background='var(--surface-2)';handleXlDrop(event)">
+        <div style="font-size:32px;margin-bottom:8px">💰</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px">Click to choose Sales Excel or drag &amp; drop</div>
+        <div style="font-size:12px;color:var(--muted)">Supports .xlsx and .xls</div>
+      </div>
+      <input type="file" id="xlFileInput" accept=".xlsx,.xls" style="display:none" onchange="handleXlFile(this.files[0])">
+      <div id="xlFileInfo" style="margin-top:10px;font-size:12.5px;display:none">
+        <span id="xlFileName" style="font-weight:600;color:var(--accent)"></span>
+        <span id="xlSheetSelect" style="margin-left:10px"></span>
+      </div>
+      <div id="xlError" style="margin-top:8px;font-size:12px;color:var(--red);display:none"></div>
+    </div>
 
-  <!-- ===== EXCEL UPLOAD PANEL ===== -->
-  <!-- Import Excel panel removed -->
+    <div class="card" id="xlColCard" style="display:none;margin-bottom:13px">
+      <div class="ct">🗂️ Column Detection</div>
+      <div id="xlColStatus" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
+      <div id="xlColMapper" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:8px"></div>
+    </div>
+
+    <div id="xlPreviewWrap" style="display:none">
+      <div class="st">Preview — Rows to be Imported</div>
+      <div class="card">
+        <div id="xlPreviewInfo" style="font-size:12.5px;margin-bottom:10px"></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>#</th><th>Date</th><th>Customer</th><th>Phone</th><th>Site</th><th>Qty</th><th>Total</th><th>Vehicle</th><th>Status</th><th>Received</th><th>Balance</th><th>Remarks</th></tr></thead>
+            <tbody id="xlPreviewTbl"></tbody>
+          </table>
+        </div>
+        <div id="xlPreviewFooter" class="tf"></div>
+        <div class="br">
+          <button class="btn b-acc" onclick="importXlRows()">📥 Import into System</button>
+          <button class="btn b-out" onclick="clearXlUpload()">🗑️ Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ===== SALES TABLE (date filtered + search) ===== -->
   <div class="se-toolbar">
@@ -2133,6 +2268,17 @@ function renderBrickModal() {
 
 <!-- ==================== PRODUCTION ENTRY ==================== -->
 <div id="pg-production" class="pg">
+
+  <!-- ===== GOOGLE FORM SYNC (PRODUCTION) ===== -->
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:10px 12px;background:var(--surface-2);border:1px solid var(--border-soft);border-radius:var(--r)">
+    <span style="font-size:16px">\ud83d\udccb</span>
+    <div style="flex:1;min-width:140px">
+      <div style="font-size:12.5px;font-weight:700;color:var(--text)">Sync Production from Google Form</div>
+      <div id="prod-gsheet-status" style="font-size:11.5px;font-weight:600;color:var(--muted)">\u26ac Not synced yet</div>
+    </div>
+    <button id="prod-gsheet-sync-btn" class="btn b-blu" style="padding:7px 16px;font-size:12.5px" onclick="syncProductionFromGSheet()">\ud83d\udd04 Sync Production</button>
+  </div>
+  <div id="prod-gsheet-log" style="margin:-4px 0 14px;font-size:12px;color:var(--muted);display:none;padding:8px 10px;background:var(--surface-2);border-radius:6px;border:1px solid var(--border-soft)"></div>
 
   <!-- MODE TOGGLE -->
   <div style="display:flex;gap:0;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:4px;margin-bottom:14px;width:fit-content">
@@ -2187,7 +2333,7 @@ function renderBrickModal() {
   <!-- ===== EXCEL IMPORT ===== -->
   <div id="prod-panel-import" style="display:none">
     <div class="al al-i">
-      📂 <strong>How to use:</strong> Upload your <strong>PRODUCTION ENTRY (Responses).xlsx</strong> → columns are auto-detected → preview → click Import.<br>
+      ���� <strong>How to use:</strong> Upload your <strong>PRODUCTION ENTRY (Responses).xlsx</strong> → columns are auto-detected → preview → click Import.<br>
       <span style="margin-top:4px;display:block;color:var(--green)">✅ Expected columns: <strong>Timestamp · Date · Shift · Number of Bricks Produced · No of Male · No of Female · Remarks</strong></span>
     </div>
     <div class="card">
@@ -2604,7 +2750,7 @@ function renderBrickModal() {
         <tr><td>📤 Total Expenses</td><td id="pl-e-m">₹0</td><td id="pl-e-a">₹0</td></tr>
         <tr style="background:var(--green-lt)"><td><strong>✅ Gross Profit (Sales − Expenses)</strong></td><td><strong id="pl-p-m">₹0</strong></td><td><strong id="pl-p-a">₹0</strong></td></tr>
         <tr><td>🔴 Outstanding Receivables</td><td id="pl-d-m">₹0</td><td id="pl-d-a">₹0</td></tr>
-        <tr><td>🏭 Bricks Produced</td><td id="pl-bp-m">0</td><td id="pl-bp-a">0</td></tr>
+        <tr><td>��� Bricks Produced</td><td id="pl-bp-m">0</td><td id="pl-bp-a">0</td></tr>
         <tr><td>🛒 Bricks Sold</td><td id="pl-bs-m">0</td><td id="pl-bs-a">0</td></tr>
         <tr><td>📊 Avg Rate per Brick (����)</td><td id="pl-ar-m">₹0</td><td id="pl-ar-a">₹0</td></tr>
       </tbody>
@@ -2953,6 +3099,46 @@ function renderBrickModal() {
       </label>
     </div>
     <div id="restore-status" style="margin-top:10px;font-size:12px;color:var(--muted)"></div>
+  </div>
+
+  <!-- DEPARTMENT-WISE CLEAR -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+    <div class="st" style="margin:0">🗂️ Clear Data — Department-wise</div>
+  </div>
+  <div class="card" style="padding:18px;margin-bottom:22px;border:1.5px solid #f0b3b3">
+    <p style="font-size:13px;color:var(--text-2);margin:0 0 14px">Permanently delete data for one department only — your other records stay safe. Each action is password-protected. <strong style="color:var(--red)">This cannot be undone — download a backup first.</strong></p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button onclick="openDeptClear('sales')" style="padding:9px 16px;border-radius:8px;border:1.5px solid #f0b3b3;background:var(--surface-2);color:var(--red);font-weight:700;font-size:13px;cursor:pointer">🧱 Clear Sales</button>
+      <button onclick="openDeptClear('prod')" style="padding:9px 16px;border-radius:8px;border:1.5px solid #f0b3b3;background:var(--surface-2);color:var(--red);font-weight:700;font-size:13px;cursor:pointer">🏭 Clear Production</button>
+      <button onclick="openDeptClear('exp')" style="padding:9px 16px;border-radius:8px;border:1.5px solid #f0b3b3;background:var(--surface-2);color:var(--red);font-weight:700;font-size:13px;cursor:pointer">💸 Clear Expenses</button>
+      <button onclick="openDeptClear('inv')" style="padding:9px 16px;border-radius:8px;border:1.5px solid #f0b3b3;background:var(--surface-2);color:var(--red);font-weight:700;font-size:13px;cursor:pointer">📦 Clear Inventory</button>
+      <button onclick="openDeptClear('payments')" style="padding:9px 16px;border-radius:8px;border:1.5px solid #f0b3b3;background:var(--surface-2);color:var(--red);font-weight:700;font-size:13px;cursor:pointer">💳 Clear Customer Payments</button>
+      <button onclick="openDeptClear('vendorPayments')" style="padding:9px 16px;border-radius:8px;border:1.5px solid #f0b3b3;background:var(--surface-2);color:var(--red);font-weight:700;font-size:13px;cursor:pointer">🏪 Clear Vendor Payments</button>
+      <button onclick="openDeptClear('openingBalances')" style="padding:9px 16px;border-radius:8px;border:1.5px solid #f0b3b3;background:var(--surface-2);color:var(--red);font-weight:700;font-size:13px;cursor:pointer">📒 Clear Opening Balances</button>
+    </div>
+  </div>
+
+  <!-- ── Department-wise Clear Modal ── -->
+  <div class="emodal-bg" id="deptClearModal" onclick="if(event.target===this)closeDeptClearModal()">
+    <div class="emodal" style="max-width:400px">
+      <div class="emodal-hdr">
+        <h3 id="deptClearTitle">Clear Department</h3>
+        <button class="emodal-close" onclick="closeDeptClearModal()">✕</button>
+      </div>
+      <div class="al al-e" id="deptClearWarn" style="margin-bottom:14px"></div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Enter the admin password to confirm:</p>
+      <div style="position:relative;margin-bottom:6px">
+        <input type="password" id="deptClearInput" placeholder="Enter admin password"
+          style="width:100%;padding:9px 38px 9px 12px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:14px;font-family:inherit;background:var(--surface-2);color:var(--text);box-sizing:border-box"
+          oninput="deptClearCheckPwd()" onkeydown="if(event.key==='Enter')doDeptClear()">
+        <span onclick="toggleDeptClearPwd()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:15px;user-select:none" id="deptClearEyeBtn">👁️</span>
+      </div>
+      <div id="deptClearErr" style="font-size:12px;color:var(--red);min-height:18px;margin-bottom:10px"></div>
+      <div class="br" style="margin-top:0;padding-top:0;border-top:none">
+        <button id="deptClearBtn" class="btn b-acc" style="background:var(--red)" onclick="doDeptClear()" disabled>Confirm &amp; Delete</button>
+        <button class="btn b-out" onclick="closeDeptClearModal()">Cancel</button>
+      </div>
+    </div>
   </div>
 
   <div class="st">Part A — Google Sheets Structure (8 Tabs)</div>
@@ -3504,14 +3690,39 @@ function saveDB(d){
     localStorage.setItem(DB, JSON.stringify(d));
   } catch(e) {
     if(e && (e.name === 'QuotaExceededError' || e.code === 22)) {
-      toast('⚠️ Storage full! Data not saved. Please export a backup and clear old data.');
+      toast('⚠️ Storage full! Please backup now.');
     } else {
       toast('⚠️ Save failed: ' + (e && e.message ? e.message : 'Unknown error'));
     }
     console.error('saveDB error:', e);
     return;
   }
+  // Auto-backup every 30 saves
+  let _sc = parseInt(localStorage.getItem('bmd_saveCount') || '0') + 1;
+  localStorage.setItem('bmd_saveCount', _sc);
+  if (_sc % 30 === 0) {
+    toast('🔔 Auto-backup triggered (' + _sc + ' saves). Downloading...');
+    setTimeout(_autoBackupNow, 800);
+  }
   syncPush();
+}
+
+function _autoBackupNow() {
+  try {
+    const db = loadDB();
+    const blob = new Blob([JSON.stringify(db, null, 2)], {type: 'application/json'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    const d    = new Date();
+    const ds   = String(d.getDate()).padStart(2,'0') + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + d.getFullYear();
+    a.href     = url;
+    a.download = 'BMD_Backup_' + ds + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('✅ Backup downloaded: BMD_Backup_' + ds + '.json');
+  } catch(e) { toast('⚠️ Backup failed: ' + e.message); }
 }
 
 const statusBadge = s => {
@@ -3762,6 +3973,9 @@ function importXlRows(){
     if(!s.cust||s.qty<=0){skipped++;return;}
     const dup=db.sales.find(e=>e.cust===s.cust&&e.date===s.date&&e.qty===s.qty&&e.total===s.total);
     if(dup){skipped++;return;}
+    // Duplicate entry guard
+    const _dupGuard = db.sales.find(e => e.cust === s.cust && e.date === s.date && e.qty === s.qty);
+    if(_dupGuard) { if(!confirm('⚠️ Possible duplicate: ' + s.cust + ' already has ' + iN(s.qty) + ' bricks on ' + s.date + '.\nSave anyway?')) return; }
     db.sales.push({id:Date.now()*1000+Math.floor(Math.random()*999),time:timeNow(),...s});
     added++;
   });
@@ -3781,6 +3995,286 @@ function clearXlUpload(){
 }
 
 // ===================== MODE SWITCH =====================
+function switchProdMode(mode){
+  const man=document.getElementById('prod-panel-manual');
+  const imp=document.getElementById('prod-panel-import');
+  const bMan=document.getElementById('prodModeManual');
+  const bImp=document.getElementById('prodModeImport');
+  const isImport = mode==='import';
+  if(man) man.style.display = isImport ? 'none' : '';
+  if(imp) imp.style.display = isImport ? '' : 'none';
+  if(bMan){ bMan.className = isImport ? 'btn b-out' : 'btn b-blu'; bMan.style.border = isImport ? 'none' : ''; }
+  if(bImp){ bImp.className = isImport ? 'btn b-blu' : 'btn b-out'; bImp.style.border = isImport ? '' : 'none'; }
+}
+
+// Sales page: switch between manual entry and Excel import
+function switchSaleMode(mode){
+  const man=document.getElementById('panel-manual');
+  const imp=document.getElementById('panel-import');
+  const bMan=document.getElementById('saleModeManual');
+  const bImp=document.getElementById('saleModeImport');
+  const isImport = mode==='import';
+  if(man) man.style.display = isImport ? 'none' : '';
+  if(imp) imp.style.display = isImport ? '' : 'none';
+  if(bMan){ bMan.className = isImport ? 'btn b-out' : 'btn b-acc'; bMan.style.border = isImport ? 'none' : ''; }
+  if(bImp){ bImp.className = isImport ? 'btn b-acc' : 'btn b-out'; bImp.style.border = isImport ? '' : 'none'; }
+}
+
+// ============ SINGLE-ENTRY SAVE / CLEAR (Sales / Production / Expense) ============
+function saveSale(){
+  const summary=document.getElementById('s-summary');
+  const setErr=(m)=>{ if(summary){summary.textContent=m;summary.style.color='var(--red)';} else toast(m); };
+  const date=fromInput(document.getElementById('s-date').value);
+  const cust=toTitleCase(document.getElementById('s-cust').value.trim());
+  const qty=parseFloat(document.getElementById('s-qty').value);
+  const total=parseFloat(document.getElementById('s-total').value);
+  const status=document.getElementById('s-status').value;
+  if(!date||!cust||!qty||qty<=0||!total||!status){ setErr('\u26a0\ufe0f Fill all required fields (*)'); return; }
+  let recv=parseFloat(document.getElementById('s-recv').value)||0;
+  if(status==='PAID/CASH' && recv===0) recv=total;
+  if(status==='Pending') recv=0;
+  const bal=Math.max(0,total-recv);
+  const db=loadDB();
+  db.sales.push({
+    id:Date.now()*1000+Math.floor(Math.random()*999),
+    date, cust,
+    phone:document.getElementById('s-phone').value.trim(),
+    site:document.getElementById('s-site').value.trim(),
+    vehicle:document.getElementById('s-vehicle').value.trim(),
+    qty, total, status, recv, bal,
+    rem:document.getElementById('s-rem').value,
+    time:timeNow(), source:'manual'
+  });
+  saveDB(db);
+  toast('\u2705 Sale entry saved!');
+  clearSale();
+  refreshAll();
+}
+
+function clearSale(){
+  ['s-cust','s-phone','s-site','s-vehicle','s-qty','s-total','s-rate','s-recv','s-bal','s-rem'].forEach(id=>{const e=document.getElementById(id); if(e) e.value='';});
+  const st=document.getElementById('s-status'); if(st) st.value='';
+  const d=document.getElementById('s-date'); if(d) d.value=_localDateStr();
+  const sum=document.getElementById('s-summary'); if(sum) sum.textContent='';
+  const rp=document.getElementById('rate-preview'); if(rp) rp.textContent='';
+}
+
+function saveProd(){
+  const date=fromInput(document.getElementById('p-date').value);
+  const shift=document.getElementById('p-shift').value;
+  const bricks=parseFloat(document.getElementById('p-bricks').value);
+  if(!date||!shift||!bricks||bricks<=0){ toast('\u26a0\ufe0f Fill date, shift and bricks produced'); return; }
+  const db=loadDB();
+  db.prod.push({
+    id:Date.now()*1000+Math.floor(Math.random()*999),
+    date, shift, bricks,
+    male:parseInt(document.getElementById('p-male').value)||0,
+    female:parseInt(document.getElementById('p-female').value)||0,
+    rem:document.getElementById('p-rem').value,
+    time:timeNow()
+  });
+  saveDB(db);
+  toast('\u2705 Production entry saved!');
+  clearProd();
+  refreshAll();
+}
+
+function clearProd(){
+  ['p-bricks','p-male','p-female','p-rem'].forEach(id=>{const e=document.getElementById(id); if(e) e.value='';});
+  const sh=document.getElementById('p-shift'); if(sh) sh.value='';
+  const d=document.getElementById('p-date'); if(d) d.value=_localDateStr();
+}
+
+function saveExp(){
+  const date=fromInput(document.getElementById('e-date').value);
+  const cat=document.getElementById('e-cat').value;
+  const desc=document.getElementById('e-desc').value.trim();
+  const amt=parseFloat(document.getElementById('e-amt').value);
+  if(!date||!cat||!desc||!amt||amt<=0){ toast('\u26a0\ufe0f Fill date, category, description and amount'); return; }
+  const db=loadDB();
+  db.exp.push({
+    id:Date.now()*1000+Math.floor(Math.random()*999),
+    date, cat, desc, amt,
+    rem:document.getElementById('e-rem').value,
+    time:timeNow()
+  });
+  saveDB(db);
+  toast('\u2705 Expense saved!');
+  clearExp();
+  refreshAll();
+}
+
+function clearExp(){
+  ['e-desc','e-amt','e-rem'].forEach(id=>{const e=document.getElementById(id); if(e) e.value='';});
+  const c=document.getElementById('e-cat'); if(c) c.value='';
+  const d=document.getElementById('e-date'); if(d) d.value=_localDateStr();
+}
+
+// ===================== PRODUCTION EXCEL IMPORT =====================
+const PROD_XL_FIELDS = [
+  {key:'date',   label:'Date',            keywords:['date','dt','\u0924\u093e\u0930\u0940\u0916']},
+  {key:'shift',  label:'Shift',           keywords:['shift','\u092a\u093e\u0932\u0940']},
+  {key:'bricks', label:'Bricks Produced', keywords:['brick','produced','production']},
+  {key:'male',   label:'Male Workers',    keywords:['male','men','\u092a\u0941\u0930\u0941\u0937']},
+  {key:'female', label:'Female Workers',  keywords:['female','women','\u092e\u0939\u093f\u0932\u093e']},
+  {key:'rem',    label:'Remarks',         keywords:['remark','note','comment','desc','info']},
+];
+
+let _prodXlRows = [];
+let _prodXlHeaders = [];
+let _prodXlColMap = {};
+
+function handleProdDrop(e){
+  const file = e.dataTransfer.files[0];
+  if(file) handleProdFile(file);
+}
+
+function handleProdFile(file){
+  if(!file) return;
+  const err=document.getElementById('prodXlError');
+  if(err) err.style.display='none';
+  if(!/\.xlsx?$/i.test(file.name)){
+    if(err){ err.textContent='\u26a0\ufe0f Please select an .xlsx or .xls file.'; err.style.display=''; }
+    return;
+  }
+  const fn=document.getElementById('prodFileName'); if(fn) fn.textContent='\ud83d\udcc4 '+file.name;
+  const fi=document.getElementById('prodFileInfo'); if(fi) fi.style.display='';
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      const data=new Uint8Array(ev.target.result);
+      const wb=XLSX.read(data,{type:'array',cellDates:true});
+      window._prodXlWB=wb;
+      parseProdSheet(wb, wb.SheetNames[0]);
+    }catch(ex){
+      if(err){ err.textContent='\u274c Could not read file: '+ex.message; err.style.display=''; }
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function parseProdSheet(wb, sheetName){
+  const err=document.getElementById('prodXlError');
+  const ws=wb.Sheets[sheetName];
+  const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,dateNF:'dd-mm-yyyy'});
+  if(!rows || rows.length<2){
+    if(err){ err.textContent='\u26a0\ufe0f Sheet appears empty or has only a header row.'; err.style.display=''; }
+    return;
+  }
+  let headerIdx=0;
+  for(let i=0;i<Math.min(5,rows.length);i++){ if(rows[i].some(c=>c&&String(c).trim())){headerIdx=i;break;} }
+  _prodXlHeaders=rows[headerIdx].map(c=>String(c||'').trim());
+  _prodXlColMap={};
+  PROD_XL_FIELDS.forEach(f=>{
+    let bestCol=-1;
+    _prodXlHeaders.forEach((h,ci)=>{ const hl=h.toLowerCase(); if(f.keywords.some(kw=>hl.includes(kw))){ if(bestCol===-1) bestCol=ci; } });
+    _prodXlColMap[f.key]=bestCol;
+  });
+  buildProdColMapper(_prodXlHeaders,_prodXlColMap);
+  const dataRows=rows.slice(headerIdx+1).filter(r=>r.some(c=>c&&String(c).trim()!=''));
+  _prodXlRows=dataRows.map(r=>prodRowToObj(r,_prodXlColMap)).filter(p=>p&&p.bricks>0);
+  renderProdPreview();
+}
+
+function buildProdColMapper(headers, colMap){
+  const card=document.getElementById('prodColCard');
+  const mapper=document.getElementById('prodColMapper');
+  const status=document.getElementById('prodColStatus');
+  if(card) card.style.display='';
+  const opts=['<option value="-1">\u2014 not in sheet \u2014</option>']
+    .concat(headers.map((h,i)=>`<option value="${i}">Col ${i+1}: ${h||'(blank)'}</option>`))
+    .join('');
+  if(mapper) mapper.innerHTML=PROD_XL_FIELDS.map(f=>{
+    const v=colMap[f.key]!==undefined?colMap[f.key]:-1;
+    const ok=v>=0;
+    return `<div class="fl">
+      <label style="color:${ok?'var(--green)':'var(--red)'}">${ok?'\u2705':'\u274c'} ${f.label}</label>
+      <select id="prodcol_${f.key}" onchange="onProdColChange()" style="font-size:12px;padding:5px">
+        ${opts.replace(`value="${v}"`,`value="${v}" selected`)}
+      </select>
+    </div>`;
+  }).join('');
+  const matched=Object.values(colMap).filter(v=>v>=0).length;
+  if(status) status.innerHTML=`<span style="color:${matched>=3?'var(--green)':'var(--amber)'}">Auto-detected ${matched}/${PROD_XL_FIELDS.length} columns from header row.</span> ${matched<3?'<strong>Please fix the red ones manually.</strong>':''}`;
+}
+
+function onProdColChange(){
+  PROD_XL_FIELDS.forEach(f=>{ const el=document.getElementById('prodcol_'+f.key); if(el) _prodXlColMap[f.key]=parseInt(el.value); });
+  if(window._prodXlWB){
+    const shName=window._prodXlWB.SheetNames[0];
+    const ws=window._prodXlWB.Sheets[shName];
+    const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,dateNF:'dd-mm-yyyy'});
+    let headerIdx=0;
+    for(let i=0;i<Math.min(5,rows.length);i++){ if(rows[i].some(c=>c&&String(c).trim())){headerIdx=i;break;} }
+    const dataRows=rows.slice(headerIdx+1).filter(r=>r.some(c=>c&&String(c).trim()!=''));
+    _prodXlRows=dataRows.map(r=>prodRowToObj(r,_prodXlColMap)).filter(p=>p&&p.bricks>0);
+    renderProdPreview();
+  }
+}
+
+function prodRowToObj(row, map){
+  const date=normalizeDate(xlGet(row,map,'date'));
+  const shift=xlGet(row,map,'shift')||'Full Day';
+  const bricks=parseFloat(String(xlGet(row,map,'bricks')).replace(/[^\d.]/g,''))||0;
+  const male=parseInt(String(xlGet(row,map,'male')).replace(/[^\d.]/g,''))||0;
+  const female=parseInt(String(xlGet(row,map,'female')).replace(/[^\d.]/g,''))||0;
+  const rem=xlGet(row,map,'rem');
+  if(bricks<=0) return null;
+  return {date,shift,bricks,male,female,rem};
+}
+
+function renderProdPreview(){
+  const wrap=document.getElementById('prodPreviewWrap');
+  const tbl=document.getElementById('prodPreviewTbl');
+  const info=document.getElementById('prodPreviewInfo');
+  const footer=document.getElementById('prodPreviewFooter');
+  if(wrap) wrap.style.display='';
+  if(!_prodXlRows.length){
+    if(info) info.innerHTML='<span style="color:var(--red)">\u26a0\ufe0f No valid rows found. Make sure the Bricks Produced column is mapped correctly.</span>';
+    if(tbl) tbl.innerHTML='';
+    if(footer) footer.innerHTML='';
+    return;
+  }
+  if(info) info.innerHTML=`<span style="color:var(--green);font-weight:600">\u2705 ${_prodXlRows.length} rows ready to import.</span>`;
+  if(tbl) tbl.innerHTML=_prodXlRows.map((p,i)=>`<tr>
+    <td>${i+1}</td>
+    <td class="dt">${p.date}</td>
+    <td>${p.shift||'\u2014'}</td>
+    <td><strong>${iN(p.bricks)}</strong></td>
+    <td>${iN(p.male)}</td>
+    <td>${iN(p.female)}</td>
+    <td>${iN((p.male||0)+(p.female||0))}</td>
+    <td style="color:var(--muted);max-width:120px;font-size:11px">${p.rem||'\u2014'}</td>
+  </tr>`).join('');
+  const totB=_prodXlRows.reduce((a,p)=>a+p.bricks,0);
+  if(footer) footer.innerHTML=`<span>Rows: <strong>${_prodXlRows.length}</strong></span> &nbsp; <span>Total Bricks: <strong style="color:var(--blue)">${iN(totB)}</strong></span>`;
+}
+
+function importProdRows(){
+  if(!_prodXlRows.length){ toast('\u26a0\ufe0f No rows to import.'); return; }
+  const db=loadDB();
+  let added=0,skipped=0;
+  _prodXlRows.forEach(p=>{
+    if(!p.bricks||p.bricks<=0){ skipped++; return; }
+    const dup=db.prod.find(e=>e.date===p.date&&e.shift===p.shift&&e.bricks===p.bricks);
+    if(dup){ skipped++; return; }
+    db.prod.push({id:Date.now()*1000+Math.floor(Math.random()*999),time:timeNow(),...p});
+    added++;
+  });
+  saveDB(db);
+  clearProdUpload();
+  refreshAll();
+  toast(`\u2705 Imported ${added} production rows!${skipped?' ('+skipped+' skipped \u2014 duplicates)':''}`);
+}
+
+function clearProdUpload(){
+  _prodXlRows=[];_prodXlHeaders=[];_prodXlColMap={};window._prodXlWB=null;
+  const fi=document.getElementById('prodFileInput'); if(fi) fi.value='';
+  const inf=document.getElementById('prodFileInfo'); if(inf) inf.style.display='none';
+  const card=document.getElementById('prodColCard'); if(card) card.style.display='none';
+  const wrap=document.getElementById('prodPreviewWrap'); if(wrap) wrap.style.display='none';
+  const err=document.getElementById('prodXlError'); if(err) err.style.display='none';
+}
 
 
 // ===================== WEEKLY LABOUR / STAFF PAYMENTS =====================
@@ -3901,7 +4395,9 @@ function confirmDelete(){
   const delEntry = db[_delType].find(e=>parseFloat(e.id)===numId);
   if(delEntry && delEntry.source==='gsheet'){
     if(!db.deletedGsheetFps) db.deletedGsheetFps=[];
-    const fp=[delEntry.date,(delEntry.cust||'').toLowerCase(),delEntry.qty,delEntry.total].join('|');
+    const fp = _delType==='prod'
+      ? ['P',delEntry.date,(delEntry.shift||'').toLowerCase(),delEntry.bricks].join('|')
+      : [delEntry.date,(delEntry.cust||'').toLowerCase(),delEntry.qty,delEntry.total].join('|');
     if(!db.deletedGsheetFps.includes(fp)) db.deletedGsheetFps.push(fp);
   }
   db[_delType]=db[_delType].filter(e=>parseFloat(e.id)!==numId);
@@ -4115,7 +4611,7 @@ function renderPayments(){
         <td style="color:var(--green)"><strong>${iR(p.amount)}</strong></td>
         <td><span class="b bb">${p.mode||'—'}</span></td>
         <td style="color:var(--muted)">${p.rem||'—'}</td>
-        <td><div class="act-cell"><button class="del-btn" onclick="delEntry('payments',${p.id})" title="Delete">🗑️</button></div></td>
+        <td><div class="act-cell"><button class="ep-btn" onclick="openEditPayment('cust',${p.id})" title="Edit">✏️</button><button class="del-btn" onclick="delEntry('payments',${p.id})" title="Delete">🗑️</button></div></td>
       </tr>`).join('') : '<tr><td colspan="7" class="empty">No customer payments recorded yet</td></tr>';
   }
 
@@ -4130,7 +4626,7 @@ function renderPayments(){
         <td style="color:var(--red)"><strong>${iR(p.amount)}</strong></td>
         <td><span class="b bb">${p.mode||'—'}</span></td>
         <td style="color:var(--muted)">${p.rem||'—'}</td>
-        <td><div class="act-cell"><button class="del-btn" onclick="delEntry('vendorPayments',${p.id})" title="Delete">🗑️</button></div></td>
+        <td><div class="act-cell"><button class="ep-btn" onclick="openEditPayment('vend',${p.id})" title="Edit">✏️</button><button class="del-btn" onclick="delEntry('vendorPayments',${p.id})" title="Delete">🗑️</button></div></td>
       </tr>`).join('') : '<tr><td colspan="7" class="empty">No vendor payments recorded yet</td></tr>';
   }
 
@@ -4303,6 +4799,7 @@ function renderCustomers(){
       <div class="pb"><div class="pf" style="width:${pct}%;background:${pct===100?'var(--green)':pct>0?'var(--amber)':'var(--red)'}"></div></div>
       <div class="cu-foot">
         <span>🗓️ Last order: ${d.last}</span>
+        ${(()=>{ if(!d.bal||d.bal<=0) return ''; const ageMs=Date.now()-Math.min(...db.sales.filter(s=>s.cust===n&&(s.bal||0)>0).map(s=>parseDate(s.date).getTime()).filter(t=>!isNaN(t))); const ageDays=isFinite(ageMs)?Math.floor(ageMs/86400000):0; const ageCls=ageDays>60?'age-old':ageDays>30?'age-mid':'age-ok'; return `<span class='${ageCls}'>${ageDays}d overdue</span>`; })()}
         <span class="cu-view">View details →</span>
       </div>
     </div>`;
@@ -5176,7 +5673,7 @@ function renderMonthlySummary(resetExpanded){
         return `<tr style="font-size:11.5px;border-bottom:1px solid var(--border-soft)">
           <td class="dt" style="padding:5px 8px;white-space:nowrap">${dd} ${['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(mkm)]} <span style="color:var(--muted);font-size:10px">${dayName}</span></td>
           <td style="padding:5px 8px">${r.sales?iR(r.sales)+'<div class="ms-bar" style="height:3px;margin-top:2px"><div class="ms-bar-fill" style="width:'+dw+'%;background:var(--accent)"></div></div>':'—'}</td>
-          <td style="padding:5px 8px;color:var(--green)">${r.cash?iR(r.cash):'—'}</td>
+          <td style="padding:5px 8px;color:var(--green)">${r.cash?iR(r.cash):'���'}</td>
           <td style="padding:5px 8px">${r.prod?iN(r.prod)+' bricks':'—'}</td>
           <td style="padding:5px 8px;color:var(--red)">${r.exp?iR(r.exp):'—'}</td>
           <td style="padding:5px 8px;color:${dayProfit>=0?'var(--green)':'var(--red)'}">${(r.sales||r.exp)?iR(dayProfit):'—'}</td>
@@ -5252,7 +5749,7 @@ function renderSalesTable(){
   }
 
   // Sort
-  rows.sort((a,b) => sortVal==='date-asc' ? a.id-b.id : b.id-a.id);
+  rows.sort((a,b) => sortVal==='date-asc' ? (parseDate(a.date)-parseDate(b.date)||a.id-b.id) : (parseDate(b.date)-parseDate(a.date)||b.id-a.id));
 
   // Label
   const lbl = document.getElementById('salesViewLabel');
@@ -5287,11 +5784,12 @@ function renderSalesTable(){
       <td>${badge}</td>
       <td>${s.rem||'—'}</td>
       <td><div class="act-cell">
-        <button class="edit-btn" onclick="openEdit('sale',${s.id})" title="Edit">✏️</button>
-        <button class="del-btn"  onclick="delEntry('sale',${s.id})" title="Delete">🗑️</button>
+        <button class="challan-btn" onclick="printChallan(${s.id})" title="Print Challan">📋</button>
+        <button class="edit-btn" onclick="openEdit('sales',${s.id})" title="Edit">✏️</button>
+        <button class="del-btn"  onclick="delEntry('sales',${s.id})" title="Delete">🗑️</button>
       </div></td>
     </tr>`;
-  }).join('') : '<tr><td colspan="12" class="empty">No sales entries for this date</td></tr>';
+  }).join('') : '<tr><td colspan="12"><div class="lg-no-data"><div class="lg-nd-icon">🧱</div><div class="lg-nd-txt">No sales for this date</div><div class="lg-nd-sub">Add a sale using the form above</div></div></td></tr>';
 
   // Footer stats
   const tot   = rows.reduce((a,s)=>a+(s.total||0),0);
@@ -5349,7 +5847,7 @@ function renderProdTable(){
 
   let rows = [...db.prod];
   if(!_prodViewAll && filterDate) rows = rows.filter(p=>p.date===filterDate);
-  rows.sort((a,b)=>sortVal==='date-asc'?a.id-b.id:b.id-a.id);
+  rows.sort((a,b)=>sortVal==='date-asc'?(parseDate(a.date)-parseDate(b.date)||a.id-b.id):(parseDate(b.date)-parseDate(a.date)||b.id-a.id));
 
   const lbl = document.getElementById('prodViewLabel');
   if(lbl){
@@ -5405,7 +5903,7 @@ function renderExpTable(){
 
   let rows = [...db.exp];
   if(!_expViewAll && filterDate) rows = rows.filter(e=>e.date===filterDate);
-  rows.sort((a,b)=>sortVal==='date-asc'?a.id-b.id:b.id-a.id);
+  rows.sort((a,b)=>sortVal==='date-asc'?(parseDate(a.date)-parseDate(b.date)||a.id-b.id):(parseDate(b.date)-parseDate(a.date)||b.id-a.id));
 
   const lbl = document.getElementById('expViewLabel');
   if(lbl){
@@ -5551,6 +6049,39 @@ function refreshAll(){
   renderReports();
   renderPayments();
   renderOpeningPage();
+  renderAttention();
+}
+
+// ===================== NEEDS ATTENTION PANEL =====================
+function renderAttention(){
+  const el = document.getElementById('d-attention');
+  if(!el) return;
+  const db = loadDB();
+  const alerts = [];
+  const mats=['Sand / Stone Dust','Cement','Diesel'];
+  const units={'Sand / Stone Dust':'Kg','Cement':'Bags','Diesel':'Ltrs'};
+  const reorderLevels={'Sand / Stone Dust':3000,'Cement':50,'Diesel':100};
+  mats.forEach(function(mat){
+    const inAmt=(db.inv||[]).filter(i=>i.mat===mat&&i.type==='IN').reduce((a,i)=>a+(i.qty||0),0);
+    const outAmt=(db.inv||[]).filter(i=>i.mat===mat&&i.type==='OUT').reduce((a,i)=>a+(i.qty||0),0);
+    const stock=inAmt-outAmt; const reorder=reorderLevels[mat]||100;
+    if(stock<reorder){ alerts.push({icon:'📦',color:'var(--amber)',bg:'var(--amber-lt)',title:'Low stock: '+mat,detail:iN(stock)+' '+(units[mat]||'')+' left · reorder below '+iN(reorder),action:"quickNav('inventory')"}); }
+  });
+  const cm = buildCustMap(db) || {};
+  const debtors = Object.keys(cm).map(function(n){return {name:n,bal:cm[n].bal||0};}).filter(function(d){return d.bal>0;}).sort(function(a,b){return b.bal-a.bal;});
+  if(debtors.length){
+    const totalDue = debtors.reduce(function(a,d){return a+d.bal;},0);
+    const top = debtors.slice(0,3).map(function(d){return d.name+' ('+iR(d.bal)+')';}).join(', ');
+    alerts.push({icon:'🔴',color:'var(--red)',bg:'var(--red-lt)',title:iR(totalDue)+' outstanding from '+debtors.length+' customer'+(debtors.length!==1?'s':''),detail:'Top: '+top,action:"quickNav('customers')"});
+  }
+  const totalProd=(db.prod||[]).reduce(function(a,p){return a+(p.bricks||0);},0);
+  const totalSold=(db.sales||[]).reduce(function(a,s){return a+(s.qty||0);},0);
+  if(totalSold>totalProd){ alerts.push({icon:'🧱',color:'var(--red)',bg:'var(--red-lt)',title:'Bricks sold exceed produced by '+iN(totalSold-totalProd),detail:'Stock is negative — check production entries',action:"quickNav('production')"}); }
+  if(!alerts.length){
+    el.innerHTML='<div style="padding:16px 20px 0"><div style="display:flex;align-items:center;gap:10px;background:var(--green-lt);border:1px solid var(--green);border-radius:12px;padding:12px 16px;color:var(--green);font-size:13px;font-weight:700">✅ All good — no alerts right now</div></div>';
+    return;
+  }
+  el.innerHTML='<div style="padding:16px 20px 0"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">⚠️ Needs Attention ('+alerts.length+')</div><div style="display:flex;flex-direction:column;gap:8px">'+alerts.map(function(a){return '<div onclick="'+a.action+'" style="cursor:pointer;display:flex;align-items:center;gap:12px;background:'+a.bg+';border:1px solid '+a.color+';border-radius:12px;padding:11px 14px"><span style="font-size:18px">'+a.icon+'</span><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;color:var(--text)">'+a.title+'</div><div style="font-size:11.5px;color:var(--muted)">'+a.detail+'</div></div><span style="font-size:16px;color:'+a.color+'">›</span></div>';}).join('')+'</div></div>';
 }
 
 // ===================== LEDGER / FILTER =====================
@@ -5855,6 +6386,68 @@ function doFullClear(){
   // Full reload guarantees every page/chart/cached variable is rebuilt
   // from the now-empty database.
   setTimeout(()=>location.reload(), 600);
+}
+
+// ===================== DEPARTMENT-WISE CLEAR =====================
+// Clear data for a single department only (password-protected, reuses CLEAR_PWD).
+const DEPT_CLEAR_MAP = {
+  sales:           { key:'sales',           label:'Sales',             icon:'🧱' },
+  prod:            { key:'prod',            label:'Production',        icon:'🏭' },
+  exp:             { key:'exp',             label:'Expenses',          icon:'💸' },
+  inv:             { key:'inv',             label:'Inventory',         icon:'📦' },
+  payments:        { key:'payments',        label:'Customer Payments', icon:'💳' },
+  vendorPayments:  { key:'vendorPayments',  label:'Vendor Payments',   icon:'🏪' },
+  openingBalances: { key:'openingBalances', label:'Opening Balances',  icon:'📒' },
+};
+let _deptClearKey = null;
+
+function openDeptClear(dept){
+  const cfg = DEPT_CLEAR_MAP[dept];
+  if(!cfg){ toast('⚠️ Unknown department'); return; }
+  _deptClearKey = dept;
+  const db = loadDB();
+  const count = (db[cfg.key]||[]).length;
+  document.getElementById('deptClearTitle').textContent = cfg.icon + ' Clear ' + cfg.label;
+  document.getElementById('deptClearWarn').innerHTML =
+    '⚠️ <strong>This will permanently delete all ' + cfg.label + ' data</strong> — '
+    + count + ' record' + (count!==1?'s':'') + '. All other departments stay untouched. This cannot be undone.';
+  document.getElementById('deptClearInput').value = '';
+  document.getElementById('deptClearBtn').disabled = true;
+  document.getElementById('deptClearErr').textContent = '';
+  document.getElementById('deptClearModal').classList.add('open');
+  setTimeout(()=>document.getElementById('deptClearInput').focus(),120);
+}
+function closeDeptClearModal(){
+  document.getElementById('deptClearModal').classList.remove('open');
+  _deptClearKey = null;
+}
+function deptClearCheckPwd(){
+  const val = document.getElementById('deptClearInput').value;
+  const ok = val===CLEAR_PWD;
+  document.getElementById('deptClearBtn').disabled = !ok;
+  document.getElementById('deptClearErr').textContent = val&&!ok ? '❌ Incorrect password' : '';
+}
+function toggleDeptClearPwd(){
+  const inp = document.getElementById('deptClearInput');
+  const btn = document.getElementById('deptClearEyeBtn');
+  if(inp.type==='password'){ inp.type='text'; btn.textContent='🙈'; }
+  else{ inp.type='password'; btn.textContent='👁️'; }
+}
+function doDeptClear(){
+  if(!_deptClearKey) return;
+  if(document.getElementById('deptClearInput').value!==CLEAR_PWD) return;
+  const cfg = DEPT_CLEAR_MAP[_deptClearKey];
+  const db = loadDB();
+  const count = (db[cfg.key]||[]).length;
+  db[cfg.key] = [];
+  saveDB(db);
+  // Reset in-memory import/view caches so cleared data can't reappear
+  _xlRows=[];_xlHeaders=[];_xlColMap={};window._xlWB=null;
+  if(typeof _prodXlRows!=='undefined'){ _prodXlRows=[];_prodXlHeaders=[];_prodXlColMap={};window._prodXlWB=null; }
+  const label = cfg.label;
+  closeDeptClearModal();
+  toast('✅ Cleared ' + count + ' ' + label + ' record' + (count!==1?'s':''));
+  refreshAll();
 }
 
 
@@ -6670,6 +7263,106 @@ try { refreshStockWidget(); } catch(e) {}
 // ══════════════════════════════════════════════════════════════
 const GSHEET_WEBAPP = 'https://script.google.com/macros/s/AKfycbxyb_nC-WZfXlE9L2Y6HKNN2LUFAW6FPg6l87T1loDfqtbxMV7V-mexpjQfe3UajNSdPQ/exec';
 
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+// GOOGLE SHEET SYNC \u2014 Production Entry (Google Form Responses)
+// \ud83d\udc47 PASTE the web-app URL for your PRODUCTION sheet between the quotes below.
+//    It must look like  https://script.google.com/macros/s/.....xxxx...../exec
+//    (See the setup steps in chat for how to get this URL.)
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+const PROD_GSHEET_WEBAPP = '';
+
+async function syncProductionFromGSheet() {
+  const btn    = document.getElementById('prod-gsheet-sync-btn');
+  const status = document.getElementById('prod-gsheet-status');
+  const log    = document.getElementById('prod-gsheet-log');
+  if (!PROD_GSHEET_WEBAPP) {
+    if(status){ status.style.color='var(--red)'; status.textContent='\u26ac Not configured'; }
+    if(log){ log.style.display=''; log.innerHTML='\u26a0\ufe0f No production Google Sheet link set yet. Open the HTML file and paste your web-app URL into <strong>PROD_GSHEET_WEBAPP</strong> (see setup steps).'; }
+    toast('\u26a0\ufe0f Production sheet link not set yet.');
+    return;
+  }
+  if(btn){ btn.disabled = true; btn.textContent = '\u23f3 Syncing\u2026'; }
+  if(status){ status.style.color = 'var(--amber)'; status.textContent = '\u26ac Fetching\u2026'; }
+  if(log){ log.style.display = ''; log.textContent = 'Connecting to production Google Sheet\u2026'; }
+
+  try {
+    const json = await jsonpFetch(PROD_GSHEET_WEBAPP);
+    if (!json.rows || !Array.isArray(json.rows)) throw new Error('Unexpected response from Apps Script.');
+    if (!json.rows.length) throw new Error('Sheet has no data rows.');
+
+    const normalize = str => (str||'').toString().toLowerCase().trim();
+    const db = loadDB();
+    if(!db.prod) db.prod=[];
+    if(!db.deletedGsheetFps) db.deletedGsheetFps=[];
+
+    const fpMap = {};
+    db.prod.forEach((p, i) => {
+      const fp = ['P', p.date, (p.shift||'').toLowerCase(), p.bricks].join('|');
+      fpMap[fp] = i;
+    });
+
+    let added = 0, updated = 0, skipped = 0, invalid = 0;
+
+    for (const row of json.rows) {
+      const get = (...keys) => {
+        for (const k of keys) {
+          for (const rk of Object.keys(row)) {
+            if (normalize(rk).includes(k)) return (row[rk]||'').toString().trim();
+          }
+        }
+        return '';
+      };
+
+      const rawDate  = get('date');
+      const rawShift = get('shift');
+      const date   = gsNormalizeDate(rawDate);
+      const shift  = rawShift || 'Full Day';
+      const bricks = parseFloat(get('bricks produced','number of bricks','bricks','produced','production','quantity','qty').replace(/[^\d.]/g,'')) || 0;
+      const male   = parseInt(get('no of male','no. of male','male','men').replace(/[^\d.]/g,'')) || 0;
+      const female = parseInt(get('no of female','no. of female','female','women').replace(/[^\d.]/g,'')) || 0;
+      const rem    = get('remarks','remark','note','comment');
+      // Allow 0-brick days (e.g. power cut / breakdown); skip only fully-empty rows
+      if (!rawDate && !rawShift && bricks<=0 && male<=0 && female<=0 && !rem) { invalid++; continue; }
+
+      const fp = ['P', date, shift.toLowerCase(), bricks].join('|');
+      if (db.deletedGsheetFps.includes(fp)) { skipped++; continue; }
+
+      if (fp in fpMap) {
+        const existing = db.prod[fpMap[fp]];
+        const changed = (existing.male||0)!==male || (existing.female||0)!==female || (existing.rem||'')!==rem;
+        if (changed) {
+          db.prod[fpMap[fp]] = { ...existing, male, female, rem, source:'gsheet' };
+          updated++;
+        } else { skipped++; }
+      } else {
+        db.prod.push({
+          id: Date.now()*1000+Math.floor(Math.random()*999),
+          date, shift, bricks, male, female, rem,
+          time: timeNow(), source:'gsheet'
+        });
+        fpMap[fp] = db.prod.length - 1;
+        added++;
+      }
+    }
+
+    saveDB(db);
+    refreshAll();
+    if(status){ status.style.color = 'var(--green)'; status.textContent = '\u26ac Synced'; }
+    if(log){
+      log.innerHTML = `\u2705 Done \u2014 <strong>${added}</strong> new, <strong>${updated}</strong> updated`
+        + (skipped?`, ${skipped} unchanged`:'')
+        + (invalid?`, ${invalid} blank rows skipped`:'') + '.';
+    }
+    toast(`\u2705 Production synced: ${added} new, ${updated} updated`);
+  } catch(e) {
+    if(status){ status.style.color = 'var(--red)'; status.textContent = '\u26ac Sync failed'; }
+    if(log){ log.style.display=''; log.innerHTML = '\u274c ' + (e.message||'Sync failed') + '. Check that the web-app URL is correct and deployed with access set to "Anyone".'; }
+    toast('\u274c Production sync failed');
+  } finally {
+    if(btn){ btn.disabled = false; btn.textContent = '\ud83d\udd04 Sync Production'; }
+  }
+}
+
 // Normalise a raw date string from the sheet (DD/MM/YYYY or similar) → DD-MM-YYYY
 function gsNormalizeDate(raw) {
   if (!raw) return today();
@@ -6879,7 +7572,8 @@ async function syncFromGSheet() {
 function toggleDark() {
   const isDark = document.body.classList.toggle('dark-mode');
   localStorage.setItem('bmd_dark', isDark ? '1' : '0');
-  document.getElementById('dark-toggle').textContent = isDark ? '☀️' : '🌙';
+  const dtBtn = document.getElementById('dark-toggle');
+  if(dtBtn) dtBtn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
   // Update Chart.js colors
   if (typeof Chart !== 'undefined') {
     const textColor = isDark ? '#9aa3b8' : '#98a2b5';
@@ -6902,7 +7596,7 @@ function toggleDark() {
       // Remove the inline override — body.dark-mode CSS takes over from here
       if(style.parentNode) style.parentNode.removeChild(style);
       const btn = document.getElementById('dark-toggle');
-      if(btn) btn.textContent='☀️';
+      if(btn) btn.textContent='☀️ Light Mode';
     });
   }
 })();
@@ -6913,6 +7607,20 @@ function toggleDark() {
 function saveRate(val) {
   if(val) localStorage.setItem('bmd_brick_rate', val);
 }
+
+// ── Silent auto-calc (called on oninput — no toast) ──
+function _silentCalc() {
+  const qty  = parseFloat(document.getElementById('s-qty').value)  || 0;
+  const rate = parseFloat(document.getElementById('s-rate').value) || parseFloat(localStorage.getItem('bmd_brick_rate')) || 0;
+  if (!qty || !rate) return;
+  const total = Math.round(qty * rate);
+  document.getElementById('s-total').value = total;
+  const recv = parseFloat(document.getElementById('s-recv').value) || 0;
+  document.getElementById('s-bal').value = Math.max(0, total - recv);
+  document.getElementById('s-summary').textContent = qty.toLocaleString('en-IN') + ' × ₹' + rate + ' = ' + iR(total);
+  document.getElementById('rate-preview').textContent = '= ' + iR(total);
+}
+
 function calcTotal() {
   const qty = parseFloat(document.getElementById('s-qty').value) || 0;
   const rate = parseFloat(document.getElementById('s-rate').value) || parseFloat(localStorage.getItem('bmd_brick_rate')) || 0;
@@ -7051,6 +7759,30 @@ function shareDailySummary(date, sales, cash, exp, qty, orders) {
   window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
 }
 
+// One-tap: send TODAY's summary straight to WhatsApp
+function shareTodayWhatsApp(){
+  const db = loadDB();
+  const td = today();
+  const tSales = db.sales.filter(s => s.date === td);
+  const tPayments = (db.payments || []).filter(p => p.date === td);
+  const tExp = (db.exp || []).filter(e => e.date === td);
+  const totalSales = tSales.reduce((a,s) => a + (s.total||0), 0);
+  const totalQty   = tSales.reduce((a,s) => a + (s.qty||0), 0);
+  const totalCash  = tPayments.reduce((a,p) => a + (parseFloat(p.amount)||0), 0);
+  const totalExp   = tExp.reduce((a,e) => a + (e.amt||0), 0);
+  shareDailySummary(td, totalSales, totalCash, totalExp, totalQty, tSales.length);
+}
+
+// Dashboard quick-add: open a page and highlight its sidebar tab
+function quickNav(id){
+  let nav = null;
+  document.querySelectorAll('.nt').forEach(function(t){
+    const oc = t.getAttribute('onclick') || '';
+    if(oc.indexOf("showPg('"+id+"'")>-1) nav = t;
+  });
+  showPg(id, nav || document.querySelector('.nt'));
+}
+
 // ══════════════════════════════════════════════════════
 // FEATURE: BACKUP & RESTORE
 // ��═════════════���═════════════���═════════════════════════
@@ -7145,10 +7877,7 @@ function doLogin() {
 }
 
 // ── Sidebar (mobile) ──────────────────────────────────────────────
-function toggleSidebar(){
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('sidebarOverlay').classList.toggle('show');
-}
+// (legacy toggleSidebar removed — unified version is defined below)
 document.querySelectorAll('.nt').forEach(function(t){
   t.addEventListener('click', function(){
     if(window.innerWidth <= 880){
@@ -7166,5 +7895,259 @@ document.querySelectorAll('.nt').forEach(function(t){
 
 </div><!-- /main-content -->
 </div><!-- /app-shell -->
-</body>
-</html>
+
+<script>
+// ══════════════════════════════════════════════════════
+// FEATURE: EDIT PAYMENTS
+// ══════════════════════════════════════════════════════
+let _epType = null, _epId = null;
+
+function openEditPayment(type, id) {
+  const db = loadDB();
+  const nid = parseFloat(id);
+  _epType = type; _epId = nid;
+  let entry, title, isVend = (type === 'vend');
+
+  if(isVend) {
+    entry = db.vendorPayments.find(p => parseFloat(p.id) === nid);
+    title = '✏️ Edit Vendor Payment';
+  } else {
+    entry = db.payments.find(p => parseFloat(p.id) === nid);
+    title = '✏️ Edit Customer Payment';
+  }
+  if(!entry) { toast('⚠️ Entry not found'); return; }
+
+  // Build inline modal HTML
+  const nameLabel = isVend ? 'Vendor' : 'Customer';
+  const nameVal   = isVend ? (entry.vendor||''): (entry.cust||'');
+  const html = `
+    <div class="emodal-bg open" id="epModal" onclick="if(event.target===this)closeEpModal()">
+      <div class="emodal" style="max-width:480px">
+        <div class="emodal-hdr">
+          <h3>${title}</h3>
+          <button class="emodal-close" onclick="closeEpModal()">✕</button>
+        </div>
+        <div class="fg">
+          <div class="fl"><label>Date</label>
+            <input type="date" id="epay-date" value="${toInput(entry.date)}">
+          </div>
+          <div class="fl"><label>${nameLabel}</label>
+            <input type="text" id="epay-name" value="${nameVal}" readonly style="background:var(--surface-2);color:var(--muted)">
+          </div>
+          <div class="fl"><label>Amount (₹)</label>
+            <input type="number" id="epay-amt" value="${entry.amount||entry.amt||''}" min="0" inputmode="numeric">
+          </div>
+          <div class="fl"><label>Mode</label>
+            <select id="epay-mode">
+              <option value="Cash">Cash</option>
+              <option value="UPI">UPI</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="Cheque">Cheque</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="fl" style="grid-column:span 2"><label>Remarks</label>
+            <input type="text" id="epay-rem" value="${entry.rem||''}" placeholder="Optional">
+          </div>
+        </div>
+        <div class="br">
+          <button class="btn b-acc" onclick="saveEditPayment()">💾 Save Changes</button>
+          <button class="btn b-out" onclick="closeEpModal()">Cancel</button>
+        </div>
+      </div>
+    </div>`;
+
+  const div = document.createElement('div');
+  div.id = 'epModalWrap';
+  div.innerHTML = html;
+  document.body.appendChild(div);
+
+  // Set mode
+  const modeEl = document.getElementById('epay-mode');
+  if(modeEl) modeEl.value = entry.mode || 'Cash';
+}
+
+function closeEpModal() {
+  const w = document.getElementById('epModalWrap');
+  if(w) w.remove();
+  _epType = null; _epId = null;
+}
+
+function saveEditPayment() {
+  if(!_epId) return;
+  const db  = loadDB();
+  const nid = parseFloat(_epId);
+  const date   = fromInput(document.getElementById('epay-date').value);
+  const amount = parseFloat(document.getElementById('epay-amt').value);
+  const mode   = document.getElementById('epay-mode').value;
+  const rem    = document.getElementById('epay-rem').value;
+  if(!date || !amount || amount <= 0) { toast('⚠️ Fill date and amount'); return; }
+
+  if(_epType === 'vend') {
+    const idx = db.vendorPayments.findIndex(p => parseFloat(p.id) === nid);
+    if(idx >= 0) { db.vendorPayments[idx] = {...db.vendorPayments[idx], date, amount, mode, rem}; }
+  } else {
+    const idx = db.payments.findIndex(p => parseFloat(p.id) === nid);
+    if(idx >= 0) { db.payments[idx] = {...db.payments[idx], date, amount, mode, rem}; }
+  }
+  saveDB(db);
+  closeEpModal();
+  refreshAll();
+  toast('✅ Payment updated!');
+}
+
+// ══════════════════════════════════════════════════════
+// FEATURE: DELIVERY CHALLAN PRINT
+// ══════════════════════════════════════════════════════
+function printChallan(id) {
+  const db = loadDB();
+  const nid = parseFloat(id);
+  const s = db.sales.find(r => parseFloat(r.id) === nid);
+  if(!s) { toast('⚠️ Sale not found'); return; }
+
+  const w = window.open('', '_blank');
+  if(!w) { toast('⚠️ Popup blocked. Allow popups for this page.'); return; }
+
+  const statusColor = s.bal > 0 ? '#dc2626' : '#15803d';
+  const now = new Date();
+  const printDate = String(now.getDate()).padStart(2,'0') + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + now.getFullYear();
+
+  w.document.write(`<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<title>Delivery Challan — ${s.cust}</title>
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; font-family:Arial,sans-serif; }
+  body { padding:28px; font-size:13px; color:#1a1a1a; }
+  .hdr { display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #1e40af; padding-bottom:12px; margin-bottom:16px; }
+  .brand { font-size:22px; font-weight:800; color:#1e40af; letter-spacing:.5px; }
+  .brand-sub { font-size:11px; color:#6b7280; margin-top:3px; }
+  .challan-no { text-align:right; }
+  .challan-no strong { font-size:18px; color:#1e40af; display:block; }
+  .challan-no span { font-size:11px; color:#6b7280; }
+  .section { margin-bottom:14px; }
+  .section-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#9ca3af; margin-bottom:8px; border-bottom:1px solid #e5e7eb; padding-bottom:4px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:8px 20px; }
+  .field label { font-size:10px; color:#6b7280; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:2px; }
+  .field strong { font-size:14px; color:#111; }
+  .amount-box { background:#f0f9ff; border:1.5px solid #1e40af; border-radius:8px; padding:14px 18px; margin:16px 0; display:flex; justify-content:space-between; align-items:center; }
+  .amount-label { font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; }
+  .amount-val { font-size:24px; font-weight:800; color:#1e40af; }
+  .bal-row { display:flex; justify-content:space-between; margin-top:8px; padding-top:8px; border-top:1px solid #e5e7eb; }
+  .sig-section { display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:40px; }
+  .sig-line { border-top:1.5px solid #374151; padding-top:6px; font-size:11px; color:#6b7280; text-align:center; }
+  .footer { text-align:center; font-size:10px; color:#9ca3af; margin-top:20px; border-top:1px solid #e5e7eb; padding-top:10px; }
+  @media print { button { display:none!important; } }
+</style>
+</head><body>
+<div class="hdr">
+  <div>
+    <div class="brand">BMD FLYASH BRICKS</div>
+    <div class="brand-sub">Fly Ash Brick Plant · Operations &amp; Management</div>
+  </div>
+  <div class="challan-no">
+    <strong>DELIVERY CHALLAN</strong>
+    <span>Printed: ${printDate}</span>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Delivery Information</div>
+  <div class="grid">
+    <div class="field"><label>Customer</label><strong>${s.cust}</strong></div>
+    <div class="field"><label>Date of Delivery</label><strong>${s.date}</strong></div>
+    <div class="field"><label>Phone</label><strong>${s.phone || '—'}</strong></div>
+    <div class="field"><label>Vehicle No.</label><strong>${s.vehicle || '—'}</strong></div>
+    <div class="field"><label>Site / Location</label><strong>${s.site || '—'}</strong></div>
+    <div class="field"><label>Quantity</label><strong>${Number(s.qty).toLocaleString('en-IN')} Bricks</strong></div>
+  </div>
+</div>
+
+<div class="amount-box">
+  <div>
+    <div class="amount-label">Total Bill Amount</div>
+    <div class="amount-val">₹${Number(s.total).toLocaleString('en-IN')}</div>
+  </div>
+  <div style="text-align:right">
+    <div class="amount-label">Amount Received</div>
+    <div style="font-size:20px;font-weight:700;color:#15803d">₹${Number(s.recv||0).toLocaleString('en-IN')}</div>
+  </div>
+</div>
+
+<div class="bal-row">
+  <strong style="color:${statusColor}">Balance Due: ₹${Number(s.bal||0).toLocaleString('en-IN')}</strong>
+  <span>Status: <strong style="color:${statusColor}">${s.status||'Pending'}</strong></span>
+</div>
+${s.rem ? `<div style="margin-top:10px;font-size:12px;color:#374151"><strong>Remarks:</strong> ${s.rem}</div>` : ''}
+
+<div class="sig-section">
+  <div class="sig-line">Customer Signature &amp; Date</div>
+  <div class="sig-line">Authorised Signatory — BMD Flyash Bricks</div>
+</div>
+
+<div class="footer">BMD Flyash Bricks · Thank you for your business!</div>
+
+<div style="text-align:center;margin-top:14px">
+  <button onclick="window.print()" style="padding:8px 24px;background:#1e40af;color:#fff;border:none;border-radius:6px;font-weight:700;cursor:pointer;font-size:13px">🖨️ Print Challan</button>
+</div>
+</body></html>`);
+  w.document.close();
+}
+
+// ══════════════════════════��═══════════════════════════
+// FEATURE: MOBILE HAMBURGER TOGGLE
+// ══════════════════════════════════════════════════════
+(function setupMobileNav(){
+  document.addEventListener('DOMContentLoaded', function(){
+    // Add hamburger button if not already present
+    if(!document.querySelector('.mobile-toggle')) {
+      const btn = document.createElement('button');
+      btn.className = 'mobile-toggle';
+      btn.innerHTML = '☰';
+      btn.title = 'Menu';
+      btn.onclick = toggleSidebar;
+      document.body.appendChild(btn);
+    }
+    // Add overlay if not present
+    if(!document.querySelector('.sidebar-overlay')) {
+      const overlay = document.createElement('div');
+      overlay.className = 'sidebar-overlay';
+      overlay.onclick = closeSidebar;
+      document.body.appendChild(overlay);
+    }
+  });
+})();
+
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.querySelector('.sidebar-overlay');
+  if(!sb) return;
+  const isOpen = sb.classList.toggle('open');
+  if(ov) ov.classList.toggle('show', isOpen);
+}
+
+// Collapse / expand the sidebar on desktop (persisted)
+function toggleSidebarCollapse(){
+  const collapsed = document.body.classList.toggle('sb-collapsed');
+  try{ localStorage.setItem('bmd_sb_collapsed', collapsed ? '1' : '0'); }catch(e){}
+}
+(function(){
+  try{ if(localStorage.getItem('bmd_sb_collapsed')==='1') document.body.classList.add('sb-collapsed'); }catch(e){}
+})();
+
+function closeSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.querySelector('.sidebar-overlay');
+  if(sb) sb.classList.remove('open');
+  if(ov) ov.classList.remove('show');
+}
+
+// Close sidebar on nav click (mobile)
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.nt').forEach(el => {
+    el.addEventListener('click', function() {
+      if(window.innerWidth <= 880) closeSidebar();
+    });
+  });
+});
+</script>
+</body></html>
