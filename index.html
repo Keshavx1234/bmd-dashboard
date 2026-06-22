@@ -5,7 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BMD FLYASH BRICKS · Plant Manager</title>
+<title>BMD GROUP — Plant Manager</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧱</text></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <!-- Firebase (cloud sync) -->
@@ -140,6 +141,13 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 @keyframes lineExpand { from{transform:scaleX(0)} to{transform:scaleX(1)} }
 
+.splash-group {
+  font-family:'Inter', sans-serif;
+  font-size:10px; font-weight:800; letter-spacing:4px;
+  color:var(--accent); text-transform:uppercase;
+  margin-top:18px; margin-bottom:3px;
+  animation:fadeIn .35s var(--ease) .15s both;
+}
 .splash-company {
   font-family:'Inter', sans-serif;
   font-size:21px; font-weight:700;
@@ -191,6 +199,29 @@ document.addEventListener('DOMContentLoaded', function() {
   box-shadow:var(--shadow-lg);
   position:relative; overflow:hidden;
 }
+
+.lc-grouptag {
+  display:flex; align-items:center; justify-content:center; gap:7px;
+  width:max-content; margin:0 auto 22px;
+  padding:6px 14px; border-radius:999px;
+  background:linear-gradient(135deg,#eef4ff,#f7faff);
+  border:1px solid var(--border-soft);
+  font-family:'Inter',sans-serif; font-size:10px; font-weight:600;
+  letter-spacing:1.4px; text-transform:uppercase; color:var(--muted);
+}
+.lc-grouptag strong { color:var(--accent); font-weight:800; }
+.lc-gt-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:linear-gradient(145deg,var(--accent),#1d4ed8);
+  box-shadow:0 0 0 3px var(--accent-lt);
+}
+.lc-group-foot {
+  text-align:center; margin-top:14px;
+  font-family:'Inter',sans-serif; font-size:10.5px; color:var(--muted);
+  letter-spacing:.3px;
+}
+.lc-group-foot strong { color:var(--text-2); font-weight:700; }
+body.dark-mode .lc-grouptag { background:rgba(47,111,237,.10); }
 
 .lc-logo {
   display:flex; align-items:center; gap:13px;
@@ -256,6 +287,55 @@ document.addEventListener('DOMContentLoaded', function() {
   50%{transform:translateX(5px)}
   75%{transform:translateX(-3px)}
 }
+
+.lf-eye {
+  position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  background:none; border:none; cursor:pointer; font-size:15px;
+  opacity:.5; padding:4px 6px; border-radius:6px; line-height:1;
+  transition:opacity .15s var(--ease), background .15s var(--ease);
+}
+.lf-eye:hover { opacity:.9; background:var(--surface-2); }
+.lf-input-wrap .lf-input { padding-right:42px; }
+
+.lf-caps {
+  display:none; margin-top:6px; font-size:11.5px; font-weight:600;
+  color:#b45309; font-family:'Inter',sans-serif;
+}
+.lf-caps.show { display:block; }
+body.dark-mode .lf-caps { color:#fbbf24; }
+
+.lf-remember { margin:2px 0 6px; }
+.lf-check {
+  display:flex; align-items:center; gap:8px; cursor:pointer;
+  font-size:12px; color:var(--text-2); font-family:'Inter',sans-serif;
+  user-select:none;
+}
+.lf-check input { position:absolute; opacity:0; width:0; height:0; }
+.lf-check-box {
+  width:16px; height:16px; border-radius:5px;
+  border:1.5px solid var(--border); background:var(--surface-2);
+  display:inline-flex; align-items:center; justify-content:center;
+  transition:all .15s var(--ease); flex-shrink:0;
+}
+.lf-check input:checked + .lf-check-box {
+  background:linear-gradient(135deg,var(--accent),#1d4ed8); border-color:var(--accent);
+}
+.lf-check input:checked + .lf-check-box::after {
+  content:'✓'; color:#fff; font-size:11px; font-weight:800;
+}
+.lf-check input:focus-visible + .lf-check-box { box-shadow:0 0 0 3px var(--accent-lt); }
+
+.lc-version {
+  text-align:center; margin-top:6px;
+  font-size:9.5px; letter-spacing:1px; text-transform:uppercase;
+  color:var(--muted); opacity:.7; font-family:'Inter',sans-serif;
+}
+.lc-contact {
+  text-align:center; margin-top:8px;
+  font-size:11px; color:var(--muted); font-family:'Inter',sans-serif;
+}
+.lc-contact a { color:var(--accent); text-decoration:none; font-weight:600; }
+.lc-contact a:hover { text-decoration:underline; }
 
 .lf-btn {
   width:100%; padding:12px;
@@ -1088,15 +1168,17 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
     <div class="splash-logo-ring">
       <div class="splash-icon">🧱</div>
     </div>
+    <div class="splash-group">BMD GROUP</div>
     <div class="splash-company">BMD FLYASH BRICKS</div>
     <div class="splash-rule"></div>
     <div class="splash-tagline">Fly Ash Brick Plant · Operations</div>
     <div class="splash-divider"></div>
-    <div class="splash-subtitle">Plant Management System</div>
+    <div class="splash-subtitle">A BMD GROUP Company &middot; Plant Management System</div>
   </div>
   <!-- LOGIN FORM -->
   <div id="login-form-wrap">
     <div class="login-card">
+      <div class="lc-grouptag"><span class="lc-gt-dot"></span>A unit of <strong>BMD GROUP</strong></div>
       <div class="lc-logo">
         <div class="lc-icon">🧱</div>
         <div class="lc-brand">
@@ -1117,9 +1199,14 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
         <label class="lf-label">Password</label>
         <div class="lf-input-wrap">
           <span class="lf-icon">🔒</span>
-          <input type="password" class="lf-input" id="lf-pass" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+          <input type="password" class="lf-input" id="lf-pass" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()" onkeyup="checkCaps(event)">
+          <button type="button" class="lf-eye" id="lf-eye" onclick="togglePass()" title="Show password" aria-label="Show password">👁️</button>
         </div>
+        <div class="lf-caps" id="lf-caps">⚠️ Caps Lock is on</div>
         <div class="lf-error" id="lf-err">Incorrect username or password. Please try again.</div>
+      </div>
+      <div class="lf-remember">
+        <label class="lf-check"><input type="checkbox" id="lf-remember"><span class="lf-check-box"></span>Remember me on this device</label>
       </div>
       <button class="lf-btn" id="lf-btn" onclick="doLogin()">
         <div class="lf-btn-inner">
@@ -1128,6 +1215,9 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
         </div>
       </button>
       <div class="lf-hint">Authorised access only. Contact admin for credentials.</div>
+      <div class="lc-group-foot">&copy; <strong>BMD GROUP</strong> &middot; Fly Ash Bricks Division</div>
+      <div class="lc-version">v2.0 &middot; Updated Jun 2026</div>
+      <div class="lc-contact">Need access? <a href="mailto:support@bmdgroup.in">support@bmdgroup.in</a></div>
     </div>
   </div>
 </div>
@@ -2255,7 +2345,7 @@ function renderBrickModal() {
   <!-- ===== EXCEL IMPORT PANEL (sales) ===== -->
   <div id="panel-import" style="display:none">
     <div class="al al-i">
-      📊 <strong>How to use:</strong> Upload your sales Excel file → columns are auto-detected → check the preview → click Import.<br>
+      📊 <strong>How to use:</strong> Upload your sales Excel file ��� columns are auto-detected → check the preview → click Import.<br>
       <span style="margin-top:4px;display:block;color:var(--green)">✅ Recognized columns: <strong>Date · Customer · Phone · Site · Quantity · Total · Vehicle · Status · Received · Remarks</strong></span>
     </div>
     <div class="card">
@@ -7601,7 +7691,7 @@ async function autoSyncFromGSheet() {
 
 try { refreshStockWidget(); } catch(e) {}
 
-// ══════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════���════════════
 // GOOGLE SHEET SYNC  — Sales Entry (Responses)
 // Sheet ID: 1MpTxiGiNHMwYsDbuJt_eWBQb0P0j9jQ1dxSe3aKebz4
 // Columns: Timestamp | Date | Customer Name | Mobile Number |
@@ -8192,6 +8282,20 @@ function restoreData(input) {
 // ── LOGIN LOGIC ───────────────────────────────────────────
 const USERS = { 'admin':'keshavx01' };
 
+function togglePass(){
+  const inp=document.getElementById('lf-pass');
+  const eye=document.getElementById('lf-eye');
+  if(!inp||!eye) return;
+  if(inp.type==='password'){ inp.type='text'; eye.textContent='🙈'; eye.title='Hide password'; }
+  else { inp.type='password'; eye.textContent='👁️'; eye.title='Show password'; }
+}
+
+function checkCaps(e){
+  const caps=document.getElementById('lf-caps');
+  if(!caps||!e.getModifierState) return;
+  caps.classList.toggle('show', e.getModifierState('CapsLock'));
+}
+
 function doLogin() {
   const u = (document.getElementById('lf-user').value||'').trim();
   const p = document.getElementById('lf-pass').value||'';
@@ -8203,6 +8307,11 @@ function doLogin() {
   setTimeout(function() {
     btn.classList.remove('loading');
     if (USERS[u] && USERS[u] === p) {
+      try {
+        const rem=document.getElementById('lf-remember');
+        if(rem && rem.checked) localStorage.setItem('bmd_remember_user', u);
+        else localStorage.removeItem('bmd_remember_user');
+      } catch(e){}
       const loginEl = document.getElementById('login-screen');
       const sweep = document.getElementById('app-reveal');
       if (sweep) {
@@ -8223,7 +8332,17 @@ function doLogin() {
   }, 800);
 }
 
-// ── Sidebar (mobile) ──────────────────────────────────────────────
+// Prefill remembered username on load
+try {
+  const _ru = localStorage.getItem('bmd_remember_user');
+  if(_ru){
+    const uEl=document.getElementById('lf-user'); if(uEl) uEl.value=_ru;
+    const rEl=document.getElementById('lf-remember'); if(rEl) rEl.checked=true;
+    const pEl=document.getElementById('lf-pass'); if(pEl) setTimeout(function(){ try{pEl.focus();}catch(e){} }, 1200);
+  }
+} catch(e){}
+
+// ── Sidebar (mobile) ─────────────���────────────────────────────────
 // (legacy toggleSidebar removed — unified version is defined below)
 document.querySelectorAll('.nt').forEach(function(t){
   t.addEventListener('click', function(){
