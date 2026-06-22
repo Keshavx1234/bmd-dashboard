@@ -482,6 +482,17 @@ tr:hover td{background:rgba(47,111,237,.04)}
 .fifo-pen{background:#fee2e2;color:#b91c1c}
 .fifo-adj{font-size:11px;color:#374151;padding:3px 0 3px 6px;border-left:2px solid #d1fae5;margin-top:2px;line-height:1.7}
 .cu-view{font-size:11.5px;color:var(--accent);font-weight:700;font-family:'Inter',sans-serif;letter-spacing:.5px}
+/* ── Customer Ledger hero ── */
+.cust-hero{background:linear-gradient(135deg,#6d28d9,#4f46e5);border-radius:16px;padding:18px 20px;margin-bottom:16px;box-shadow:0 8px 24px rgba(79,70,229,.28);color:#fff}
+.cust-hero-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.cust-hero-ttl{font-size:13px;font-weight:800;letter-spacing:.3px;display:flex;align-items:center;gap:8px;opacity:.96}
+.cust-hero-sub{font-size:11px;font-weight:600;opacity:.85;background:rgba(255,255,255,.14);padding:4px 11px;border-radius:999px;white-space:nowrap}
+.cust-hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ch-cell{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 13px}
+.ch-cell .ch-lbl{font-size:9.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;opacity:.85}
+.ch-cell .ch-val{font-size:21px;font-weight:800;margin-top:4px;line-height:1.05;font-family:'Inter',sans-serif}
+.ch-cell.alert{background:rgba(239,68,68,.22);border-color:rgba(239,68,68,.45)}
+@media(max-width:560px){.cust-hero-grid{grid-template-columns:1fr 1fr}}
 
 /* TIMELINE (customer detail) */
 .tl{list-style:none;margin:0;padding:0}
@@ -1669,7 +1680,7 @@ body.dark-mode #login-screen { background: linear-gradient(150deg,#0d1020 0%,#11
     <div class="d-card" style="margin-bottom:12px">
       <div class="tw">
         <table>
-          <thead><tr><th>Date</th><th>Customer</th><th>Vehicle</th><th>Location</th><th>Qty</th><th>Total ₹</th><th>Received ₹</th><th>Balance ₹</th><th>Status</th></tr></thead>
+          <thead><tr><th>Sl. No</th><th>Date</th><th>Customer</th><th>Vehicle</th><th>Location</th><th>Qty</th><th>Total ₹</th><th>Received ₹</th><th>Balance ₹</th><th>Status</th></tr></thead>
           <tbody id="recentSalesTbl"></tbody>
         </table>
       </div>
@@ -2046,6 +2057,47 @@ function renderBrickModal() {
   #pg-sales .sd-tab.on{background:var(--surface);color:var(--accent);box-shadow:var(--shadow-sm)}
 
   #pg-sales .qe-card{padding:22px}
+  #pg-sales .qe-collapse-hdr{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin:-22px -22px 0;padding:15px 22px;border-bottom:1px solid var(--border-soft)}
+  #pg-sales .qe-collapse-hdr:hover{background:var(--surface-2)}
+  #pg-sales .qe-collapse-ttl{font-size:13.5px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+  #pg-sales .qe-collapse-chev{font-size:13px;color:var(--muted);transition:transform .2s var(--ease)}
+  #pg-sales #manualEntryBody{padding-top:22px}
+  #pg-sales .qe-card.collapsed .qe-collapse-hdr{border-bottom:none;margin-bottom:-22px}
+  #pg-sales .qe-card.collapsed .qe-collapse-chev{transform:rotate(-90deg)}
+  #pg-sales .qe-card.collapsed #manualEntryBody{display:none}
+  /* ── Live preview hero ── */
+  #pg-sales .sale-hero{background:linear-gradient(135deg,#2f6fed,#1d4ed8);border-radius:16px;padding:18px 20px;margin-bottom:20px;box-shadow:0 8px 24px rgba(47,111,237,.28);color:#fff}
+  #pg-sales .sale-hero-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  #pg-sales .sale-hero-ttl{font-size:13px;font-weight:700;letter-spacing:.3px;display:flex;align-items:center;gap:8px;opacity:.96}
+  #pg-sales .lp-pill{font-size:11.5px;font-weight:800;padding:5px 13px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;white-space:nowrap;transition:background .2s}
+  #pg-sales .lp-pill.paid{background:#16a34a}
+  #pg-sales .lp-pill.credit{background:#f59e0b}
+  #pg-sales .lp-pill.pending{background:#ef4444}
+  #pg-sales .sale-hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  #pg-sales .lp-cell{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:11px 12px;text-align:center}
+  #pg-sales .lp-cell .lp-lbl{font-size:9.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;opacity:.85}
+  #pg-sales .lp-cell .lp-val{font-size:19px;font-weight:800;margin-top:3px;line-height:1.1;font-family:'Inter',sans-serif}
+  @media(max-width:560px){#pg-sales .sale-hero-grid{grid-template-columns:1fr 1fr}}
+  /* ── Icon-led section blocks ── */
+  #pg-sales .qe-block{border:1px solid var(--border-soft);border-radius:14px;margin-bottom:16px;overflow:hidden;background:var(--surface)}
+  #pg-sales .qe-bhdr{display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:13px;font-weight:700;color:var(--text)}
+  #pg-sales .qe-bhdr.deliv{background:linear-gradient(90deg,rgba(47,111,237,.10),transparent);border-bottom:1px solid var(--border-soft)}
+  #pg-sales .qe-bhdr.pay{background:linear-gradient(90deg,rgba(245,158,11,.13),transparent);border-bottom:1px solid var(--border-soft)}
+  #pg-sales .qe-bhdr .qe-bic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+  #pg-sales .qe-bhdr.deliv .qe-bic{background:var(--accent-lt)}
+  #pg-sales .qe-bhdr.pay .qe-bic{background:rgba(245,158,11,.18)}
+  #pg-sales .qe-bbody{padding:16px}
+  /* ── Status pills ── */
+  #pg-sales .stat-pills{display:flex;gap:8px;flex-wrap:wrap}
+  #pg-sales .stat-pill{flex:1;min-width:92px;padding:10px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-2);font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s var(--ease);font-family:inherit;text-align:center}
+  #pg-sales .stat-pill:hover{border-color:var(--accent);color:var(--text)}
+  #pg-sales .stat-pill.on.paid{background:#16a34a;border-color:#16a34a;color:#fff}
+  #pg-sales .stat-pill.on.credit{background:#f59e0b;border-color:#f59e0b;color:#fff}
+  #pg-sales .stat-pill.on.pending{background:#ef4444;border-color:#ef4444;color:#fff}
+  /* ── Save bar ── */
+  #pg-sales .save-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px}
+  #pg-sales .btn-save-lg{background:linear-gradient(135deg,#2f6fed,#1d4ed8);color:#fff;border:none;padding:12px 26px;border-radius:11px;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(47,111,237,.3);font-family:inherit;display:inline-flex;align-items:center;gap:8px;transition:transform .12s}
+  #pg-sales .btn-save-lg:hover{transform:translateY(-1px)}
   #pg-sales .qe-section+.qe-section{margin-top:22px;padding-top:20px;border-top:1px solid var(--border-soft)}
   #pg-sales .qe-section-title{font-size:10.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);margin:0 0 13px;display:flex;align-items:center;gap:9px}
   #pg-sales .qe-section-title::after{content:'';flex:1;height:1px;background:var(--border-soft)}
@@ -2092,8 +2144,27 @@ function renderBrickModal() {
   <!-- ===== QUICK ENTRY PANEL (single sale) ===== -->
   <div id="panel-manual">
     <div class="card qe-card">
-      <div class="qe-section">
-        <div class="qe-section-title">Delivery Details</div>
+      <div class="qe-collapse-hdr" onclick="toggleManualEntry()">
+        <span class="qe-collapse-ttl">✏️ New Sale Entry</span>
+        <span class="qe-collapse-chev" id="manualEntryChev">▾</span>
+      </div>
+      <div id="manualEntryBody">
+      <!-- LIVE PREVIEW HERO -->
+      <div class="sale-hero">
+        <div class="sale-hero-top">
+          <div class="sale-hero-ttl">⚡ Live Sale Preview</div>
+          <span class="lp-pill" id="lp-pill">— Select status —</span>
+        </div>
+        <div class="sale-hero-grid">
+          <div class="lp-cell"><div class="lp-lbl">🧱 Bricks</div><div class="lp-val" id="lp-qty">0</div></div>
+          <div class="lp-cell"><div class="lp-lbl">💰 Total</div><div class="lp-val" id="lp-total">₹0</div></div>
+          <div class="lp-cell"><div class="lp-lbl">✅ Received</div><div class="lp-val" id="lp-recv">₹0</div></div>
+          <div class="lp-cell"><div class="lp-lbl">⚖️ Balance</div><div class="lp-val" id="lp-bal">₹0</div></div>
+        </div>
+      </div>
+      <div class="qe-block">
+        <div class="qe-bhdr deliv"><span class="qe-bic">🚚</span>Delivery Details</div>
+        <div class="qe-bbody">
         <div class="fg">
           <div class="fl">
             <label>Date <span class="req">*</span></label>
@@ -2117,9 +2188,11 @@ function renderBrickModal() {
             <input type="text" id="s-vehicle" placeholder="e.g. CG 15 AC 6374">
           </div>
         </div>
+        </div>
       </div>
-      <div class="qe-section">
-        <div class="qe-section-title">Payment Details</div>
+      <div class="qe-block">
+        <div class="qe-bhdr pay"><span class="qe-bic">💰</span>Payment Details</div>
+        <div class="qe-bbody">
         <div class="fg">
           <div class="fl">
             <label>Quantity Sold (Bricks) <span class="req">*</span></label>
@@ -2138,7 +2211,12 @@ function renderBrickModal() {
           </div>
           <div class="fl">
             <label>Payment Status <span class="req">*</span></label>
-            <select id="s-status">
+            <div class="stat-pills">
+              <button type="button" class="stat-pill paid" onclick="setSaleStatus('PAID/CASH',this)">✅ Paid / Cash</button>
+              <button type="button" class="stat-pill credit" onclick="setSaleStatus('CREDIT',this)">🔶 Credit</button>
+              <button type="button" class="stat-pill pending" onclick="setSaleStatus('Pending',this)">🔴 Pending</button>
+            </div>
+            <select id="s-status" style="display:none">
               <option value="">-- Select --</option>
               <option value="PAID/CASH">✅ PAID/CASH</option>
               <option value="CREDIT">🔶 CREDIT</option>
@@ -2155,18 +2233,22 @@ function renderBrickModal() {
             <input type="number" id="s-bal" readonly placeholder="Auto">
           </div>
         </div>
-      </div>
-      <div class="qe-section">
-        <div class="fl">
-          <label>Remarks</label>
-          <textarea id="s-rem" placeholder="e.g. Cash - Dhiraj, Phone pay boss number, P.pay boss account…"></textarea>
         </div>
       </div>
-      <div class="br">
-        <button class="btn b-acc" onclick="saveSale()">💾 Save Sale Entry</button>
+      <div class="qe-block">
+        <div class="qe-bhdr"><span class="qe-bic" style="background:var(--surface-2)">📝</span>Remarks <span style="font-weight:500;color:var(--muted);font-size:11px">(optional)</span></div>
+        <div class="qe-bbody">
+        <div class="fl">
+          <textarea id="s-rem" placeholder="e.g. Cash - Dhiraj, Phone pay boss number, P.pay boss account…"></textarea>
+        </div>
+        </div>
+      </div>
+      <div class="save-bar">
+        <button class="btn-save-lg" onclick="saveSale()">💾 Save Sale Entry</button>
         <button class="btn b-out" onclick="clearSale()">🗑️ Clear Form</button>
         <span id="s-summary" style="font-size:12px;color:var(--muted)"></span>
       </div>
+      </div><!-- /#manualEntryBody -->
     </div>
   </div>
 
@@ -2253,7 +2335,7 @@ function renderBrickModal() {
     <div id="salesViewLabel" style="font-size:12px;color:var(--muted);margin-bottom:8px"></div>
     <div class="tw">
       <table>
-        <thead><tr><th>Date</th><th>Customer Name</th><th>Phone</th><th>Vehicle No.</th><th>Site / Location</th><th style="text-align:right">Qty</th><th style="text-align:right">Total (₹)</th><th style="text-align:right">Received (₹)</th><th style="text-align:right">Balance (₹)</th><th>Status</th><th>Remarks</th><th></th></tr></thead>
+        <thead><tr><th>Sl. No</th><th>Date</th><th>Customer Name</th><th>Phone</th><th>Vehicle No.</th><th>Site / Location</th><th style="text-align:right">Qty</th><th style="text-align:right">Total (₹)</th><th style="text-align:right">Received (₹)</th><th style="text-align:right">Balance (₹)</th><th>Status</th><th>Remarks</th><th></th></tr></thead>
         <tbody id="todaySalesTbl"></tbody>
       </table>
     </div>
@@ -2469,7 +2551,7 @@ function renderBrickModal() {
     <div id="prodViewLabel" style="font-size:12px;color:var(--muted);margin-bottom:8px"></div>
     <div class="tw">
       <table>
-        <thead><tr><th>Date</th><th>Shift</th><th>Bricks Produced</th><th>👨 Male</th><th>👩 Female</th><th>Total Workers</th><th>Remarks</th><th>Entered At</th><th></th></tr></thead>
+        <thead><tr><th>Sl. No</th><th>Date</th><th>Shift</th><th>Bricks Produced</th><th>👨 Male</th><th>👩 Female</th><th>Total Workers</th><th>Remarks</th><th>Entered At</th><th></th></tr></thead>
         <tbody id="prodTbl"></tbody>
       </table>
     </div>
@@ -2568,7 +2650,7 @@ function renderBrickModal() {
     <div class="ct">📅 Weekly Labour Payment Log</div>
     <div class="tw">
       <table>
-        <thead><tr><th>Week Ending</th><th>Workers</th><th>Amount Paid (₹)</th><th>Avg / Worker (₹)</th><th>Remarks</th><th></th></tr></thead>
+        <thead><tr><th>Sl. No</th><th>Week Ending</th><th>Workers</th><th>Amount Paid (₹)</th><th>Avg / Worker (₹)</th><th>Remarks</th><th></th></tr></thead>
         <tbody id="labourWeekTbl"></tbody>
       </table>
     </div>
@@ -2598,7 +2680,7 @@ function renderBrickModal() {
     <div id="expViewLabel" style="font-size:12px;color:var(--muted);margin-bottom:8px"></div>
     <div class="tw">
       <table>
-        <thead><tr><th>Date</th><th>Time</th><th>Category</th><th>Description</th><th>Amount (₹)</th><th>Remarks</th><th></th></tr></thead>
+        <thead><tr><th>Sl. No</th><th>Date</th><th>Time</th><th>Category</th><th>Description</th><th>Amount (₹)</th><th>Remarks</th><th></th></tr></thead>
         <tbody id="expTbl"></tbody>
       </table>
     </div>
@@ -2690,7 +2772,7 @@ function renderBrickModal() {
   <div class="card">
     <div class="tw">
       <table>
-        <thead><tr><th>Date</th><th>Material</th><th>Type</th><th>Quantity</th><th>Unit</th><th>Vendor / Reason</th><th>Amount (₹)</th><th></th></tr></thead>
+        <thead><tr><th>Sl. No</th><th>Date</th><th>Material</th><th>Type</th><th>Quantity</th><th>Unit</th><th>Vendor / Reason</th><th>Amount (₹)</th><th></th></tr></thead>
         <tbody id="invLog"></tbody>
       </table>
     </div>
@@ -2774,7 +2856,7 @@ function renderBrickModal() {
     </div>
     <div class="tw">
       <table>
-        <thead><tr><th>Date</th><th>Customer</th><th>Phone</th><th>Vehicle</th><th>Site</th><th>Qty</th><th>Total (₹)</th><th>Received (₹)</th><th>Balance (₹)</th><th>Status</th><th>Remarks</th></tr></thead>
+        <thead><tr><th>Sl. No</th><th>Date</th><th>Customer</th><th>Phone</th><th>Vehicle</th><th>Site</th><th>Qty</th><th>Total (₹)</th><th>Received (₹)</th><th>Balance (₹)</th><th>Status</th><th>Remarks</th></tr></thead>
         <tbody id="ledgerTbl"></tbody>
       </table>
     </div>
@@ -2785,7 +2867,7 @@ function renderBrickModal() {
   <div class="card">
     <div class="tw">
       <table>
-        <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount (₹)</th><th>Remarks</th></tr></thead>
+        <thead><tr><th>Sl. No</th><th>Date</th><th>Category</th><th>Description</th><th>Amount (₹)</th><th>Remarks</th></tr></thead>
         <tbody id="expLedgerTbl"></tbody>
       </table>
     </div>
@@ -2801,12 +2883,18 @@ function renderBrickModal() {
   </div>
   <div id="custAlert"></div>
 
-  <!-- KPI summary -->
-  <div class="kg">
-    <div class="kc acc"><div class="kl">Total Customers</div><div class="kv" id="cu-total">0</div></div>
-    <div class="kc grn"><div class="kl">Total Received</div><div class="kv" id="cu-recv">₹0</div></div>
-    <div class="kc red"><div class="kl">Total Outstanding</div><div class="kv" id="cu-due">₹0</div></div>
-    <div class="kc amb"><div class="kl">Customers with Dues</div><div class="kv" id="cu-dueCount">0</div></div>
+  <!-- KPI summary hero -->
+  <div class="cust-hero">
+    <div class="cust-hero-top">
+      <div class="cust-hero-ttl">👥 Customer Portfolio</div>
+      <span class="cust-hero-sub">💰 Outstanding payment tracker</span>
+    </div>
+    <div class="cust-hero-grid">
+      <div class="ch-cell"><div class="ch-lbl">Total Customers</div><div class="ch-val" id="cu-total">0</div></div>
+      <div class="ch-cell"><div class="ch-lbl">Total Received</div><div class="ch-val" id="cu-recv">₹0</div></div>
+      <div class="ch-cell alert"><div class="ch-lbl">Total Outstanding</div><div class="ch-val" id="cu-due">₹0</div></div>
+      <div class="ch-cell"><div class="ch-lbl">Customers with Dues</div><div class="ch-val" id="cu-dueCount">0</div></div>
+    </div>
   </div>
 
   <!-- Search bar -->
@@ -2852,6 +2940,7 @@ function renderBrickModal() {
    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
     <button class="btn b-grn" style="padding:6px 12px;font-size:12px" onclick="_toggleCdPay(true)">&#43; Record Payment</button>
     <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="printCustBill(null,null)">&#128424; Print Statement</button>
+    <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="printCustTally(null,null)">&#129534; Tally Ledger</button>
     <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="_exportCustLedger()">&#128229; Export CSV</button>
     <button onclick="sendWhatsApp()" style="padding:6px 14px;border-radius:8px;border:none;background:#25D366;color:#fff;font-size:12px;font-weight:700;cursor:pointer">&#128172; WhatsApp</button>
     <button class="emodal-close" onclick="closeCustDetail()">&#10005;</button>
@@ -2946,7 +3035,7 @@ function renderBrickModal() {
   <div class="card">
     <div class="tw">
       <table>
-        <thead><tr><th>Vendor</th><th>Total Purchases (₹)</th><th>Total Paid (₹)</th><th>Balance Payable (₹)</th><th>Status</th></tr></thead>
+        <thead><tr><th>Sl. No</th><th>Vendor</th><th>Total Purchases (₹)</th><th>Total Paid (₹)</th><th>Balance Payable (₹)</th><th>Status</th></tr></thead>
         <tbody id="vendorLedgerTbl"></tbody>
       </table>
     </div>
@@ -2960,7 +3049,7 @@ function renderBrickModal() {
   <div class="card">
     <div class="tw">
       <table>
-        <thead><tr><th>Date</th><th>Time</th><th>Customer</th><th>Amount (₹)</th><th>Mode</th><th>Remarks</th><th></th></tr></thead>
+        <thead><tr><th>Sl. No</th><th>Date</th><th>Time</th><th>Customer</th><th>Amount (₹)</th><th>Mode</th><th>Remarks</th><th></th></tr></thead>
         <tbody id="custPayTbl"></tbody>
       </table>
     </div>
@@ -2971,7 +3060,7 @@ function renderBrickModal() {
   <div class="card">
     <div class="tw">
       <table>
-        <thead><tr><th>Date</th><th>Time</th><th>Vendor</th><th>Amount (₹)</th><th>Mode</th><th>Remarks</th><th></th></tr></thead>
+        <thead><tr><th>Sl. No</th><th>Date</th><th>Time</th><th>Vendor</th><th>Amount (₹)</th><th>Mode</th><th>Remarks</th><th></th></tr></thead>
         <tbody id="vendPayTbl"></tbody>
       </table>
     </div>
@@ -3151,7 +3240,7 @@ function renderBrickModal() {
         <tr><td>🏗️ PRODUCTION ENTRY</td><td>All production data from Form</td><td>Auto from Form</td></tr>
         <tr><td>💸 EXPENSE ENTRY</td><td>All expense data from Form</td><td>Auto from Form</td></tr>
         <tr><td>📦 INVENTORY</td><td>Raw material stock levels and movement log</td><td>Auto from Form</td></tr>
-        <tr><td>👤 CUSTOMER LEDGER</td><td>Customer-wise outstanding balance tracker</td><td>Auto (formulas)</td></tr>
+        <tr><td>��� CUSTOMER LEDGER</td><td>Customer-wise outstanding balance tracker</td><td>Auto (formulas)</td></tr>
         <tr><td>📈 MONTHLY P&amp;L</td><td>Profit &amp; Loss report by month and year</td><td>Auto (formulas)</td></tr>
       </tbody>
     </table>
@@ -3421,7 +3510,7 @@ function syncConnect(code, silent) {
         ref.set({ db: local, updatedAt: Date.now() }, { merge: true });
       }
     } else {
-      // No cloud doc yet — push current local data to create it
+      // No cloud doc yet �� push current local data to create it
       ref.set({ db: local, updatedAt: Date.now() });
       if (!silent) toast('☁️ Cloud storage created for this shop');
     }
@@ -3529,7 +3618,7 @@ const timeNow = () => {const d=new Date();return String(d.getHours()).padStart(2
 // extra spaces, and capitalises each word (e.g. "ramesh   KUMAR" → "Ramesh Kumar")
 function toTitleCase(str){
   if(!str) return '';
-  return String(str).trim().replace(/\s+/g,' ').replace(/[A-Za-zÀ-ÖØ-öø-ÿ]+(['’][A-Za-z]+)?/g,
+  return String(str).trim().replace(/\s+/g,' ').replace(/[A-Za-zÀ-ÖØ-öø-ÿ]+(['��][A-Za-z]+)?/g,
     w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
 }
 
@@ -4020,6 +4109,44 @@ function switchSaleMode(mode){
   if(bImp){ bImp.className = isImport ? 'btn b-acc' : 'btn b-out'; bImp.style.border = isImport ? '' : 'none'; }
 }
 
+// Collapse / expand the manual Sale Entry form
+function toggleManualEntry(){
+  const card = document.querySelector('#panel-manual .qe-card');
+  if(!card) return;
+  card.classList.toggle('collapsed');
+}
+
+// Live preview hero for the redesigned Sales entry form
+function _salesLivePreview(){
+  if(!document.getElementById('lp-total')) return;
+  const qty=parseFloat(document.getElementById('s-qty').value)||0;
+  const total=parseFloat(document.getElementById('s-total').value)||0;
+  const recv=parseFloat(document.getElementById('s-recv').value)||0;
+  const status=(document.getElementById('s-status')||{}).value||'';
+  const bal=Math.max(0,total-recv);
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('lp-qty', qty?qty.toLocaleString('en-IN'):'0');
+  set('lp-total', iR(total));
+  set('lp-recv', iR(recv));
+  set('lp-bal', iR(bal));
+  const pill=document.getElementById('lp-pill');
+  if(pill){
+    let txt='— Select status —', cls='lp-pill';
+    if(status==='PAID/CASH'){txt='🟢 Paid / Cash';cls='lp-pill paid';}
+    else if(status==='CREDIT'){txt='🔶 Credit';cls='lp-pill credit';}
+    else if(status==='Pending'){txt='🔴 Pending';cls='lp-pill pending';}
+    pill.className=cls; pill.textContent=txt;
+  }
+}
+// Status pill buttons drive the hidden <select id="s-status"> so all existing logic keeps working
+function setSaleStatus(val,btn){
+  const sel=document.getElementById('s-status');
+  if(sel){ sel.value=val; sel.dispatchEvent(new Event('change')); }
+  document.querySelectorAll('#panel-manual .stat-pill').forEach(b=>b.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  _salesLivePreview();
+}
+
 // ============ SINGLE-ENTRY SAVE / CLEAR (Sales / Production / Expense) ============
 function saveSale(){
   const summary=document.getElementById('s-summary');
@@ -4057,6 +4184,8 @@ function clearSale(){
   const d=document.getElementById('s-date'); if(d) d.value=_localDateStr();
   const sum=document.getElementById('s-summary'); if(sum) sum.textContent='';
   const rp=document.getElementById('rate-preview'); if(rp) rp.textContent='';
+  document.querySelectorAll('#panel-manual .stat-pill').forEach(b=>b.classList.remove('on'));
+  if(typeof _salesLivePreview==='function') _salesLivePreview();
 }
 
 function saveProd(){
@@ -4319,11 +4448,12 @@ function renderLabourPayments(){
 
   const tbl = document.getElementById('labourWeekTbl');
   if(tbl){
-    tbl.innerHTML = rows.length ? rows.map(e=>{
+    tbl.innerHTML = rows.length ? rows.map((e,i)=>{
       const wk = e.week || weekEndingOf(e.date);
       const workers = e.workers || 0;
       const avg = workers>0 ? Math.round(e.amt/workers) : 0;
       return `<tr>
+        <td style="text-align:center;color:var(--muted)">${i+1}</td>
         <td class="dt">${wk}</td>
         <td>${workers || '—'}</td>
         <td><strong style="color:var(--red)">${iR(e.amt)}</strong></td>
@@ -4331,7 +4461,7 @@ function renderLabourPayments(){
         <td style="color:var(--muted)">${e.rem||'—'}</td>
         <td><div class="act-cell"><button class="edit-btn" onclick="openEdit('exp',${e.id})" title="Edit">✏️</button><button class="del-btn" onclick="delEntry('exp',${e.id})" title="Delete">🗑️</button></div></td>
       </tr>`;
-    }).join('') : '<tr><td colspan="6" class="empty">No weekly labour payments recorded yet</td></tr>';
+    }).join('') : '<tr><td colspan="7" class="empty">No weekly labour payments recorded yet</td></tr>';
   }
 
   const monthTotal = rows.filter(e=>monthOf(e.date)===m).reduce((a,e)=>a+e.amt,0);
@@ -4591,20 +4721,22 @@ function renderPayments(){
   const vendorTbl = document.getElementById('vendorLedgerTbl');
   if(vendorTbl){
     const rows = vendorNames.map(n=>({name:n, ...vendorTotals(db,n)})).sort((a,b)=>b.bal-a.bal);
-    vendorTbl.innerHTML = rows.length ? rows.map(v=>`<tr>
+    vendorTbl.innerHTML = rows.length ? rows.map((v,i)=>`<tr>
+        <td style="text-align:center;color:var(--muted)">${i+1}</td>
         <td><strong>${v.name}</strong></td>
         <td>${iR(v.purchases)}</td>
         <td style="color:var(--green)">${iR(v.paid)}</td>
         <td style="color:${v.bal>0?'var(--red)':'var(--green)'}"><strong>${iR(v.bal)}</strong></td>
         <td>${v.bal>0?'<span class="b ba">⏳ Due</span>':'<span class="b bg">✅ Cleared</span>'}</td>
-      </tr>`).join('') : '<tr><td colspan="5" class="empty">No vendor purchase data yet. Add inventory IN entries with a vendor name.</td></tr>';
+      </tr>`).join('') : '<tr><td colspan="6" class="empty">No vendor purchase data yet. Add inventory IN entries with a vendor name.</td></tr>';
   }
 
   // Customer payment history (most recent first)
   const cpTbl = document.getElementById('custPayTbl');
   if(cpTbl){
     const rows=[...db.payments].sort((a,b)=>parseDate(b.date)-parseDate(a.date) || b.id-a.id);
-    cpTbl.innerHTML = rows.length ? rows.map(p=>`<tr>
+    cpTbl.innerHTML = rows.length ? rows.map((p,i)=>`<tr>
+        <td style="text-align:center;color:var(--muted)">${i+1}</td>
         <td class="dt">${p.date}</td>
         <td>${p.time||'—'}</td>
         <td><strong>${p.cust}</strong></td>
@@ -4612,14 +4744,15 @@ function renderPayments(){
         <td><span class="b bb">${p.mode||'—'}</span></td>
         <td style="color:var(--muted)">${p.rem||'—'}</td>
         <td><div class="act-cell"><button class="ep-btn" onclick="openEditPayment('cust',${p.id})" title="Edit">✏️</button><button class="del-btn" onclick="delEntry('payments',${p.id})" title="Delete">🗑️</button></div></td>
-      </tr>`).join('') : '<tr><td colspan="7" class="empty">No customer payments recorded yet</td></tr>';
+      </tr>`).join('') : '<tr><td colspan="8" class="empty">No customer payments recorded yet</td></tr>';
   }
 
   // Vendor payment history (most recent first)
   const vpTbl = document.getElementById('vendPayTbl');
   if(vpTbl){
     const rows=[...db.vendorPayments].sort((a,b)=>parseDate(b.date)-parseDate(a.date) || b.id-a.id);
-    vpTbl.innerHTML = rows.length ? rows.map(p=>`<tr>
+    vpTbl.innerHTML = rows.length ? rows.map((p,i)=>`<tr>
+        <td style="text-align:center;color:var(--muted)">${i+1}</td>
         <td class="dt">${p.date}</td>
         <td>${p.time||'—'}</td>
         <td><strong>${p.vendor}</strong></td>
@@ -4627,7 +4760,7 @@ function renderPayments(){
         <td><span class="b bb">${p.mode||'—'}</span></td>
         <td style="color:var(--muted)">${p.rem||'—'}</td>
         <td><div class="act-cell"><button class="ep-btn" onclick="openEditPayment('vend',${p.id})" title="Edit">✏️</button><button class="del-btn" onclick="delEntry('vendorPayments',${p.id})" title="Delete">🗑️</button></div></td>
-      </tr>`).join('') : '<tr><td colspan="7" class="empty">No vendor payments recorded yet</td></tr>';
+      </tr>`).join('') : '<tr><td colspan="8" class="empty">No vendor payments recorded yet</td></tr>';
   }
 
   // Default date inputs to today if empty
@@ -5239,6 +5372,154 @@ function closeCustDetail() {
 // FEATURE: PRINT DATE RANGE PICKER
 // ══════���═══════════════════════��═══════════════════════
 // Returns the full print HTML string — used by printCustBill AND by _regen in the print window
+function buildTallyHTML(custName, fromDate, toDate) {
+  const db          = loadDB();
+  const allCusts    = buildCustMap(db);
+  const d           = allCusts[custName];
+  const today_      = today();
+  const custDisplay = custName.replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
+  const isFiltered  = !!(fromDate && toDate);
+  const ledger      = buildRunningLedger(db, custName, fromDate || null, toDate || null);
+  const tA = n => (Math.abs(Number(n) || 0)).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  // Build voucher-style lines (Tally splits each sale & receipt into separate vouchers)
+  const lines = [];
+  let drTot = 0, crTot = 0, vS = 0, vR = 0;
+  if (ledger.openingBal > 0) {
+    lines.push({ date: (ledger.ob && ledger.ob.date) ? ledger.ob.date : (fromDate || ''), part: 'Opening Balance', sub: ledger.ob && ledger.ob.isCarryForward ? '(carried forward)' : '(brought forward)', vt: '', vn: '', dr: ledger.openingBal, cr: 0, bold: true });
+    drTot += ledger.openingBal;
+  }
+  ledger.rows.forEach(r => {
+    if (r.type === 'sale') {
+      vS++;
+      lines.push({ date: r.date, part: 'To Sales A/c', sub: (iN(r.qty) + ' bricks' + (r.vehicle ? ' - ' + r.vehicle : '') + (r.site ? ' - ' + r.site : '')), vt: 'Sales', vn: 'S-' + vS, dr: r.debit, cr: 0 });
+      drTot += r.debit;
+      if (r.credit > 0) {
+        vR++;
+        lines.push({ date: r.date, part: 'By Receipt', sub: 'against delivery', vt: 'Receipt', vn: 'R-' + vR, dr: 0, cr: r.credit });
+        crTot += r.credit;
+      }
+    } else {
+      vR++;
+      lines.push({ date: r.date, part: 'By Receipt' + (r.mode ? ' (' + r.mode + ')' : ''), sub: r.rem || '', vt: 'Receipt', vn: 'R-' + vR, dr: 0, cr: r.credit });
+      crTot += r.credit;
+    }
+  });
+
+  const closing = drTot - crTot;            // +ve => customer owes (Dr balance)
+  const grand   = Math.max(drTot, crTot);
+  const closingLabel = closing > 0 ? 'Dr' : (closing < 0 ? 'Cr' : '');
+
+  let body = '';
+  lines.forEach(L => {
+    body += `<tr>
+      <td class="tdate">${L.date || ''}</td>
+      <td class="tpart"><span class="${L.bold ? 'tbold' : ''}">${L.part}</span>${L.sub ? `<div class="tsub">${L.sub}</div>` : ''}</td>
+      <td class="tvt">${L.vt || ''}</td>
+      <td class="tvn">${L.vn || ''}</td>
+      <td class="tamt">${L.dr ? tA(L.dr) : ''}</td>
+      <td class="tamt">${L.cr ? tA(L.cr) : ''}</td>
+    </tr>`;
+  });
+  if (!lines.length) body = '<tr><td colspan="6" style="text-align:center;padding:14px">No transactions in this period</td></tr>';
+  // Closing balance is placed on the opposite side to balance the ledger (Tally-style)
+  body += closing >= 0
+    ? `<tr class="tclose"><td></td><td class="tpart"><span class="tbold">By Closing Balance</span></td><td></td><td></td><td class="tamt"></td><td class="tamt">${tA(closing)}</td></tr>`
+    : `<tr class="tclose"><td></td><td class="tpart"><span class="tbold">To Closing Balance</span></td><td></td><td></td><td class="tamt">${tA(closing)}</td><td class="tamt"></td></tr>`;
+
+  return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Ledger - ${custDisplay}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Courier New',monospace;font-size:12px;color:#000;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.ctrl{padding:12px 30px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid #ccc;background:#f5f5f5}
+.ctrl label{font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px}
+.ctrl input[type=date]{padding:5px 9px;border:1.5px solid #ccc;border-radius:6px;font-size:12px}
+.cbtn{border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;color:#fff}
+.cbtn.print{background:#1d4ed8}.cbtn.mod{background:#0f1f3d}.cbtn.ref{background:#15803d}.cbtn.cls{background:#6b7280}
+@media print{.ctrl{display:none!important}}
+.wrap{max-width:760px;margin:0 auto;padding:26px 30px}
+.t-head{text-align:center;margin-bottom:10px}
+.t-co{font-size:18px;font-weight:700;letter-spacing:.5px}
+.t-co-sub{font-size:10px;margin-top:1px}
+.t-line{border-top:1.5px solid #000;margin:8px 0}
+.t-title{margin-top:6px;font-weight:700;font-size:13px}
+.t-acct{font-size:14px;font-weight:700;margin-top:2px}
+.t-period{font-size:11px;margin-top:2px}
+table.tl{width:100%;border-collapse:collapse;margin-top:6px;border:1.5px solid #000}
+table.tl th{border:1px solid #000;padding:4px 6px;font-size:11px;text-align:left;background:#eee}
+table.tl th.r,table.tl td.tamt{text-align:right}
+table.tl td{border-left:1px solid #000;border-right:1px solid #000;padding:3px 6px;font-size:11.5px;vertical-align:top}
+.tamt{font-variant-numeric:tabular-nums;white-space:nowrap}
+.tdate{white-space:nowrap}
+.tvt,.tvn{font-size:10.5px;color:#222}
+.tsub{font-size:10px;color:#555;margin-top:1px}
+.tbold{font-weight:700}
+.tclose td{border-top:1px solid #000}
+.ttot td{border-top:1.5px solid #000;border-bottom:2px solid #000;font-weight:700;background:#eee}
+.t-cb{margin-top:8px;font-size:12px;font-weight:700;text-align:right}
+.t-foot{margin-top:16px;font-size:10.5px;display:flex;justify-content:space-between;align-items:flex-end}
+.t-sign{margin-top:38px;border-top:1px solid #000;width:170px;text-align:center;padding-top:3px;font-size:10.5px}
+</style></head>
+<body>
+<div class="ctrl">
+  <strong style="font-size:13px">&#129534; ${custDisplay} - Tally Format</strong>
+  <label>From <input type="date" id="wFrom" value="${isFiltered && fromDate ? fromDate.split('-').reverse().join('-') : ''}"></label>
+  <label>To <input type="date" id="wTo" value="${today().split('-').reverse().join('-')}"></label>
+  <button class="cbtn ref" onclick="_regen()">&#128260; Refresh</button>
+  <button class="cbtn ref" style="background:#92400e" onclick="document.getElementById('wFrom').value='';_regen()">All Time</button>
+  <button class="cbtn mod" onclick="_modern()">&#128196; Modern Format</button>
+  <button class="cbtn print" onclick="window.print()">&#128424; Print / PDF</button>
+  <button class="cbtn cls" onclick="window.close()">&#10005; Close</button>
+</div>
+<div class="wrap">
+
+<div class="t-head">
+  <div class="t-co">BMD FLYASH BRICKS</div>
+  <div class="t-co-sub">Fly Ash Brick Plant &middot; Operations &amp; Management</div>
+  <div class="t-line"></div>
+  <div class="t-title">Ledger Account</div>
+  <div class="t-acct">${custDisplay}${d && d.phone ? ' &nbsp;(' + d.phone + ')' : ''}</div>
+  <div class="t-period">${isFiltered ? fromDate + ' to ' + toDate : 'Up to ' + today_ + '  (All Transactions)'}</div>
+</div>
+
+<table class="tl">
+  <thead><tr>
+    <th>Date</th>
+    <th>Particulars</th>
+    <th>Vch Type</th>
+    <th>Vch No</th>
+    <th class="r">Debit</th>
+    <th class="r">Credit</th>
+  </tr></thead>
+  <tbody>
+    ${body}
+    <tr class="ttot"><td colspan="4" style="text-align:right">Total</td><td class="tamt">${tA(grand)}</td><td class="tamt">${tA(grand)}</td></tr>
+  </tbody>
+</table>
+
+<div class="t-cb">Closing Balance: &#8377; ${tA(closing)} ${closingLabel}</div>
+
+<div class="t-foot">
+  <div>
+    Computer-generated ledger &middot; subject to verification.<br>
+    Generated: ${today_} &middot; BMD Flyash Bricks
+  </div>
+  <div class="t-sign">Authorised Signatory</div>
+</div>
+
+</div>
+<script>
+var _printCust = ${JSON.stringify(custName)};
+function _fmtBack(v){if(!v)return null;var p=v.split('-');return p[2]+'-'+p[1]+'-'+p[0];}
+function _ft(){var f=document.getElementById('wFrom').value;var t=document.getElementById('wTo').value;return [_fmtBack(f),_fmtBack(t)||null];}
+function _regen(){if(window.opener&&!window.opener.closed){var a=_ft();var html=window.opener.buildTallyHTML(_printCust,a[0],a[1]);document.open();document.write(html);document.close();}}
+function _modern(){if(window.opener&&!window.opener.closed){var a=_ft();var html=window.opener.buildPrintHTML(_printCust,a[0],a[1]);document.open();document.write(html);document.close();}}
+<\/script>
+</body></html>`;
+}
+
 function buildPrintHTML(custName, fromDate, toDate) {
 
   const db          = loadDB();
@@ -5251,6 +5532,9 @@ function buildPrintHTML(custName, fromDate, toDate) {
   const ledger   = buildRunningLedger(db, custName, fromDate || null, toDate || null);
   const pFifo    = computeFIFO(db, custName, toDate || null);
   const grandBal = Math.max(0, ledger.finalBalance);
+  const totalBilled = ledger.openingBal + ledger.totalDebit;
+  const totalPaid   = ledger.totalCredit;
+  const paidPct     = totalBilled > 0 ? Math.max(0, Math.min(100, Math.round(totalPaid / totalBilled * 100))) : 100;
 
   // ── Build ledger table rows ──────────────────────────────────
   let tRows = '';
@@ -5370,6 +5654,47 @@ table.lt td{padding:8px 11px;border-bottom:1px solid var(--g300)}
 .btn-ref{background:var(--navy);color:#fff;padding:7px 16px;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}
 .btn-all{background:var(--g100);color:var(--navy);border:1.5px solid var(--g300);padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
 .btn-cls{background:#f3f4f6;color:#374151;padding:7px 16px;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
+/* ── Customer-friendly summary band ── */
+.greet{font-size:13px;color:var(--g700);margin:0 0 16px;padding:0 2px;line-height:1.5}
+.greet strong{color:var(--navy)}
+.stat-band{display:flex;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.stat-cell{flex:1;min-width:120px;border:1px solid var(--g300);border-radius:10px;padding:13px 15px;background:var(--g100)}
+.stat-cell .sc-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--g500);font-weight:700}
+.stat-cell .sc-val{font-size:19px;font-weight:800;color:var(--navy);margin-top:4px}
+.stat-cell .sc-val.paid{color:var(--green)}
+.stat-cell .sc-val.due{color:var(--red)}
+.stat-cell.prog{flex:1.4;min-width:175px;display:flex;flex-direction:column;justify-content:center}
+.pbar{height:9px;border-radius:6px;background:#e5e7eb;overflow:hidden;margin-top:9px}
+.pbar>span{display:block;height:100%;background:linear-gradient(90deg,var(--green),#22c55e);border-radius:6px}
+.thanks{margin-top:24px;text-align:center;font-size:13px;font-weight:700;color:var(--navy);background:var(--blue-pale);border:1px solid #d7e2ff;border-radius:10px;padding:14px}
+.thanks small{display:block;font-weight:500;color:var(--g500);font-size:11px;margin-top:4px}
+/* ── Compact, print-friendly spacing ── */
+.wrap{padding:16px 26px}
+.top-stripe{height:4px}
+.hdr{padding-bottom:9px;margin-bottom:11px}
+.meta-row{margin-bottom:11px;padding:9px 14px}
+.greet{margin:0 0 9px;font-size:12px}
+.stat-band{gap:9px;margin-bottom:12px}
+.stat-cell{padding:8px 12px;min-width:104px}
+.stat-cell .sc-val{font-size:16px;margin-top:2px}
+.sec{margin:13px 0 7px;padding-bottom:5px}
+table.lt td{padding:5px 10px}
+table.lt th{padding:6px 10px}
+.sum-box{margin-top:12px}
+.thanks{margin-top:12px;padding:9px}
+.foot-row{margin-top:14px;padding-top:10px}
+.sign-line{margin-top:26px}
+/* ── Clean borderless header summary ── */
+.cust-line{margin:2px 0 8px}
+.cl-for{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--g500);font-weight:700;margin-bottom:2px}
+.cl-name{font-size:18px;font-weight:800;color:var(--navy)}
+.cl-phone{font-size:12px;font-weight:600;color:var(--g500);margin-left:8px}
+.sum-line{display:flex;gap:34px;flex-wrap:wrap;margin:6px 0 4px;padding:11px 0;border-top:1px solid var(--g300);border-bottom:1px solid var(--g300)}
+.sl-item{display:flex;flex-direction:column}
+.sl-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--g500);font-weight:700}
+.sl-val{font-size:18px;font-weight:800;color:var(--navy);margin-top:3px}
+.sl-val.paid{color:var(--green)}
+.sl-val.due{color:var(--red)}
 @media print{.ctrl{display:none!important}}
 </style></head>
 <body>
@@ -5379,6 +5704,7 @@ table.lt td{padding:8px 11px;border-bottom:1px solid var(--g300)}
   <label>To <input type="date" id="wTo" value="${today().split('-').reverse().join('-')}"></label>
   <button class="btn-ref" onclick="_regen()">&#128260; Refresh</button>
   <button class="btn-all" onclick="document.getElementById('wFrom').value='';_regen()">All Time</button>
+  <button class="btn-ref" style="background:#6d28d9" onclick="_tally()">&#129534; Tally Format</button>
   <button class="btn-print" onclick="window.print()">&#128424; Print / PDF</button>
   <button class="btn-cls" onclick="window.close()">&#10005; Close</button>
 </div>
@@ -5404,17 +5730,12 @@ table.lt td{padding:8px 11px;border-bottom:1px solid var(--g300)}
   </div>
 </div>
 
-<div class="meta-row">
-  <div>
-    <div style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--g500);font-weight:700;margin-bottom:4px">Statement For</div>
-    <div class="cust-name">${custDisplay}</div>
-    ${d && d.phone ? `<div class="cust-phone">&#128222; ${d.phone}</div>` : ''}
-  </div>
-  <div class="bal-chip ${grandBal > 0 ? 'due' : 'ok'}">
-    <div class="bc-lbl">${grandBal > 0 ? 'Balance Due' : 'Account Clear'}${isFiltered ? ' (Period)' : ''}</div>
-    <div class="bc-val ${grandBal > 0 ? 'due' : 'ok'}">${iR(grandBal)}</div>
-  </div>
+<div class="cust-line">
+  <div class="cl-for">Statement For</div>
+  <div class="cl-name">${custDisplay}${d && d.phone ? ` <span class="cl-phone">&#128222; ${d.phone}</span>` : ''}</div>
 </div>
+
+<p class="greet">Dear <strong>${custDisplay}</strong>, here is a summary of your account with us${isFiltered ? ' for the selected period' : ''}, as of <strong>${today_}</strong>.</p>
 
 <div class="sec">Account Ledger &mdash; Running Balance Statement</div>
 <table class="lt">
@@ -5430,6 +5751,8 @@ table.lt td{padding:8px 11px;border-bottom:1px solid var(--g300)}
 </table>
 
 <div class="sum-box">${sumHTML}</div>
+
+<div class="thanks">&#128591; Thank you for your business!<small>We value your trust. Please verify this statement and reach out for any clarification.</small></div>
 
 <div class="foot-row">
   <div>
@@ -5453,6 +5776,14 @@ function _regen(){
     document.open();document.write(html);document.close();
   }
 }
+function _tally(){
+  var f=document.getElementById('wFrom').value;
+  var t=document.getElementById('wTo').value;
+  if(window.opener&&!window.opener.closed){
+    var html=window.opener.buildTallyHTML(_printCust,_fmtBack(f),_fmtBack(t)||null);
+    document.open();document.write(html);document.close();
+  }
+}
 <\/script>
 </body></html>`;
 }
@@ -5462,6 +5793,15 @@ function printCustBill(fromDate, toDate) {
   const win = window.open('', '_blank');
   if (!win) { toast('\u26A0 Allow pop-ups to print'); return; }
   win.document.write(buildPrintHTML(_cdCust, fromDate, toDate));
+  win.document.close();
+  setTimeout(() => win.focus(), 200);
+}
+
+function printCustTally(fromDate, toDate) {
+  if (!_cdCust) return;
+  const win = window.open('', '_blank');
+  if (!win) { toast('\u26A0 Allow pop-ups to print'); return; }
+  win.document.write(buildTallyHTML(_cdCust, fromDate, toDate));
   win.document.close();
   setTimeout(() => win.focus(), 200);
 }
@@ -5765,13 +6105,14 @@ function renderSalesTable(){
   const tbody = document.getElementById('todaySalesTbl');
   if(!tbody) return;
 
-  tbody.innerHTML = rows.length ? rows.map(s => {
+  tbody.innerHTML = rows.length ? rows.map((s,i) => {
     const c = cm[s.cust];
     const dispRecv  = iR(s.recv||0);
     const dispBal   = iR(s.bal||0);
     const balColor  = s.bal>0?'var(--red)':'var(--green)';
     const badge     = c ? statusBadge(c.bal<=0?'PAID/CASH':(s.status||'Pending')) : statusBadge(s.status);
     return `<tr>
+      <td style="text-align:center;color:var(--muted)">${i+1}</td>
       <td class="dt">${s.date}</td>
       <td><strong>${s.cust}</strong></td>
       <td>${s.phone||'—'}</td>
@@ -5789,7 +6130,7 @@ function renderSalesTable(){
         <button class="del-btn"  onclick="delEntry('sales',${s.id})" title="Delete">🗑️</button>
       </div></td>
     </tr>`;
-  }).join('') : '<tr><td colspan="12"><div class="lg-no-data"><div class="lg-nd-icon">🧱</div><div class="lg-nd-txt">No sales for this date</div><div class="lg-nd-sub">Add a sale using the form above</div></div></td></tr>';
+  }).join('') : '<tr><td colspan="13"><div class="lg-no-data"><div class="lg-nd-icon">🧱</div><div class="lg-nd-txt">No sales for this date</div><div class="lg-nd-sub">Add a sale using the form above</div></div></td></tr>';
 
   // Footer stats
   const tot   = rows.reduce((a,s)=>a+(s.total||0),0);
@@ -5858,10 +6199,11 @@ function renderProdTable(){
   const tbody = document.getElementById('prodTbl');
   if(!tbody) return;
 
-  tbody.innerHTML = rows.length ? rows.map(p=>{
+  tbody.innerHTML = rows.length ? rows.map((p,i)=>{
     const total=(p.male||0)+(p.female||0);
     const ts=p.ts?new Date(p.ts).toLocaleString('en-IN',{dateStyle:'short',timeStyle:'short'}):'—';
     return `<tr>
+      <td style="text-align:center;color:var(--muted)">${i+1}</td>
       <td class="dt">${p.date}</td>
       <td>${p.shift||'—'}</td>
       <td style="text-align:right;font-weight:700;color:var(--accent)">${iN(p.bricks||0)}</td>
@@ -5875,7 +6217,7 @@ function renderProdTable(){
         <button class="del-btn"  onclick="delEntry('prod',${p.id})" title="Delete">🗑️</button>
       </div></td>
     </tr>`;
-  }).join('') : '<tr><td colspan="9" class="empty">No production entries for this date</td></tr>';
+  }).join('') : '<tr><td colspan="10" class="empty">No production entries for this date</td></tr>';
 
   const totBricks=rows.reduce((a,p)=>a+(p.bricks||0),0);
   const foot=document.getElementById('prodTblFooter');
@@ -5914,9 +6256,10 @@ function renderExpTable(){
   const tbody = document.getElementById('expTbl');
   if(!tbody) return;
 
-  tbody.innerHTML = rows.length ? rows.map(e=>{
+  tbody.innerHTML = rows.length ? rows.map((e,i)=>{
     const ts=e.ts?new Date(e.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'—';
     return `<tr>
+      <td style="text-align:center;color:var(--muted)">${i+1}</td>
       <td class="dt">${e.date}</td>
       <td>${ts}</td>
       <td><span class="b bp">${e.cat||'—'}</span></td>
@@ -5928,7 +6271,7 @@ function renderExpTable(){
         <button class="del-btn"  onclick="delEntry('exp',${e.id})" title="Delete">🗑️</button>
       </div></td>
     </tr>`;
-  }).join('') : '<tr><td colspan="7" class="empty">No expense entries for this date</td></tr>';
+  }).join('') : '<tr><td colspan="8" class="empty">No expense entries for this date</td></tr>';
 
   const tot=rows.reduce((a,e)=>a+(e.amt||0),0);
   const tEl=document.getElementById('expTodayTotal'); if(tEl) tEl.textContent=iR(tot);
@@ -5975,10 +6318,10 @@ function refreshAll(){
   const rs=[...db.sales].sort((a,b)=>b.id-a.id).slice(0,10);
   // Recent sales: recv/bal shown per-sale row (sale-level is fine here for row detail)
   // But status badge corrected using overall cust balance
-  document.getElementById('recentSalesTbl').innerHTML=rs.length?rs.map(s=>{
+  document.getElementById('recentSalesTbl').innerHTML=rs.length?rs.map((s,i)=>{
     const custTotals=(_allCustMap||{})[s.cust];
-    return `<tr><td class="dt">${s.date}</td><td><strong>${s.cust}</strong></td><td style="color:var(--muted)">${s.vehicle||'—'}</td><td style="color:var(--muted)">${s.site||'—'}</td><td>${iN(s.qty)}</td><td>${iR(s.total)}</td><td style="color:var(--green)">—</td><td style="color:var(--muted)"><strong>—</strong></td><td>${statusBadge(custTotals&&custTotals.bal<=0?'PAID/CASH':s.status)}</td></tr>`;
-  }).join(''):'<tr><td colspan="9" class="empty">No sales yet</td></tr>';
+    return `<tr><td style="text-align:center;color:var(--muted)">${i+1}</td><td class="dt">${s.date}</td><td><strong>${s.cust}</strong></td><td style="color:var(--muted)">${s.vehicle||'—'}</td><td style="color:var(--muted)">${s.site||'—'}</td><td>${iN(s.qty)}</td><td>${iR(s.total)}</td><td style="color:var(--green)">—</td><td style="color:var(--muted)"><strong>—</strong></td><td>${statusBadge(custTotals&&custTotals.bal<=0?'PAID/CASH':s.status)}</td></tr>`;
+  }).join(''):'<tr><td colspan="10" class="empty">No sales yet</td></tr>';
 
   // Monthly summary — interactive
   renderMonthlySummary();
@@ -6038,7 +6381,7 @@ function refreshAll(){
     }).join('');
   }
   const invLog=[...db.inv].sort((a,b)=>b.id-a.id).slice(0,30);
-  document.getElementById('invLog').innerHTML=invLog.length?invLog.map(i=>`<tr><td>${i.date}</td><td>${i.mat}</td><td><span class="b ${i.type==='IN'?'bg':'br2'}">${i.type==='IN'?'📥 IN':'📤 OUT'}</span></td><td><strong>${iN(i.qty)}</strong></td><td>${i.unit}</td><td>${i.vendor||'—'}</td><td>${i.amt?iR(i.amt):'—'}</td><td><div class="act-cell"><button class="edit-btn" onclick="openEdit('inv',${i.id})" title="Edit">✏️</button><button class="del-btn" onclick="delEntry('inv',${i.id})" title="Delete">🗑️</button></div></td></tr>`).join(''):'<tr><td colspan="8" class="empty">No stock entries yet</td></tr>';
+  document.getElementById('invLog').innerHTML=invLog.length?invLog.map((i,ix)=>`<tr><td style="text-align:center;color:var(--muted)">${ix+1}</td><td>${i.date}</td><td>${i.mat}</td><td><span class="b ${i.type==='IN'?'bg':'br2'}">${i.type==='IN'?'📥 IN':'📤 OUT'}</span></td><td><strong>${iN(i.qty)}</strong></td><td>${i.unit}</td><td>${i.vendor||'—'}</td><td>${i.amt?iR(i.amt):'—'}</td><td><div class="act-cell"><button class="edit-btn" onclick="openEdit('inv',${i.id})" title="Edit">✏️</button><button class="del-btn" onclick="delEntry('inv',${i.id})" title="Delete">🗑️</button></div></td></tr>`).join(''):'<tr><td colspan="9" class="empty">No stock entries yet</td></tr>';
 
   renderCustomers();
 
@@ -6093,17 +6436,17 @@ function filterLedger(){
   const el=document.getElementById('ledgerTbl');
   // recv/bal from buildCustMap for accurate display
   const _stMapForRows = buildCustMap(db) || {};
-  if(el)el.innerHTML=rows.length?rows.map(s=>{
+  if(el)el.innerHTML=rows.length?rows.map((s,i)=>{
     const cm = _stMapForRows[s.cust];
     const dispRecv = iR(s.recv||0);
     const dispBal  = iR(s.bal||0);
     const dispBalColor = s.bal>0?'var(--red)':'var(--green)';
     const dispStatus = cm ? statusBadge(cm.bal<=0?'PAID/CASH':(s.status||'Pending')) : statusBadge(s.status);
-    return `<tr><td class="dt">${s.date}</td><td><strong>${s.cust}</strong></td><td>${s.phone||'—'}</td><td>${s.vehicle||'—'}</td><td>${s.site||'—'}</td><td>${iN(s.qty)}</td><td>${iR(s.total)}</td><td style="color:var(--green)">${dispRecv}</td><td style="color:${dispBalColor}"><strong>${dispBal}</strong></td><td>${dispStatus}</td><td style="color:var(--muted)">${s.rem||'—'}</td></tr>`;
-  }).join(''):'<tr><td colspan="11" class="empty">No matching records</td></tr>';
+    return `<tr><td style="text-align:center;color:var(--muted)">${i+1}</td><td class="dt">${s.date}</td><td><strong>${s.cust}</strong></td><td>${s.phone||'—'}</td><td>${s.vehicle||'—'}</td><td>${s.site||'—'}</td><td>${iN(s.qty)}</td><td>${iR(s.total)}</td><td style="color:var(--green)">${dispRecv}</td><td style="color:${dispBalColor}"><strong>${dispBal}</strong></td><td>${dispStatus}</td><td style="color:var(--muted)">${s.rem||'—'}</td></tr>`;
+  }).join(''):'<tr><td colspan="12" class="empty">No matching records</td></tr>';
   const expRows=[...db.exp].sort((a,b)=>b.id-a.id).slice(0,100);
   const expEl=document.getElementById('expLedgerTbl');
-  if(expEl)expEl.innerHTML=expRows.length?expRows.map(e=>`<tr><td class="dt">${e.date}</td><td><span class="b bp">${e.cat}</span></td><td>${e.desc}</td><td><strong>${iR(e.amt)}</strong></td><td style="color:var(--muted)">${e.rem||'—'}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">No expense records</td></tr>';
+  if(expEl)expEl.innerHTML=expRows.length?expRows.map((e,i)=>`<tr><td style="text-align:center;color:var(--muted)">${i+1}</td><td class="dt">${e.date}</td><td><span class="b bp">${e.cat}</span></td><td>${e.desc}</td><td><strong>${iR(e.amt)}</strong></td><td style="color:var(--muted)">${e.rem||'—'}</td></tr>`).join(''):'<tr><td colspan="6" class="empty">No expense records</td></tr>';
 }
 
 // ===================== REPORTS =====================
@@ -6184,6 +6527,10 @@ function initForms(){
     if(this.value==='PAID/CASH'){document.getElementById('s-recv').value=total;document.getElementById('s-bal').value=0;document.getElementById('s-summary').textContent='Balance = ₹0';}
     else if(this.value==='Pending'){document.getElementById('s-recv').value=0;document.getElementById('s-bal').value=total;document.getElementById('s-summary').textContent=total>0?`Balance = ${iR(total)}`:''}
   });
+
+  // Live preview updates for the redesigned sales form
+  const pmPanel=document.getElementById('panel-manual');
+  if(pmPanel){ pmPanel.addEventListener('input',_salesLivePreview); pmPanel.addEventListener('change',_salesLivePreview); _salesLivePreview(); }
 
   // Reports year init
   const yr=document.getElementById('rYear');
@@ -7566,7 +7913,7 @@ async function syncFromGSheet() {
 }
 
 
-// ══════════════════════════════════════════════════════
+// ════════════════════════��═════════════════════════════
 // FEATURE: DARK MODE
 // ══════════════════════════════════════════════════════
 function toggleDark() {
@@ -7899,7 +8246,7 @@ document.querySelectorAll('.nt').forEach(function(t){
 <script>
 // ══════════════════════════════════════════════════════
 // FEATURE: EDIT PAYMENTS
-// ══════════════════════════════════════════════════════
+// ════════════════════════════════════���═════════════════
 let _epType = null, _epId = null;
 
 function openEditPayment(type, id) {
