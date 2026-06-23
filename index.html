@@ -3011,7 +3011,13 @@ function renderBrickModal() {
   <!-- Customer cards grid -->
   <div id="custCards"><p class="empty">No customer data yet. Add sales entries first.</p></div>
 
-  <div class="st">📞 Payment Follow-up List</div>
+  <div class="st" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <span>📞 Payment Follow-up List</span>
+    <span style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="printPendingPayments()">&#128424; Print Pending</button>
+      <button class="btn b-out" style="padding:6px 12px;font-size:12px" onclick="exportPendingPaymentsXLSX()">&#128229; Export Excel</button>
+    </span>
+  </div>
   <div class="card">
     <div class="tw">
       <table>
@@ -3280,6 +3286,21 @@ function renderBrickModal() {
     <div id="restore-status" style="margin-top:10px;font-size:12px;color:var(--muted)"></div>
   </div>
 
+  <!-- TALLY EXPORT -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+    <div class="st" style="margin:0">🧾 Export to Tally (XML)</div>
+  </div>
+  <div class="card" style="padding:18px;margin-bottom:22px">
+    <p style="font-size:13px;color:var(--text-2);margin:0 0 6px">Generate a Tally-compatible XML file (sales, receipts, vendor payments &amp; expenses) with auto-created ledger masters. Leave dates blank to export everything.</p>
+    <p style="font-size:12px;color:var(--muted);margin:0 0 14px">In Tally: <strong>Gateway of Tally &rarr; Import Data &rarr; Vouchers</strong>, then select the downloaded file.</p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px">
+      <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:4px">From Date</label><input type="date" id="tally-from" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);color:var(--text);font-size:13px;font-family:'Inter',sans-serif"></div>
+      <div><label style="display:block;font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:4px">To Date</label><input type="date" id="tally-to" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);color:var(--text);font-size:13px;font-family:'Inter',sans-serif"></div>
+    </div>
+    <button onclick="exportTally()" style="padding:9px 20px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-weight:700;font-size:13px;cursor:pointer">🧾 Generate Tally XML</button>
+    <div id="tally-status" style="margin-top:10px;font-size:12px;color:var(--muted)"></div>
+  </div>
+
   <!-- DEPARTMENT-WISE CLEAR -->
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
     <div class="st" style="margin:0">🗂️ Clear Data — Department-wise</div>
@@ -3349,7 +3370,7 @@ function renderBrickModal() {
         <tr><td>F</td><td>Vehicle Number</td><td>Text</td><td>Entered in form</td></tr>
         <tr><td>G</td><td>Quantity Sold (Bricks)</td><td>Number</td><td>Entered in form</td></tr>
         <tr><td>H</td><td>Total Amount (₹)</td><td>Number</td><td>Entered in form</td></tr>
-        <tr><td>I</td><td>Payment Status</td><td>Dropdown</td><td>Paid / Partial / Pending</td></tr>
+        <tr style="opacity:.55"><td>—</td><td><s>Payment Status</s></td><td>—</td><td>No longer needed — auto-calculated from Amount Received</td></tr>
         <tr><td>J</td><td>Amount Received (₹)</td><td>Number</td><td>Entered in form</td></tr>
         <tr class="shc"><td>K</td><td>Balance Amount (₹)</td><td>Formula</td><td>=H2-J2</td></tr>
         <tr><td>L</td><td>Remarks</td><td>Text</td><td>Entered in form</td></tr>
@@ -3440,7 +3461,7 @@ function renderBrickModal() {
     <div class="lb">
       <strong>Form 1 — Sales Entry Form</strong>
       <p>Go to forms.google.com → Blank form → Add these fields exactly in this order. Link to SALES ENTRY tab in your spreadsheet.</p>
-      <p><strong>Fields:</strong> Date (Date), Customer Name (Short text), Phone Number (Short text), Site / Delivery Location (Short text), Vehicle Number (Short text), Quantity Sold — Number of Bricks (Number), Total Amount ₹ (Number), Payment Status (Multiple choice: Paid / Partial / Pending), Amount Received ₹ (Number), Remarks (Paragraph)</p>
+      <p><strong>Fields:</strong> Date (Date), Customer Name (Short text), Phone Number (Short text), Site / Delivery Location (Short text), Vehicle Number (Short text), Quantity Sold — Number of Bricks (Number), Total Amount ₹ (Number), Amount Received ₹ (Number), Remarks (Paragraph). <strong>Note:</strong> Don't add a "Payment Status" field — the dashboard now calculates Paid / Partial / Pending automatically from Amount Received.</p>
       <div class="notice">⚠️ Balance Amount is NOT a form field — it is auto-calculated by the formula =H2-J2 in column K of the spreadsheet.</div>
       <a href="https://forms.google.com" target="_blank">→ Open Google Forms to create</a>
     </div>
@@ -3471,7 +3492,7 @@ function renderBrickModal() {
       <li><div class="sc"><strong>Open the uploaded Excel file in Google Sheets</strong><p>Go to drive.google.com → Upload the Excel file → Right-click → Open with Google Sheets. Rename it "Fly Ash Brick Plant Manager 2025".</p></div></li>
       <li><div class="sc"><strong>Verify all 7 tabs are present</strong><p>Check the tabs at the bottom: Dashboard, Sales Entry, Production Entry, Expense Entry, Inventory, Customer Ledger, Monthly P&amp;L. If any are missing, add them by clicking the + button.</p></div></li>
       <li><div class="sc"><strong>Add formula columns in Sales Entry sheet</strong><p>Click cell K2 in the SALES ENTRY tab. Type =H2-J2 and press Enter. Then click K2, copy it (Ctrl+C), select K2:K2000, and paste (Ctrl+V). This auto-calculates Balance Amount for every row.</p></div></li>
-      <li><div class="sc"><strong>Create Form 1 — Sales Entry</strong><p>forms.google.com → New Form → Add all 10 fields as listed above → Click Responses tab → Google Sheets icon → Link to existing spreadsheet → Select SALES ENTRY tab.</p></div></li>
+      <li><div class="sc"><strong>Create Form 1 — Sales Entry</strong><p>forms.google.com → New Form → Add all 10 fields as listed above → Click Responses tab �� Google Sheets icon → Link to existing spreadsheet → Select SALES ENTRY tab.</p></div></li>
       <li><div class="sc"><strong>Create Form 2 — Production Entry</strong><p>Same process. Add 4 fields (Date, Shift, Bricks, Remarks). Link to PRODUCTION ENTRY tab.</p></div></li>
       <li><div class="sc"><strong>Create Form 3 — Expense Entry</strong><p>Add 5 fields (Date, Category, Description, Amount, Remarks). Link to EXPENSE ENTRY tab.</p></div></li>
       <li><div class="sc"><strong>Build DASHBOARD formulas</strong><p>In the DASHBOARD tab, enter the SUMIF and SUMPRODUCT formulas provided above. Each formula cell should be clearly labelled (Today's Sales, Monthly Sales, etc.)</p></div></li>
@@ -3671,7 +3692,7 @@ function renderSyncModal() {
   const body = document.getElementById('syncModalBody');
   if (FIREBASE_CONFIG.apiKey === "YOUR_API_KEY") {
     body.innerHTML = `
-      <div class="al al-w">⚠️ Cloud sync isn't configured yet.</div>
+      <div class="al al-w">�����️ Cloud sync isn't configured yet.</div>
       <div style="margin-top:10px">Until then, data stays only in this browser (localStorage).</div>
       <div class="br"><button class="btn b-out" onclick="closeSyncModal()">Close</button></div>`;
     return;
@@ -3914,6 +3935,25 @@ const statusBadge = s => {
   return`<span class="b bb">${s}</span>`;
 };
 
+// ===== PAYMENT STATUS = AUTO-CALCULATED FROM MONEY (single source of truth) =====
+// paid = amount received at delivery + later payments applied oldest-first (FIFO),
+// compared against the sale total. No manual/typed status is trusted anymore.
+function payStateMap(db){
+  const map={};
+  const custs=[...new Set((db.sales||[]).map(s=>s.cust))];
+  custs.forEach(c=>{
+    try{ const ss=computeFIFO(db,c).saleStatus||{}; Object.keys(ss).forEach(id=>{ map[id]=ss[id].status; }); }catch(e){}
+  });
+  return map; // { saleId: 'CLEARED' | 'PARTIAL' | 'PENDING' }
+}
+function saleDispStatus(s, psMap){
+  let st = psMap && psMap[s.id];
+  if(!st){ const r=Number(s.recv)||0, t=Number(s.total)||0; st = (t>0 && r>=t) ? 'CLEARED' : r>0 ? 'PARTIAL' : 'PENDING'; }
+  return st==='CLEARED' ? 'Paid' : st;            // 'Paid' | 'PARTIAL' | 'PENDING'
+}
+function saleStatusBadge(s, psMap){ return statusBadge(saleDispStatus(s, psMap)); }
+function moneyStatusRaw(recv,total){ recv=Number(recv)||0; total=Number(total)||0; return (total>0 && recv>=total) ? 'PAID/CASH' : recv>0 ? 'PARTIAL' : 'Pending'; }
+
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
@@ -4101,10 +4141,10 @@ function xlRowToSale(row, map){
   const totalRaw = xlGet(row,map,'total');
   const total = parseFloat(String(totalRaw).replace(/[^\d.]/g,''))||0;
   const vehicle = xlGet(row,map,'vehicle');
-  const status = normalizeStatus(xlGet(row,map,'status'));
   const recvRaw = xlGet(row,map,'recv');
   const recv = parseFloat(String(recvRaw).replace(/[^\d.]/g,''))||0;
   const bal = Math.max(0, total-recv);
+  const status = moneyStatusRaw(recv, total);   // auto-calculated from money, not the sheet's typed label
   const rem = xlGet(row,map,'rem');
   if(qty<=0) return null;
   return {date,cust,phone,site,qty,total,vehicle,status,recv,bal,rem};
@@ -5626,7 +5666,7 @@ function buildPrintHTML(custName, fromDate, toDate) {
   const totalPaid   = ledger.totalCredit;
   const paidPct     = totalBilled > 0 ? Math.max(0, Math.min(100, Math.round(totalPaid / totalBilled * 100))) : 100;
 
-  // ── Build ledger table rows ──────────────────────────────────
+  // ── Build ledger table rows ─────────────────────���────────────
   let tRows = '';
   if (ledger.ob && ledger.openingBal > 0) {
     tRows += `<tr style="background:#fefce8">
@@ -6191,6 +6231,7 @@ function renderSalesTable(){
 
   // Build cust map for accurate bal/status
   const cm = buildCustMap(db) || {};
+  const _ps = payStateMap(db);   // auto-calculated payment status per sale
 
   const tbody = document.getElementById('todaySalesTbl');
   if(!tbody) return;
@@ -6200,7 +6241,7 @@ function renderSalesTable(){
     const dispRecv  = iR(s.recv||0);
     const dispBal   = iR(s.bal||0);
     const balColor  = s.bal>0?'var(--red)':'var(--green)';
-    const badge     = c ? statusBadge(c.bal<=0?'PAID/CASH':(s.status||'Pending')) : statusBadge(s.status);
+    const badge     = saleStatusBadge(s, _ps);
     return `<tr>
       <td style="text-align:center;color:var(--muted)">${i+1}</td>
       <td class="dt">${s.date}</td>
@@ -6406,11 +6447,12 @@ function refreshAll(){
 
   // Recent sales table
   const rs=[...db.sales].sort((a,b)=>b.id-a.id).slice(0,10);
+  const _psRecent = payStateMap(db);   // auto-calculated payment status per sale
   // Recent sales: recv/bal shown per-sale row (sale-level is fine here for row detail)
   // But status badge corrected using overall cust balance
   document.getElementById('recentSalesTbl').innerHTML=rs.length?rs.map((s,i)=>{
     const custTotals=(_allCustMap||{})[s.cust];
-    return `<tr><td style="text-align:center;color:var(--muted)">${i+1}</td><td class="dt">${s.date}</td><td><strong>${s.cust}</strong></td><td style="color:var(--muted)">${s.vehicle||'—'}</td><td style="color:var(--muted)">${s.site||'—'}</td><td>${iN(s.qty)}</td><td>${iR(s.total)}</td><td style="color:var(--green)">—</td><td style="color:var(--muted)"><strong>—</strong></td><td>${statusBadge(custTotals&&custTotals.bal<=0?'PAID/CASH':s.status)}</td></tr>`;
+    return `<tr><td style="text-align:center;color:var(--muted)">${i+1}</td><td class="dt">${s.date}</td><td><strong>${s.cust}</strong></td><td style="color:var(--muted)">${s.vehicle||'—'}</td><td style="color:var(--muted)">${s.site||'—'}</td><td>${iN(s.qty)}</td><td>${iR(s.total)}</td><td style="color:var(--green)">—</td><td style="color:var(--muted)"><strong>—</strong></td><td>${saleStatusBadge(s, _psRecent)}</td></tr>`;
   }).join(''):'<tr><td colspan="10" class="empty">No sales yet</td></tr>';
 
   // Monthly summary — interactive
@@ -6522,7 +6564,9 @@ function filterLedger(){
   const db=loadDB();
   const q=(document.getElementById('ledSearch')?.value||'').toLowerCase();
   const st=document.getElementById('ledStatus')?.value||'';
-  const rows=db.sales.filter(s=>(!q||(s.cust.toLowerCase().includes(q)||(s.vehicle||'').toLowerCase().includes(q)))&&(!st||s.status===st)).sort((a,b)=>b.id-a.id).slice(0,100);
+  const _ps = payStateMap(db);   // auto-calculated payment status per sale
+  const _ledNorm = s => { const d = saleDispStatus(s, _ps); return d==='Paid' ? 'Paid' : d==='PARTIAL' ? 'Partial' : 'Pending'; };
+  const rows=db.sales.filter(s=>(!q||(s.cust.toLowerCase().includes(q)||(s.vehicle||'').toLowerCase().includes(q)))&&(!st||_ledNorm(s)===st)).sort((a,b)=>b.id-a.id).slice(0,100);
   const el=document.getElementById('ledgerTbl');
   // recv/bal from buildCustMap for accurate display
   const _stMapForRows = buildCustMap(db) || {};
@@ -6531,7 +6575,7 @@ function filterLedger(){
     const dispRecv = iR(s.recv||0);
     const dispBal  = iR(s.bal||0);
     const dispBalColor = s.bal>0?'var(--red)':'var(--green)';
-    const dispStatus = cm ? statusBadge(cm.bal<=0?'PAID/CASH':(s.status||'Pending')) : statusBadge(s.status);
+    const dispStatus = saleStatusBadge(s, _ps);
     return `<tr><td style="text-align:center;color:var(--muted)">${i+1}</td><td class="dt">${s.date}</td><td><strong>${s.cust}</strong></td><td>${s.phone||'—'}</td><td>${s.vehicle||'—'}</td><td>${s.site||'—'}</td><td>${iN(s.qty)}</td><td>${iR(s.total)}</td><td style="color:var(--green)">${dispRecv}</td><td style="color:${dispBalColor}"><strong>${dispBal}</strong></td><td>${dispStatus}</td><td style="color:var(--muted)">${s.rem||'—'}</td></tr>`;
   }).join(''):'<tr><td colspan="12" class="empty">No matching records</td></tr>';
   const expRows=[...db.exp].sort((a,b)=>b.id-a.id).slice(0,100);
@@ -7114,6 +7158,277 @@ function exportPaymentsXLSX() {
   toast('✅ Payment records exported (2 sheets)!');
 }
 
+// ===================== PENDING PAYMENTS REPORT (date-wise, all customers) =====================
+// Builds one row per still-unpaid item (each pending sale + any opening balance),
+// sorted oldest-first. Pending math uses the same FIFO engine as the rest of the app,
+// so the grand total reconciles exactly with the dashboard's Total Outstanding.
+function _buildPendingRows(){
+  const db = loadDB();
+  const cmAll = buildCustMap(db) || {};
+  const rows = [];
+  const custs = [...new Set([
+    ...(db.sales||[]).map(s=>s.cust),
+    ...(db.openingBalances||[]).map(o=>o.name),
+    ...(db.payments||[]).map(p=>p.cust)
+  ])].filter(Boolean);
+  custs.forEach(cust=>{
+    const cm = cmAll[cust] || {};
+    const phone = cm.phone || '';
+    const { saleStatus, payAdj } = computeFIFO(db, cust);
+    // Payments not consumed by any sale (leftover) pay down the opening balance first.
+    const extraCredits = Object.values(payAdj||{}).reduce((a,p)=>a+(p.leftover||0),0);
+    // Opening balance (pre-system debt)
+    const ob = (db.openingBalances||[]).find(o=>o.name===cust);
+    if(ob && (Number(ob.bal)||0)>0){
+      const obTotal = Number(ob.bal)||0;
+      const obRemain = Math.max(0, obTotal - extraCredits);
+      if(obRemain > 0.5){
+        rows.push({ date: ob.date||'', _d: ob.date?parseDate(ob.date):0, cust, phone, item:'Opening Balance', total: obTotal, paid: obTotal-obRemain, pending: obRemain });
+      }
+    }
+    // Pending sales (per-sale remaining after delivery cash + FIFO-allocated payments)
+    Object.values(saleStatus||{}).forEach(f=>{
+      const paid = (Number(f.recvAtDelivery)||0)+(Number(f.paidExtra)||0);
+      const pending = Math.max(0, (Number(f.total)||0)-paid);
+      if(pending > 0.5){
+        const sale = (db.sales||[]).find(s=>s.id===f.id) || {};
+        const item = (sale.qty?iN(sale.qty)+' bricks':'Sale') + (sale.vehicle?' · '+sale.vehicle:'') + (sale.site?' · '+sale.site:'');
+        rows.push({ date: f.date||'', _d: f.date?parseDate(f.date):0, cust, phone, item, total: Number(f.total)||0, paid, pending });
+      }
+    });
+  });
+  rows.sort((a,b)=> (a._d - b._d) || String(a.cust).localeCompare(String(b.cust)));
+  return rows;
+}
+
+function exportPendingPaymentsXLSX(){
+  if(!xlsxReady()) return;
+  const rows = _buildPendingRows();
+  if(!rows.length){ toast('✅ No pending payments — all cleared!'); return; }
+  const data = rows.map((r,i)=>({
+    'Sl. No': i+1,
+    'Date': r.date || '',
+    'Customer': r.cust,
+    'Phone': r.phone || '',
+    'Item / Order': r.item,
+    'Total (₹)': Math.round(r.total),
+    'Paid (₹)': Math.round(r.paid),
+    'Pending (₹)': Math.round(r.pending)
+  }));
+  const totalPending = rows.reduce((a,r)=>a+r.pending,0);
+  data.push({ 'Sl. No':'', 'Date':'', 'Customer':'', 'Phone':'', 'Item / Order':'TOTAL PENDING', 'Total (₹)':'', 'Paid (₹)':'', 'Pending (₹)':Math.round(totalPending) });
+  const ws = XLSX.utils.json_to_sheet(data);
+  ws['!cols'] = [{wch:6},{wch:12},{wch:22},{wch:14},{wch:26},{wch:12},{wch:12},{wch:13}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Pending Payments');
+  xlsxDownload(wb, 'BMD_Pending_Payments_' + new Date().toISOString().slice(0,10) + '.xlsx');
+  toast('✅ Pending payments exported (' + rows.length + ' rows)!');
+}
+
+function printPendingPayments(){
+  const rows = _buildPendingRows();
+  const totalPending = rows.reduce((a,r)=>a+r.pending,0);
+  const custCount = new Set(rows.map(r=>r.cust)).size;
+  const gen = (new Date()).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  const inr = v => '₹' + Math.round(Number(v)||0).toLocaleString('en-IN');
+  const body = rows.length ? rows.map((r,i)=>`<tr>
+      <td style="text-align:center">${i+1}</td>
+      <td>${r.date||'—'}</td>
+      <td><strong>${r.cust}</strong></td>
+      <td>${r.phone||'—'}</td>
+      <td>${r.item}</td>
+      <td class="r">${inr(r.total)}</td>
+      <td class="r" style="color:#15803d">${inr(r.paid)}</td>
+      <td class="r" style="color:#dc2626;font-weight:700">${inr(r.pending)}</td>
+    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;padding:26px;color:#15803d;font-weight:600">✅ No pending payments — everything is collected!</td></tr>';
+  const w = window.open('', '_blank');
+  if(!w){ toast('⚠️ Allow pop-ups to print.'); return; }
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Pending Payments — BMD GROUP</title>
+  <style>
+    *{box-sizing:border-box} body{font-family:Inter,Arial,sans-serif;color:#1c2433;padding:26px;font-size:12.5px}
+    .hdr{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #2f6fed;padding-bottom:12px}
+    .brand{font-size:22px;font-weight:800;letter-spacing:.5px;color:#13203a}
+    .brand small{display:block;font-size:10.5px;font-weight:700;color:#6b7280;letter-spacing:3px;margin-top:3px}
+    .doc{font-size:15px;font-weight:700;margin:14px 0 3px}
+    .meta{color:#6b7280;font-size:11.5px;margin-bottom:10px}
+    .summary{display:flex;gap:14px;margin:10px 0;flex-wrap:wrap}
+    .scard{border:1px solid #d7dce5;border-radius:8px;padding:8px 16px;min-width:120px}
+    .scard b{display:block;font-size:17px;margin-top:2px}
+    .scard span{font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:.6px}
+    table{width:100%;border-collapse:collapse;margin-top:8px}
+    th,td{border:1px solid #d7dce5;padding:6px 9px;vertical-align:top}
+    th{background:#eef2fb;text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}
+    td.r,th.r{text-align:right}
+    tfoot td{font-weight:800;background:#fff5f5}
+    .note{margin-top:14px;font-size:10.5px;color:#9ca3af}
+    @media print{ .noprint{display:none} }
+  </style></head><body>
+  <div class="hdr">
+    <div class="brand">BMD GROUP<small>FLYASH BRICKS</small></div>
+    <div style="text-align:right;font-size:11.5px;color:#6b7280">Generated: ${gen}</div>
+  </div>
+  <div class="doc">🔴 Pending Payments — All Customers (date-wise)</div>
+  <div class="meta">Cross-check or update outstanding amounts. Entries sorted oldest first.</div>
+  <div class="summary">
+    <div class="scard"><span>Total Pending</span><b style="color:#dc2626">${inr(totalPending)}</b></div>
+    <div class="scard"><span>Customers</span><b style="color:#2f6fed">${custCount}</b></div>
+    <div class="scard"><span>Entries</span><b style="color:#2f6fed">${rows.length}</b></div>
+  </div>
+  <table>
+    <thead><tr><th style="text-align:center">Sl.</th><th>Date</th><th>Customer</th><th>Phone</th><th>Item / Order</th><th class="r">Total</th><th class="r">Paid</th><th class="r">Pending</th></tr></thead>
+    <tbody>${body}</tbody>
+    ${rows.length?`<tfoot><tr><td colspan="7" style="text-align:right">TOTAL PENDING</td><td class="r" style="color:#dc2626">${inr(totalPending)}</td></tr></tfoot>`:''}
+  </table>
+  <div class="note">Pending is calculated from money received (delivery cash + payments, oldest-first). This total reconciles with the dashboard's Total Outstanding.</div>
+  <div class="noprint" style="margin-top:18px;text-align:center"><button onclick="window.print()" style="padding:8px 22px;background:#2f6fed;color:#fff;border:none;border-radius:6px;font-weight:700;cursor:pointer;font-size:13px">🖨️ Print / Save PDF</button></div>
+  </body></html>`);
+  w.document.close();
+}
+
+// ===================== TALLY XML EXPORT =====================
+// DD-MM-YYYY -> YYYYMMDD (Tally date format)
+function _tlyDate(d){ const p = normalizeDate(d).split('-'); return p[2]+p[1]+p[0]; }
+function _tlyEsc(s){
+  return String(s==null?'':s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+}
+function _tlyAmt(n){ return (Math.round((parseFloat(n)||0)*100)/100).toFixed(2); }
+
+function exportTally(){
+  const db = loadDB();
+  const statusEl = document.getElementById('tally-status');
+  const fromV = (document.getElementById('tally-from')||{}).value || '';
+  const toV   = (document.getElementById('tally-to')||{}).value || '';
+  const fromD = fromV ? parseDate(fromInput(fromV)) : null;
+  const toD   = toV   ? parseDate(fromInput(toV))   : null;
+  const inRange = (dateStr)=>{ const d = parseDate(dateStr); if(fromD && d < fromD) return false; if(toD && d > toD) return false; return true; };
+  const COMPANY = 'BMD FLYASH BRICKS';
+  const cashOf = (mode)=> (mode && /cash/i.test(mode)) ? 'Cash' : 'Bank A/c';
+
+  const sales = (db.sales||[]).filter(s=>s.date && inRange(s.date));
+  const pays  = (db.payments||[]).filter(p=>p.date && inRange(p.date));
+  const vpays = (db.vendorPayments||[]).filter(p=>p.date && inRange(p.date));
+  const exps  = (db.exp||[]).filter(e=>e.date && inRange(e.date));
+
+  if(!sales.length && !pays.length && !vpays.length && !exps.length){
+    if(statusEl) statusEl.innerHTML = '<span style="color:var(--red)">⚠️ No records found in that date range.</span>';
+    return;
+  }
+
+  // ---- ledger masters ----
+  const debtors = new Set(), creditors = new Set(), expLedgers = new Set();
+  sales.forEach(s=>{ if(s.cust) debtors.add(s.cust); });
+  pays.forEach(p=>{ if(p.cust) debtors.add(p.cust); });
+  vpays.forEach(p=>{ if(p.vendor) creditors.add(p.vendor); });
+  exps.forEach(e=>{ expLedgers.add((e.cat&&e.cat.trim())?e.cat.trim():'General Expenses'); });
+
+  const ledger = (name,parent,billwise)=>
+    `   <TALLYMESSAGE xmlns:UDF="TallyUDF">\n    <LEDGER NAME="${_tlyEsc(name)}" ACTION="Create">\n     <NAME.LIST><NAME>${_tlyEsc(name)}</NAME></NAME.LIST>\n     <PARENT>${parent}</PARENT>\n     <ISBILLWISEON>${billwise?'Yes':'No'}</ISBILLWISEON>\n    </LEDGER>\n   </TALLYMESSAGE>\n`;
+
+  let masters = '';
+  masters += ledger('Sales A/c','Sales Accounts',false);
+  masters += ledger('Cash','Cash-in-Hand',false);
+  masters += ledger('Bank A/c','Bank Accounts',false);
+  debtors.forEach(n=> masters += ledger(n,'Sundry Debtors',true));
+  creditors.forEach(n=> masters += ledger(n,'Sundry Creditors',true));
+  expLedgers.forEach(n=> masters += ledger(n,'Indirect Expenses',false));
+
+  // ---- vouchers ----
+  let vouchers='', vCount=0;
+  const voucher = (vtype, dateStr, party, narration, entries, objview)=>{
+    let e='';
+    entries.forEach(en=>{
+      e += `    <ALLLEDGERENTRIES.LIST>\n     <LEDGERNAME>${_tlyEsc(en.ledger)}</LEDGERNAME>\n     <ISDEEMEDPOSITIVE>${en.dr?'Yes':'No'}</ISDEEMEDPOSITIVE>\n     <AMOUNT>${en.dr?'-':''}${_tlyAmt(en.amt)}</AMOUNT>\n    </ALLLEDGERENTRIES.LIST>\n`;
+    });
+    const d=_tlyDate(dateStr);
+    return `   <TALLYMESSAGE xmlns:UDF="TallyUDF">\n    <VOUCHER VCHTYPE="${vtype}" ACTION="Create" OBJVIEW="${objview}">\n     <DATE>${d}</DATE>\n     <EFFECTIVEDATE>${d}</EFFECTIVEDATE>\n     <VOUCHERTYPENAME>${vtype}</VOUCHERTYPENAME>\n`
+      +(party?`     <PARTYLEDGERNAME>${_tlyEsc(party)}</PARTYLEDGERNAME>\n`:``)
+      +(narration?`     <NARRATION>${_tlyEsc(narration)}</NARRATION>\n`:``)
+      +e+`    </VOUCHER>\n   </TALLYMESSAGE>\n`;
+  };
+
+  // Sales: Dr customer (total), Cr Sales A/c (total)
+  sales.forEach(s=>{
+    const cust = s.cust || 'Cash Sales';
+    const total = parseFloat(s.total)||0;
+    if(total<=0) return;
+    if(!debtors.has(cust)){ masters += ledger(cust,'Sundry Debtors',true); debtors.add(cust); }
+    const narr = (s.qty?`${s.qty} bricks`:'') + (s.vehicle?` · ${s.vehicle}`:'');
+    vouchers += voucher('Sales', s.date, cust, narr, [
+      {ledger:cust, dr:true, amt:total},
+      {ledger:'Sales A/c', dr:false, amt:total}
+    ], 'Accounting Voucher View');
+    vCount++;
+    const recv = parseFloat(s.recv)||0;
+    if(recv>0){
+      const cl = cashOf(s.status);
+      vouchers += voucher('Receipt', s.date, cust, 'Receipt against sale', [
+        {ledger:cl, dr:true, amt:recv},
+        {ledger:cust, dr:false, amt:recv}
+      ], 'Accounting Voucher View');
+      vCount++;
+    }
+  });
+
+  // Customer payments -> Receipt
+  pays.forEach(p=>{
+    const amt = parseFloat(p.amount)||0;
+    if(amt<=0) return;
+    const cust = p.cust || 'Cash Sales';
+    if(!debtors.has(cust)){ masters += ledger(cust,'Sundry Debtors',true); debtors.add(cust); }
+    const cl = cashOf(p.mode);
+    vouchers += voucher('Receipt', p.date, cust, p.rem||'Customer payment', [
+      {ledger:cl, dr:true, amt:amt},
+      {ledger:cust, dr:false, amt:amt}
+    ], 'Accounting Voucher View');
+    vCount++;
+  });
+
+  // Vendor payments -> Payment
+  vpays.forEach(p=>{
+    const amt = parseFloat(p.amount)||0;
+    if(amt<=0) return;
+    const ven = p.vendor || 'Sundry Vendor';
+    if(!creditors.has(ven)){ masters += ledger(ven,'Sundry Creditors',true); creditors.add(ven); }
+    const cl = cashOf(p.mode);
+    vouchers += voucher('Payment', p.date, ven, p.rem||'Vendor payment', [
+      {ledger:ven, dr:true, amt:amt},
+      {ledger:cl, dr:false, amt:amt}
+    ], 'Accounting Voucher View');
+    vCount++;
+  });
+
+  // Expenses -> Payment (Dr expense, Cr Cash)
+  exps.forEach(e=>{
+    const amt = parseFloat(e.amt)||0;
+    if(amt<=0) return;
+    const led = (e.cat&&e.cat.trim())?e.cat.trim():'General Expenses';
+    if(!expLedgers.has(led)){ masters += ledger(led,'Indirect Expenses',false); expLedgers.add(led); }
+    vouchers += voucher('Payment', e.date, '', e.desc||led, [
+      {ledger:led, dr:true, amt:amt},
+      {ledger:'Cash', dr:false, amt:amt}
+    ], 'Accounting Voucher View');
+    vCount++;
+  });
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<ENVELOPE>\n <HEADER>\n  <TALLYREQUEST>Import Data</TALLYREQUEST>\n </HEADER>\n <BODY>\n  <IMPORTDATA>\n   <REQUESTDESC>\n    <REPORTNAME>Vouchers</REPORTNAME>\n    <STATICVARIABLES><SVCURRENTCOMPANY>${_tlyEsc(COMPANY)}</SVCURRENTCOMPANY></STATICVARIABLES>\n   </REQUESTDESC>\n   <REQUESTDATA>\n${masters}${vouchers}   </REQUESTDATA>\n  </IMPORTDATA>\n </BODY>\n</ENVELOPE>`;
+
+  try{
+    const blob = new Blob([xml], {type:'application/xml;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'BMD_Tally_' + new Date().toISOString().slice(0,10) + '.xml';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>{ try{URL.revokeObjectURL(url);}catch(e){} }, 1000);
+    if(statusEl) statusEl.innerHTML = '<span style="color:var(--green)">✅ Exported '+vCount+' vouchers. Import in Tally via Gateway → Import Data → Vouchers.</span>';
+    toast('✅ Tally XML exported ('+vCount+' vouchers)');
+  }catch(err){
+    if(statusEl) statusEl.innerHTML = '<span style="color:var(--red)">❌ '+err.message+'</span>';
+  }
+}
+
 
 // ===================== OPENING BALANCES =====================
 
@@ -7631,7 +7946,7 @@ async function autoSyncFromGSheet() {
       if (db.deletedGsheetFps.includes(fp)) continue;
 
       const recv   = parseFloat(get('amount received','received').replace(/[^\d.]/g,'')) || 0;
-      const status = gsNormalizeStatus(get('payment status','payment','status'));
+      const status = moneyStatusRaw(recv, total);   // auto-calculated; sheet Payment Status column ignored
       const rem    = get('remarks','remark','note');
       const bal    = Math.max(0, total - recv);
 
@@ -7696,7 +8011,7 @@ try { refreshStockWidget(); } catch(e) {}
 // Sheet ID: 1MpTxiGiNHMwYsDbuJt_eWBQb0P0j9jQ1dxSe3aKebz4
 // Columns: Timestamp | Date | Customer Name | Mobile Number |
 //          Location/Site | Vehicle Number | Quantity | Total amount |
-//          Payment Status | AMOUNT RECEIVED | REMARKS
+//          AMOUNT RECEIVED | REMARKS   (Payment Status column no longer used — status is auto-calculated)
 // ══════════════════════════════════════════════════════════════
 const GSHEET_WEBAPP = 'https://script.google.com/macros/s/AKfycbxyb_nC-WZfXlE9L2Y6HKNN2LUFAW6FPg6l87T1loDfqtbxMV7V-mexpjQfe3UajNSdPQ/exec';
 
@@ -7934,8 +8249,8 @@ async function syncFromGSheet() {
       const phone   = get('mobile','phone');
       const site    = get('location','site');
       const vehicle = get('vehicle');
-      const entryStatus = gsNormalizeStatus(get('payment status','payment','status'));
       const recv    = parseFloat(get('amount received','received').replace(/[^\d.]/g,'')) || 0;
+      const entryStatus = moneyStatusRaw(recv, total);   // auto-calculated; sheet Payment Status column ignored
       const rem     = get('remarks','remark','note');
       const bal     = Math.max(0, total - recv);
 
@@ -8116,6 +8431,7 @@ function showDailySummary() {
   const db = loadDB();
   const td = today();
   const tSales = db.sales.filter(s => s.date === td);
+  const _psDaily = payStateMap(db);   // auto-calculated payment status per sale
   const tPayments = (db.payments || []).filter(p => p.date === td);
   const tExp = db.exp.filter(e => e.date === td);
   const tProd = db.prod.filter(p => p.date === td);
@@ -8166,7 +8482,7 @@ function showDailySummary() {
     ${tSales.length ? `<div style="font-size:11.5px;font-weight:700;color:var(--text-2);margin-bottom:6px">Today's Sales:</div>
     <table style="width:100%;border-collapse:collapse;font-size:11.5px">
       <tr style="background:var(--surface-2)"><th style="padding:5px 8px;text-align:left">Customer</th><th style="padding:5px 8px;text-align:right">Qty</th><th style="padding:5px 8px;text-align:right">Amount</th><th style="padding:5px 8px;text-align:left">Status</th></tr>
-      ${tSales.map(s=>`<tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:5px 8px"><strong>${s.cust}</strong>${s.vehicle?` <span style="color:var(--muted)">${s.vehicle}</span>`:''}</td><td style="padding:5px 8px;text-align:right">${iN(s.qty)}</td><td style="padding:5px 8px;text-align:right">${iR(s.total)}</td><td style="padding:5px 8px">${statusBadge(s.status)}</td></tr>`).join('')}
+      ${tSales.map(s=>`<tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:5px 8px"><strong>${s.cust}</strong>${s.vehicle?` <span style="color:var(--muted)">${s.vehicle}</span>`:''}</td><td style="padding:5px 8px;text-align:right">${iN(s.qty)}</td><td style="padding:5px 8px;text-align:right">${iR(s.total)}</td><td style="padding:5px 8px">${saleStatusBadge(s, _psDaily)}</td></tr>`).join('')}
     </table>` : '<div style="color:var(--muted);font-size:12px">No sales recorded today.</div>'}
     <div style="margin-top:14px;display:flex;gap:8px">
       <button onclick="printDailySummary()" style="padding:7px 16px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:12px;font-weight:700;cursor:pointer">🖨️ Print</button>
@@ -8541,7 +8857,7 @@ function printChallan(id) {
 
 <div class="bal-row">
   <strong style="color:${statusColor}">Balance Due: ₹${Number(s.bal||0).toLocaleString('en-IN')}</strong>
-  <span>Status: <strong style="color:${statusColor}">${s.status||'Pending'}</strong></span>
+  <span>Status: <strong style="color:${statusColor}">${(()=>{const d=saleDispStatus(s,null);return d==='Paid'?'Paid':d==='PARTIAL'?'Partial':'Pending';})()}</strong></span>
 </div>
 ${s.rem ? `<div style="margin-top:10px;font-size:12px;color:#374151"><strong>Remarks:</strong> ${s.rem}</div>` : ''}
 
